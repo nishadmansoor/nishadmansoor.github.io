@@ -1,3 +1,1 @@
-# nishadmansoor.github.io
-
 hello
