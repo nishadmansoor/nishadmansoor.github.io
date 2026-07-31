@@ -57,8 +57,19 @@ section {
 }
 
 #beyond {
-    background-color: red;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#nav-toggle {
+    display: none
+}
+
+#nav-links {
+    display: none
+}
+
+#nav-toggle:checked~#nav-links {
+    display: flex
 }
