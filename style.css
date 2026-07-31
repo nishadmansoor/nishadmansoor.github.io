@@ -31,10 +31,12 @@ nav {
     width: 100%;
     z-index: 10;
     background: #e8e8e8;
-    padding: 1rem;
+    padding: 1rem 2rem;
     display: flex;
     gap: 1.5rem;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 nav a {
