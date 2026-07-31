@@ -75,3 +75,7 @@ section {
 #nav-toggle:checked~#nav-links {
     display: flex
 }
+
+#social-links {
+    margin-left: auto
+}
