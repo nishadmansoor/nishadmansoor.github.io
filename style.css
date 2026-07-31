@@ -69,7 +69,14 @@ section {
 }
 
 #nav-links {
-    display: none
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    flex-direction: column;
+    background: #e8e8e8;
+    padding: 1rem;
+    gap: 0.5rem;
 }
 
 #nav-toggle:checked~#nav-links {
