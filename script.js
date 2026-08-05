@@ -30,3 +30,9 @@ typeText(line1, "hey there! my name is nishad", 60, function () {
         });
     }, 400);
 });
+
+document.querySelectorAll('#nav-links a').forEach(link => {
+    link.addEventListener('click', function () {
+        document.getElementById('nav-toggle').checked = false;
+    });
+});
