@@ -23,7 +23,7 @@ typeText(line1, "hey there! my name is nishad", 60, function () {
     setTimeout(function () {
         typeText(line2, "welcome to my portfolio", 60, function () {
             setTimeout(function () {
-                typeText(line3, "click here to learn more about me & my work!", 60, function () {
+                typeText(line3, "click here to learn more about me", 60, function () {
                     explore.style.display = 'block';
                 }, 300);
             }, 400);
