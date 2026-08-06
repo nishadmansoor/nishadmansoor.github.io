@@ -93,3 +93,15 @@ section {
 #social-links {
     margin-left: auto;
 }
+
+/*Fading header on scroll*/
+nav {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+body.past-about nav {
+    opacity: 1;
+    pointer-events: auto;
+}
