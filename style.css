@@ -63,6 +63,11 @@ section {
     text-align: center;
 }
 
+#about-text {
+    max-width: 40rem;
+    margin: 0 auto;
+}
+
 #beyond {
     display: flex;
     align-items: center;
