@@ -19,3 +19,10 @@ document.querySelectorAll('#nav-links a').forEach(link => {
     });
 });
 
+const heroSection = document.getElementById('hero');
+window.addEventListener('scroll', () => {
+    const heroBottom = heroSection.getBoundingClientRect().bottom;
+    document.body.classList.toggle('past-hero', heroBottom <= 0);
+});
+window.dispatchEvent(new Event('scroll'));
+
