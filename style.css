@@ -47,6 +47,11 @@ section {
     scroll-snap-align: start;
     scroll-margin-top: 60px;
     height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+#nav-toggle:checked ~ section {
+    margin-left: 250px;
 }
 
 #hero {
@@ -110,8 +115,6 @@ section {
     justify-content: center;
     text-align: justify;
     align-items: center;
-    margin-left: auto;
-    margin-right: 8%;
     hyphens: none;
 }
 
@@ -123,8 +126,8 @@ section {
 }
 
 #profile-photo {
-    width: 72px;
-    height: 72px;
+    width: 120px;
+    height: 120px;
 }
 
 #about-name {
@@ -142,10 +145,127 @@ section {
     margin-bottom: 1rem;
 }
 
-#beyond {
+#projects {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 4rem 2rem 2rem;
+    height: 100vh;
+    overflow: auto;
+}
+
+#projects h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+#projects h4 {
+    font-weight: 400;
+    opacity: 0.6;
+    margin-bottom: 2rem;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    max-width: 850px;
+    width: 100%;
+}
+
+.project-card {
+    cursor: pointer;
+}
+
+.project-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
+    max-height: 240px;
+}
+
+.project-card p {
+    font-size: 1.1rem;
+}
+
+#beyond {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 6rem;
+}
+
+#beyond h2 {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+}
+
+.flip-card {
+    cursor: pointer;
+    perspective: 1000px;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+.flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg) scale(1.3);
+}
+
+#beyond.has-flipped .flip-card:not(.flipped) {
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.flip-card-front .project-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
+    max-height: 240px;
+}
+
+.flip-card-back {
+    background: rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transform: rotateY(180deg);
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    max-width: 600px;
+}
+
+.tag {
+    padding: 0.5rem 1.25rem;
+    border: 1px solid #1a1a1a;
+    border-radius: 2rem;
+    font-size: 1.05rem;
 }
 
 #research {
@@ -166,14 +286,15 @@ section {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 4rem 2rem;
-    min-height: 100vh;
-    height: auto;
+    padding: 6rem 2rem 2rem;
+    height: 100vh;
+    overflow: auto;
 }
 
 #experience h2 {
     font-size: 2rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
+    align-self: center;
 }
 
 .timeline {
@@ -254,11 +375,12 @@ section {
     left: 0;
     height: calc(100vh - 60px);
     width: 250px;
-    background: #d6d4d0;
+    background: #90d5ff;
     flex-direction: column;
     padding: 2rem;
     gap: 1.5rem;
-    z-index: 9;
+    z-index: 11;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 #nav-toggle:checked~#nav-links {
@@ -277,9 +399,20 @@ section {
     align-items: center;
 }
 
+#social-links a[href$=".pdf"] {
+    border: 1px solid #1a1a1a;
+    border-radius: 2rem;
+    padding: 0.35rem 1rem;
+    font-size: 0.95rem;
+}
+
 #social-links svg {
     width: 28px;
     height: 28px;
+}
+
+#social-links i {
+    font-size: 1.5rem;
 }
 
 #image {
