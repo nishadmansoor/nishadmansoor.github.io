@@ -383,6 +383,8 @@ section {
     background: transparent;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 2rem;
     gap: 1.5rem;
     z-index: 11;
@@ -426,4 +428,124 @@ section {
     display: flex;
     justify-content: left;
     transform: translateY(-120px);
+}
+
+/* Nav toggle */
+#nav-toggle {
+    display: none;
+}
+
+#nav-icon {
+    display: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    z-index: 12;
+}
+
+.icon-close {
+    display: none;
+}
+
+#nav-toggle:checked ~ nav .icon-open {
+    display: none;
+}
+
+#nav-toggle:checked ~ nav .icon-close {
+    display: inline;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    #nav-icon {
+        display: block;
+    }
+
+    #nav-links {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        background: #ffffff;
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    #nav-toggle:checked ~ #nav-links {
+        transform: translateX(0);
+    }
+
+    section {
+        margin-left: 0;
+    }
+
+    #hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    #hero-content p {
+        font-size: 1.1rem;
+    }
+
+    #about-text {
+        padding: 0 1rem;
+    }
+
+    #about-text p {
+        font-size: 1rem;
+    }
+
+    #projects {
+        padding: 6rem 1.5rem 2rem;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+    }
+
+    #experience {
+        padding: 6rem 1.5rem 2rem;
+    }
+
+    .timeline {
+        padding-left: 30px;
+    }
+
+    .timeline-dot {
+        left: -30px;
+        width: 12px;
+        height: 12px;
+    }
+
+    .timeline::before {
+        left: 5px;
+    }
+
+    .timeline-content h3 {
+        font-size: 1.1rem;
+    }
+
+    .timeline-content p {
+        font-size: 0.95rem;
+    }
+
+    #beyond {
+        padding: 6rem 1.5rem 2rem;
+    }
+
+    #beyond .projects-grid {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+    }
+
+    #social-links {
+        gap: 1rem;
+    }
+
+    #social-links svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    #social-links a[href$=".pdf"] {
+        font-size: 0.85rem;
+        padding: 0.3rem 0.8rem;
+    }
 }
