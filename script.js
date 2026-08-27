@@ -1,6 +1,6 @@
 window.addEventListener('scroll', () => {
-    const heroBottom = document.getElementById('hero').getBoundingClientRect().bottom;
-    document.body.classList.toggle('past-hero', heroBottom <= 0);
+    const aboutBottom = document.getElementById('about').getBoundingClientRect().bottom;
+    document.body.classList.toggle('past-hero', aboutBottom <= 60);
 });
 window.dispatchEvent(new Event('scroll'));
 
