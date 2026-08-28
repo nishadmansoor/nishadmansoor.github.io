@@ -113,6 +113,7 @@ section {
 
 .resume-link {
     border: 1px solid #1a1a1a;
+    border-radius: 0;
     padding: 0.35rem 1rem;
     font-size: 1.15rem;
 }
@@ -396,7 +397,6 @@ section {
 
 #social-links a[href$=".pdf"] {
     border: 1px solid #1a1a1a;
-    border-radius: 2rem;
     padding: 0.35rem 1rem;
     font-size: 0.95rem;
 }
