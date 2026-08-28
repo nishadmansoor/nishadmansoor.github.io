@@ -5,6 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nishad Mansoor</title>
+    <script>
+        // Runs before first paint so the saved theme never flashes light.
+        (function () {
+            try {
+                var saved = localStorage.getItem('theme');
+                var dark = saved
+                    ? saved === 'dark'
+                    : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (dark) document.documentElement.classList.add('dark');
+            } catch (e) { }
+        })();
+    </script>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
     <link
@@ -26,6 +38,10 @@
             <a href="https://github.com/nishadmansoor" target="_blank"><i class="fa-brands fa-github"></i></a>
             <a href="mailto:nishadmansoor02@gmail.com"><i class="fa-solid fa-envelope"></i></a>
             <a href="https://linkedin.com/in/nishad-mansoor" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            <button type="button" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
+                <i class="fa-solid fa-moon icon-sun"></i>
+                <i class="fa-solid fa-sun icon-moon"></i>
+            </button>
         </div>
     </nav>
     <div id="nav-links">

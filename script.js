@@ -14,3 +14,21 @@ document.querySelectorAll('.flip-card').forEach(card => {
         }
     });
 });
+
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+    const syncPressed = () => {
+        const isDark = document.documentElement.classList.contains('dark');
+        themeToggle.setAttribute('aria-pressed', String(isDark));
+    };
+    syncPressed();
+    themeToggle.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        syncPressed();
+        try {
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        } catch (e) {
+            /* storage unavailable (private mode) — theme still applies for this page */
+        }
+    });
+}
