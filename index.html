@@ -5,18 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nishad Mansoor</title>
-    <script>
-        // Runs before first paint so the saved theme never flashes light.
-        (function () {
-            try {
-                var saved = localStorage.getItem('theme');
-                var dark = saved
-                    ? saved === 'dark'
-                    : window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (dark) document.documentElement.classList.add('dark');
-            } catch (e) { }
-        })();
-    </script>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
     <link
@@ -33,23 +21,19 @@
             <span class="icon-close">&larr;</span>
         </label>
         <span id="nav-name">Nishad Mansoor</span>
+        <div id="nav-links">
+            <a href="#about">About</a>
+            <a href="#experience">Experience</a>
+            <a href="#projects">Projects</a>
+            <a href="#beyond">Beyond the Code</a>
+        </div>
         <div id="social-links">
             <a href="assets/NishadMansoor - Resume.pdf" download>Resume</a>
             <a href="https://github.com/nishadmansoor" target="_blank"><i class="fa-brands fa-github"></i></a>
             <a href="mailto:nishadmansoor02@gmail.com"><i class="fa-solid fa-envelope"></i></a>
             <a href="https://linkedin.com/in/nishad-mansoor" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
-            <button type="button" id="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
-                <i class="fa-solid fa-moon icon-sun"></i>
-                <i class="fa-solid fa-sun icon-moon"></i>
-            </button>
         </div>
     </nav>
-    <div id="nav-links">
-        <a href="#about">About</a>
-        <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
-        <a href="#beyond">Beyond the Code</a>
-    </div>
 
     <section id="about">
         <div id="about-content">
@@ -68,7 +52,7 @@
                     models to
                     evaluate spatial reasoning.
                 </p>
-                <p>Additionally, I am pursuing my MS in Data Science at Northeastern University. During my time here,I
+                <p>Additionally, I am pursuing my MS in Data Science at Northeastern University. During my time here, I
                     have gained experience
                     across a range of machine learning and data science domains, including computer vision, natural
                     language processing, predictive modeling, and knowledge graph engineering.</p>
@@ -76,10 +60,11 @@
             </div>
             <div id="about-links">
                 <a href="assets/NishadMansoor - Resume.pdf" download class="resume-link">Resume</a>
-                <a href="https://github.com/nishadmansoor" target="_blank"><i class="fa-brands fa-github"></i></a>
-                <a href="https://linkedin.com/in/nishad-mansoor" target="_blank"><i
+                <a href="https://github.com/nishadmansoor" target="_blank" aria-label="GitHub"><i
+                        class="fa-brands fa-github"></i></a>
+                <a href="https://linkedin.com/in/nishad-mansoor" target="_blank" aria-label="LinkedIn"><i
                         class="fa-brands fa-linkedin"></i></a>
-                <a href="mailto:nishadmansoor02@gmail.com"><i class="fa-solid fa-envelope"></i></a>
+                <a href="mailto:nishadmansoor02@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
             </div>
         </div>
     </section>
@@ -177,7 +162,7 @@
             </div>
             <div class="project-card">
                 <div class="project-image"></div>
-                <h3>AstroRefine</h3>
+                <h3>Astro Refine</h3>
                 <p>A brief description of what this project does and the problems it solves.</p>
                 <div class="project-links">
                     <a href="https://github.com/nishadmansoor/astro-refine" class="project-link">GitHub</a>
@@ -203,6 +188,7 @@
     </section>
     <section id="beyond">
         <h2>Beyond the Code</h2>
+        <h4>a few things I enjoy outside of work and school</h4>
         <div class="projects-grid">
             <div class="flip-card">
                 <div class="flip-card-inner">

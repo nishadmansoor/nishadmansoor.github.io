@@ -1,8 +1,14 @@
-window.addEventListener('scroll', () => {
-    const aboutBottom = document.getElementById('about').getBoundingClientRect().bottom;
-    document.body.classList.toggle('past-hero', aboutBottom <= 60);
-});
-window.dispatchEvent(new Event('scroll'));
+// Nav stays hidden over the first screen and fades in once it scrolls past.
+const firstSection = document.getElementById('about');
+if (firstSection) {
+    const updateNav = () => {
+        const bottom = firstSection.getBoundingClientRect().bottom;
+        document.body.classList.toggle('past-hero', bottom <= 60);
+    };
+    window.addEventListener('scroll', updateNav);
+    window.addEventListener('resize', updateNav);
+    updateNav();
+}
 
 document.querySelectorAll('.flip-card').forEach(card => {
     card.addEventListener('click', function () {
@@ -15,20 +21,10 @@ document.querySelectorAll('.flip-card').forEach(card => {
     });
 });
 
-const themeToggle = document.getElementById('theme-toggle');
-if (themeToggle) {
-    const syncPressed = () => {
-        const isDark = document.documentElement.classList.contains('dark');
-        themeToggle.setAttribute('aria-pressed', String(isDark));
-    };
-    syncPressed();
-    themeToggle.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.toggle('dark');
-        syncPressed();
-        try {
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        } catch (e) {
-            /* storage unavailable (private mode) — theme still applies for this page */
-        }
+// Close the mobile drawer after tapping a nav link.
+document.querySelectorAll('#nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        const toggle = document.getElementById('nav-toggle');
+        if (toggle) toggle.checked = false;
     });
-}
+});
