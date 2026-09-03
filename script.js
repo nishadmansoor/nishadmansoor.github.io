@@ -1,9 +1,14 @@
-// Nav stays hidden over the first screen and fades in once it scrolls past.
+// Docks the nav links and fades in the top bar.
+// Fires as soon as About gives up ~10% of the viewport, rather than waiting
+// until it has almost fully scrolled away — that head start is what lets the
+// links finish moving up before the next section's content is on screen.
+const DOCK_THRESHOLD = 0.9;
 const firstSection = document.getElementById('about');
 if (firstSection) {
     const updateNav = () => {
         const bottom = firstSection.getBoundingClientRect().bottom;
-        document.body.classList.toggle('past-hero', bottom <= 60);
+        const docked = bottom <= window.innerHeight * DOCK_THRESHOLD;
+        document.body.classList.toggle('past-hero', docked);
     };
     window.addEventListener('scroll', updateNav);
     window.addEventListener('resize', updateNav);
