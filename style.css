@@ -159,12 +159,14 @@ section {
     overflow: auto;
 }
 
-#projects h2 {
+#projects h2,
+#beyond h2 {
     font-size: 2rem;
     margin-bottom: 0.5rem;
 }
 
-#projects h4 {
+#projects h4,
+#beyond h4 {
     font-weight: 400;
     opacity: 0.6;
     margin-bottom: 2rem;
@@ -261,11 +263,6 @@ section {
     padding-top: 6rem;
 }
 
-#beyond h2 {
-    font-size: 2rem;
-    margin-bottom: 3rem;
-}
-
 .flip-card {
     cursor: pointer;
     perspective: 1000px;
@@ -343,9 +340,11 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 6rem 2rem 2rem;
-    height: 100vh;
-    overflow: auto;
+    padding: 6rem 2rem 4rem;
+    /* Five entries don't fit one screen — grow instead of scrolling internally */
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
 }
 
 #experience h2 {
@@ -355,48 +354,99 @@ section {
 }
 
 .timeline {
+    /* Rail geometry lives here so the dot, connector and columns can't drift */
+    --date-col: 9rem;
+    --rail-w: 3rem;
+    --dot-size: 14px;
+    --row-lh: 1.6rem;
     position: relative;
-    max-width: 700px;
+    max-width: 780px;
     width: 100%;
-    padding-left: 40px;
     margin: 0 auto;
-}
-
-.timeline::before {
-    content: "";
-    position: absolute;
-    left: 7px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: var(--text);
 }
 
 .timeline-entry {
     position: relative;
-    margin-bottom: 2.5rem;
+    display: grid;
+    grid-template-columns: var(--date-col) var(--rail-w) 1fr;
+    grid-template-areas: "date rail content";
+    padding-bottom: 2.5rem;
+}
+
+.timeline-entry:last-child {
+    padding-bottom: 0;
+}
+
+/* Connector is drawn per-entry starting at the dot's centre, so it never
+   overshoots above the first dot or dangles below the last one. */
+.timeline-entry:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--date-col) + var(--rail-w) / 2 - 1px);
+    top: calc(var(--row-lh) / 2);
+    bottom: 0;
+    width: 2px;
+    background: var(--border-strong);
+}
+
+.timeline-date {
+    grid-area: date;
+    align-self: start;
+    display: block;
+    font-size: 0.9rem;
+    line-height: var(--row-lh);
+    opacity: 0.6;
 }
 
 .timeline-dot {
-    position: absolute;
-    left: -40px;
-    top: 6px;
-    width: 16px;
-    height: 16px;
-    background: var(--text);
+    grid-area: rail;
+    align-self: start;
+    justify-self: center;
+    position: relative;
+    z-index: 1;
+    width: var(--dot-size);
+    height: var(--dot-size);
+    margin-top: calc((var(--row-lh) - var(--dot-size)) / 2);
+    border: 2px solid var(--text);
     border-radius: 50%;
+    background: var(--bg);
+}
+
+/* Current role reads as filled + full-strength date */
+.timeline-entry.is-current .timeline-dot {
+    background: var(--text);
+}
+
+.timeline-entry.is-current .timeline-date {
+    opacity: 1;
+    font-weight: 500;
+}
+
+.timeline-content {
+    grid-area: content;
+    padding: 0.4rem 0.75rem;
+    margin: -0.4rem -0.75rem;
+    border-radius: 3px;
+    transition: background 0.2s;
+}
+
+.timeline-entry:hover .timeline-content {
+    background: var(--surface);
 }
 
 .timeline-content h3 {
     font-size: 1.25rem;
-    margin-bottom: 0.25rem;
+    line-height: var(--row-lh);
+    margin-bottom: 0.1rem;
 }
 
-.timeline-date {
-    font-size: 0.9rem;
-    opacity: 0.6;
+.timeline-company {
     display: block;
-    margin-bottom: 0.75rem;
+    font-size: 1.05rem;
+    font-style: italic;
+    line-height: 1.35;
+    opacity: 0.7;
+    margin-bottom: 0.55rem;
 }
 
 .timeline-content p {
@@ -647,22 +697,32 @@ section {
         padding: 5rem 1.25rem 3rem;
     }
 
+    /* No room for a date gutter — date stacks above the role instead.
+       --date-col: 0 keeps the connector's left calc() correct. */
     .timeline {
-        padding-left: 30px;
+        --date-col: 0rem;
+        --rail-w: 1.75rem;
+        --dot-size: 12px;
     }
 
-    .timeline-dot {
-        left: -30px;
-        width: 12px;
-        height: 12px;
+    .timeline-entry {
+        grid-template-columns: var(--rail-w) 1fr;
+        grid-template-areas:
+            "rail date"
+            "rail content";
+        padding-bottom: 2rem;
     }
 
-    .timeline::before {
-        left: 5px;
+    .timeline-date {
+        margin-bottom: 0.15rem;
     }
 
     .timeline-content h3 {
         font-size: 1.1rem;
+    }
+
+    .timeline-company {
+        font-size: 0.95rem;
     }
 
     .timeline-content p {
