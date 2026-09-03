@@ -449,6 +449,18 @@ section {
     margin-bottom: 0.55rem;
 }
 
+/* Inline links in entry descriptions — underlined, never browser blue */
+.timeline-content a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: opacity 0.2s;
+}
+
+.timeline-content a:hover {
+    opacity: 0.65;
+}
+
 .timeline-content p {
     font-size: 1.05rem;
     line-height: 1.6;
@@ -462,6 +474,7 @@ section {
 }
 
 #nav-links a {
+    position: relative;
     color: var(--text);
     text-decoration: none;
     white-space: nowrap;
@@ -470,6 +483,23 @@ section {
 
 #nav-links a:hover {
     opacity: 0.6;
+}
+
+/* Active-section underline, grown from the centre so it slides in */
+#nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 1px;
+    background: var(--text);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+}
+
+#nav-links a.active::after {
+    transform: scaleX(1);
 }
 
 #nav-name {
