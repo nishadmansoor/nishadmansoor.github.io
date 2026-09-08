@@ -15,15 +15,45 @@ if (firstSection) {
     updateNav();
 }
 
+// Drives the section's backdrop, which only #projects has.
+const syncFlipState = section => {
+    section.classList.toggle('has-flipped', !!section.querySelector('.flip-card.flipped'));
+};
+
+const closeFlipped = section => {
+    section.querySelectorAll('.flip-card.flipped').forEach(c => c.classList.remove('flipped'));
+    syncFlipState(section);
+};
+
 document.querySelectorAll('.flip-card').forEach(card => {
-    card.addEventListener('click', function () {
+    card.addEventListener('click', function (e) {
+        // Let links inside a card navigate instead of toggling the flip
+        if (e.target.closest('a')) return;
+
+        const closer = e.target.closest('[data-flip-close]');
+        // Clicking around inside an open detail panel shouldn't shut it —
+        // only the close button, the backdrop, or Escape do that.
+        if (!closer && e.target.closest('.flip-card-back')) return;
+
         const section = this.closest('section');
         const wasFlipped = this.classList.contains('flipped');
         section.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
-        if (!wasFlipped) {
+        if (!wasFlipped && !closer) {
             this.classList.add('flipped');
         }
+        syncFlipState(section);
     });
+});
+
+// Backdrop sits outside the cards, so it needs its own listener
+document.querySelectorAll('.flip-backdrop').forEach(backdrop => {
+    backdrop.addEventListener('click', () => closeFlipped(backdrop.closest('section')));
+});
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        document.querySelectorAll('section').forEach(closeFlipped);
+    }
 });
 
 const navLinks = document.querySelectorAll('#nav-links a');

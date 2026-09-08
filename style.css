@@ -5,6 +5,8 @@
     --border-strong: rgba(0, 0, 0, 0.15);
     --surface: rgba(0, 0, 0, 0.08);
     --dot: rgba(0, 0, 0, 0.06);
+    /* Semi-transparent so the blur behind it stays visible */
+    --scrim: rgba(255, 255, 255, 0.5);
     /* Height of the top bar; the nav links dock into a band this tall */
     --nav-h: 64px;
     color-scheme: light;
@@ -18,6 +20,7 @@
         --border-strong: rgba(255, 255, 255, 0.3);
         --surface: rgba(255, 255, 255, 0.08);
         --dot: rgba(255, 255, 255, 0.08);
+        --scrim: rgba(26, 26, 26, 0.5);
         color-scheme: dark;
     }
 }
@@ -183,20 +186,72 @@ section {
     width: 100%;
 }
 
-.project-card {
-    display: flex;
-    flex-direction: column;
+/* ---- Projects: card flips open into a large detail panel ----
+   All of this is scoped to #projects on purpose. The .flip-card* classes are
+   shared with #beyond, which keeps its own small in-place flip. */
+
+#projects {
+    position: relative;
 }
 
-.project-image {
+#projects .flip-card {
+    /* perspective would make this a containing block and trap the expanded
+       panel in its cell — it's applied per-transform on the inner instead */
+    perspective: none;
+    /* Holds the cell open once the inner is taken out of flow */
+    aspect-ratio: 4 / 5;
+}
+
+/* No 3D here. Rotating a preserve-3d element this large while it resizes,
+   on top of the backdrop blur, was what made the flip stutter — the panel
+   cross-fades instead. */
+#projects .flip-card-inner {
     width: 100%;
-    aspect-ratio: 4 / 3;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    margin-bottom: 1rem;
+    height: 100%;
+    aspect-ratio: auto;
+    transform-style: flat;
+    transform: none;
+    transition: none;
 }
 
-.project-card h3 {
+/* Fixed, so it centres on the viewport rather than on the grid — the grid's
+   midpoint sits low because of the heading above it. No ancestor sets a
+   transform or perspective, so fixed here really is viewport-relative. */
+#projects .flip-card.flipped .flip-card-inner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: min(860px, 92vw);
+    height: min(420px, 80vh);
+    z-index: 40;
+    transform: translate(-50%, -50%);
+}
+
+#projects .flip-card-front,
+#projects .flip-card-back {
+    align-items: stretch;
+    justify-content: flex-start;
+    text-align: left;
+    overflow: hidden;
+    /* Pointless without a 3D rotation, and it forces an extra layer */
+    backface-visibility: visible;
+}
+
+/* Hidden instantly rather than cross-faded — the front would otherwise be
+   stretched to the panel's width mid-fade, which looks broken */
+#projects .flip-card.flipped .flip-card-front {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#projects .flip-card-front .project-image {
+    aspect-ratio: 4 / 3;
+    max-height: none;
+    margin-bottom: 0.9rem;
+    flex-shrink: 0;
+}
+
+#projects .flip-card h3 {
     font-size: 1.1rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -206,11 +261,110 @@ section {
     margin-bottom: 0.5rem;
 }
 
-.project-card p {
+#projects .flip-card p {
     font-size: 1rem;
     line-height: 1.5;
-    margin-bottom: 1rem;
+}
+
+/* The expanded panel */
+#projects .flip-card-back {
+    flex-direction: row;
+    gap: 1.75rem;
+    padding: 1.75rem;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    /* Overrides the base rotateY(180deg) — nothing is rotated now */
+    transform: scale(0.97);
+    opacity: 0;
+    /* Must not swallow clicks meant for the front card while hidden */
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#projects .flip-card.flipped .flip-card-back {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#projects .flip-card-back h3 {
+    font-size: 1.35rem;
+}
+
+#projects .flip-card-back p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.project-shot {
+    flex: 0 0 42%;
+    /* Landscape, sized to a site screenshot rather than stretched full-height */
+    align-self: start;
+    aspect-ratio: 16 / 10;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+}
+
+.project-detail {
     flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.project-detail .project-links {
+    align-self: flex-start;
+}
+
+.flip-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    z-index: 2;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1.6rem;
+    line-height: 1;
+    opacity: 0.45;
+    transition: opacity 0.2s;
+}
+
+.flip-close:hover {
+    opacity: 1;
+}
+
+/* Blurs and dims the grid behind an open panel; also the click-outside target.
+   The scrim has to be partly transparent — a near-opaque fill would sit on top
+   of the blur and hide it entirely. */
+.flip-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    background: var(--scrim);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#projects.has-flipped .flip-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.project-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    margin-bottom: 1rem;
 }
 
 /* Tech stack tags — sits between the description and the links */
