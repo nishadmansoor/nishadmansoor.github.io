@@ -56,6 +56,25 @@ document.addEventListener('keydown', e => {
     }
 });
 
+const themeToggle = document.getElementById('theme-toggle');
+if (themeToggle) {
+    const syncPressed = () => {
+        const isDark = document.documentElement.classList.contains('dark');
+        themeToggle.setAttribute('aria-pressed', String(isDark));
+    };
+    syncPressed();
+    themeToggle.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        syncPressed();
+        try {
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        } catch (e) {
+            /* storage blocked (private mode) — the theme still applies here */
+        }
+    });
+}
+
+// Only <a> children, so the theme toggle button isn't treated as a section link
 const navLinks = document.querySelectorAll('#nav-links a');
 
 // Underline the nav link for whichever section is currently in view.

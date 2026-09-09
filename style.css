@@ -1,28 +1,37 @@
+/* Warm light mode: deep beige ground, warm near-black ink, burnt-orange accent.
+   The alpha tokens are tinted with the ink colour rather than pure black so
+   borders and surfaces stay in the same temperature family as the ground.
+   Accent is deliberately a dark burnt orange: on a mid-tone beige a bright
+   orange can't reach 4.5:1, and this accent is used for link text. */
 :root {
-    --bg: #ffffff;
-    --text: #1a1a1a;
-    --border: rgba(0, 0, 0, 0.1);
-    --border-strong: rgba(0, 0, 0, 0.15);
-    --surface: rgba(0, 0, 0, 0.08);
-    --dot: rgba(0, 0, 0, 0.06);
+    --bg: #ddd3c0;
+    --text: #201c17;
+    --accent: #943c14;
+    --border: rgba(32, 28, 23, 0.12);
+    --border-strong: rgba(32, 28, 23, 0.18);
+    --surface: rgba(32, 28, 23, 0.06);
+    --dot: rgba(32, 28, 23, 0.07);
     /* Semi-transparent so the blur behind it stays visible */
-    --scrim: rgba(255, 255, 255, 0.5);
+    --scrim: rgba(221, 211, 192, 0.5);
     /* Height of the top bar; the nav links dock into a band this tall */
     --nav-h: 64px;
     color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #1a1a1a;
-        --text: #ffffff;
-        --border: rgba(255, 255, 255, 0.2);
-        --border-strong: rgba(255, 255, 255, 0.3);
-        --surface: rgba(255, 255, 255, 0.08);
-        --dot: rgba(255, 255, 255, 0.08);
-        --scrim: rgba(26, 26, 26, 0.5);
-        color-scheme: dark;
-    }
+/* A class, not a media query — a manual toggle has to be able to override the
+   OS preference, which a media query can't do. The inline script in <head>
+   applies this before first paint so the saved theme never flashes.
+   Warm charcoal keeps both modes in the same temperature as the beige. */
+html.dark {
+    --bg: #2a2725;
+    --text: #f2eee7;
+    --accent: #5dcaa5;
+    --border: rgba(242, 238, 231, 0.16);
+    --border-strong: rgba(242, 238, 231, 0.26);
+    --surface: rgba(242, 238, 231, 0.07);
+    --dot: rgba(242, 238, 231, 0.08);
+    --scrim: rgba(42, 39, 37, 0.5);
+    color-scheme: dark;
 }
 
 html {
@@ -41,27 +50,53 @@ body {
     background-image: radial-gradient(circle, var(--dot) 1px, transparent 1px);
     background-size: 24px 24px;
     color: var(--text);
-    font-family: "EB Garamond", serif;
+    font-family: "Cormorant Garamond", serif;
 }
 
+/* The bar no longer fades as one block — Resume and the theme toggle stay
+   visible over About while the name and social icons hold back. So the bar
+   itself is always present and only its background fades in.
+   Transparent over About so the body's dot grid shows through unbroken. */
 nav {
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 10;
-    background: var(--bg);
+    background: transparent;
     padding: 1rem 2rem;
     display: flex;
     gap: 1.5rem;
     align-items: center;
-    opacity: 0;
+    /* Empty stretches of the bar must not intercept clicks meant for the
+       page beneath; the interactive group re-enables them. */
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: background 0.3s ease;
 }
 
 body.past-hero nav {
+    background: var(--bg);
+}
+
+/* Held back over About — the section already shows the name at full size */
+#nav-name {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+body.past-hero #nav-name {
     opacity: 1;
-    pointer-events: auto;
+}
+
+/* display rather than opacity so the hidden icons don't leave a gap between
+   Resume and the toggle, or shift the group off the right edge */
+#nav-socials {
+    display: none;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+body.past-hero #nav-socials {
+    display: inline-flex;
 }
 
 nav a {
@@ -402,7 +437,8 @@ section {
 }
 
 .project-link:hover {
-    background: var(--text);
+    background: var(--accent);
+    border-color: var(--accent);
     color: var(--bg);
 }
 
@@ -570,8 +606,10 @@ section {
 }
 
 /* Current role reads as filled + full-strength date */
+/* Teal fill marks the current role without needing extra words */
 .timeline-entry.is-current .timeline-dot {
-    background: var(--text);
+    background: var(--accent);
+    border-color: var(--accent);
 }
 
 .timeline-entry.is-current .timeline-date {
@@ -608,7 +646,7 @@ section {
 
 /* Inline links in entry descriptions — underlined, never browser blue */
 .timeline-content a {
-    color: inherit;
+    color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: opacity 0.2s;
@@ -666,14 +704,53 @@ body.past-hero #nav-links {
     left: 0;
     right: 0;
     bottom: -4px;
-    height: 1px;
-    background: var(--text);
+    height: 2px;
+    background: var(--accent);
     transform: scaleX(0);
     transition: transform 0.25s ease;
 }
 
 #nav-links a.active::after {
     transform: scaleX(1);
+}
+
+/* A real switch: the button is the track, ::after is the sliding knob.
+   Still a <button> with aria-pressed rather than a checkbox, so it stays
+   keyboard-operable and announces its state. */
+#theme-toggle {
+    position: relative;
+    flex-shrink: 0;
+    width: 34px;
+    height: 18px;
+    padding: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+#theme-toggle::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    width: 12px;
+    height: 12px;
+    margin-top: -6px;
+    border-radius: 50%;
+    background: var(--text);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease;
+}
+
+/* 32px of inner track, 12px knob, 3px inset each side -> 17px of travel */
+html.dark #theme-toggle::after {
+    transform: translateX(17px);
+    background: var(--accent);
+}
+
+#theme-toggle:hover {
+    border-color: var(--text);
 }
 
 #nav-name {
@@ -690,6 +767,8 @@ body.past-hero #nav-links {
     align-items: center;
     flex-shrink: 0;
     margin-left: auto;
+    /* nav sets pointer-events: none; this group is the interactive part */
+    pointer-events: auto;
 }
 
 #social-links a[href$=".pdf"] {
@@ -698,13 +777,11 @@ body.past-hero #nav-links {
     font-size: 0.95rem;
 }
 
-#social-links svg {
-    width: 28px;
-    height: 28px;
-}
-
-#social-links i {
-    font-size: 1.5rem;
+#social-links svg,
+#about-links svg {
+    width: 17px;
+    height: 17px;
+    display: block;
 }
 
 #image {
@@ -769,8 +846,9 @@ body.past-hero #nav-links {
         gap: 1rem;
     }
 
-    #social-links i {
-        font-size: 1.25rem;
+    #social-links svg {
+        width: 16px;
+        height: 16px;
     }
 
     #social-links a[href$=".pdf"] {
@@ -819,13 +897,9 @@ body.past-hero #nav-links {
         margin-left: auto;
     }
 
-    #social-links i {
-        font-size: 1.05rem;
-    }
-
     #social-links svg {
-        width: 22px;
-        height: 22px;
+        width: 15px;
+        height: 15px;
     }
 
     #social-links a[href$=".pdf"] {
