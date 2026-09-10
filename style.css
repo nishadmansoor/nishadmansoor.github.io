@@ -359,6 +359,18 @@ section {
     aspect-ratio: 16 / 10;
     background: var(--surface);
     border: 1px solid var(--border-strong);
+    overflow: hidden;
+}
+
+/* object-position: top because app screenshots are top-weighted — the title
+   and controls matter, the tail of the page is what should crop away. */
+.project-image img,
+.project-shot img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: top;
 }
 
 .project-detail {
@@ -426,6 +438,7 @@ section {
     background: var(--surface);
     border: 1px solid var(--border-strong);
     margin-bottom: 1rem;
+    overflow: hidden;
 }
 
 /* Tech stack tags — sits between the description and the links */
