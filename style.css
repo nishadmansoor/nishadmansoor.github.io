@@ -4,7 +4,7 @@
    Accent is deliberately a dark burnt orange: on a mid-tone beige a bright
    orange can't reach 4.5:1, and this accent is used for link text. */
 :root {
-    --bg: #F5EBDD;
+    --bg: #FCF2E5;
     --text: #201c17;
     --accent: #F2765E;
     --border: rgba(32, 28, 23, 0.12);
@@ -405,12 +405,18 @@ section {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     opacity: 0;
+    /* opacity: 0 alone is not enough — an invisible element with a
+       backdrop-filter still keeps a live blur layer, and two viewport-sized
+       ones stall scrolling entirely. visibility: hidden takes it out of
+       rendering so the filter isn't computed at all. */
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .flip-section.has-flipped .flip-backdrop {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
 }
 
@@ -829,6 +835,11 @@ html.dark #theme-toggle::after {
     display: none;
 }
 
+/* Only ever shown by the mobile drawer rules */
+#nav-scrim {
+    display: none;
+}
+
 #nav-toggle:checked~nav .icon-open {
     display: none;
 }
@@ -921,21 +932,63 @@ html.dark #theme-toggle::after {
         padding: 0.25rem 0.5rem;
     }
 
-    /* Same bottom-then-dock bar, scaled to fit four links at 320px.
-       --nav-h matches the shorter mobile bar so the docked band doesn't
-       hang below the bar's background. */
+    /* ---- Section links become a hamburger drawer ---- */
+    #nav-icon {
+        display: block;
+        font-size: 1.35rem;
+        flex-shrink: 0;
+        /* nav is click-through, so the label must opt back in */
+        pointer-events: auto;
+    }
+
+    /* Replaces the bottom-then-dock band entirely: a drawer shouldn't move
+       with scroll, so `top` is pinned and `transform` does the sliding. */
     #nav-links {
         --nav-h: 48px;
-        gap: 0.85rem;
-        padding: 0 0.75rem;
+        top: var(--nav-h);
+        left: 0;
+        right: auto;
+        width: min(260px, 76vw);
+        height: calc(100dvh - var(--nav-h));
+        padding: 2rem 1.5rem;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 1.75rem;
+        background: var(--bg);
+        border-right: 1px solid var(--border);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        /* The open drawer is a real surface — it must not be click-through */
+        pointer-events: auto;
+    }
+
+    /* `body.past-hero #nav-links` docks the band to top:0 and out-specifies a
+       bare #nav-links, so the drawer's position has to be restated here. */
+    body.past-hero #nav-links {
+        top: var(--nav-h);
+    }
+
+    #nav-toggle:checked~#nav-links {
+        transform: translateX(0);
     }
 
     #nav-links a {
-        font-size: 0.9rem;
+        font-size: 1.1rem;
     }
 
+    /* Tap-outside-to-close. A <label> for the same checkbox, so no JS. */
+    #nav-toggle:checked~#nav-scrim {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 9;
+        background: var(--scrim);
+    }
+
+    /* Bottom padding no longer needs to clear a parked links band */
     #about {
-        padding: 5rem 1.25rem 7rem;
+        padding: 5rem 1.25rem 3rem;
     }
 
     #about-content {
@@ -1013,6 +1066,84 @@ html.dark #theme-toggle::after {
     #beyond .projects-grid {
         grid-template-columns: 1fr;
         max-width: 280px;
+    }
+
+    /* ---- Expanded card panels ----
+       Side-by-side leaves the shot ~110px and the text ~150px at this width,
+       so the panel stacks and scrolls as a whole instead. */
+    .flip-section .flip-card.flipped .flip-card-inner {
+        width: 92vw;
+        height: min(560px, 82vh);
+    }
+
+    #projects .flip-card-back,
+    #beyond .flip-card-back {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.25rem;
+        overflow-y: auto;
+    }
+
+    .project-shot {
+        flex: 0 0 auto;
+        align-self: stretch;
+        width: 100%;
+    }
+
+    /* The whole panel scrolls now, so this must not scroll independently */
+    .project-detail {
+        overflow: visible;
+    }
+
+    /* Stacked, the close button sits over the screenshot — needs its own
+       ground to stay legible, and doubles as a real tap target */
+    .flip-close {
+        top: 0.4rem;
+        right: 0.4rem;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: var(--bg);
+        opacity: 0.85;
+    }
+
+    /* Sections are taller than the viewport here, so an absolutely positioned
+       backdrop would scroll away from the fixed panel it's meant to sit behind */
+    .flip-backdrop {
+        position: fixed;
+    }
+
+    /* ---- Touch targets ----
+       15-17px icons with no padding are far too small to hit reliably. The
+       attribute-selector rule for Resume out-specifies this, so its pill
+       padding is untouched. */
+    #social-links a,
+    #about-links a {
+        padding: 0.35rem;
+    }
+
+    #social-links,
+    #nav-socials {
+        gap: 0.15rem;
+    }
+
+    #about-links {
+        gap: 0.5rem;
+    }
+
+    /* Expands the switch's hit area to ~50x34 without changing how it looks */
+    #theme-toggle::before {
+        content: "";
+        position: absolute;
+        inset: -8px;
+    }
+
+    /* Nav is ~48px tall here, not 60 */
+    section {
+        scroll-margin-top: 56px;
     }
 
     /* Static so it stops floating over section content while scrolling */
