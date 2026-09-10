@@ -4,9 +4,9 @@
    Accent is deliberately a dark burnt orange: on a mid-tone beige a bright
    orange can't reach 4.5:1, and this accent is used for link text. */
 :root {
-    --bg: #ddd3c0;
+    --bg: #F5EBDD;
     --text: #201c17;
-    --accent: #943c14;
+    --accent: #F2765E;
     --border: rgba(32, 28, 23, 0.12);
     --border-strong: rgba(32, 28, 23, 0.18);
     --surface: rgba(32, 28, 23, 0.06);
