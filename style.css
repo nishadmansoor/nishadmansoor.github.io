@@ -221,38 +221,23 @@ section {
     width: 100%;
 }
 
-/* ---- Projects: card flips open into a large detail panel ----
-   All of this is scoped to #projects on purpose. The .flip-card* classes are
-   shared with #beyond, which keeps its own small in-place flip. */
+/* ---- Shared: a card expands into a large centred panel ----
+   Used by both #projects and #beyond via .flip-section. Only the layout
+   inside the panel differs per section, further down. */
 
-#projects {
+.flip-section {
     position: relative;
 }
 
-#projects .flip-card {
+.flip-section .flip-card {
     /* perspective would make this a containing block and trap the expanded
-       panel in its cell — it's applied per-transform on the inner instead */
+       panel inside its own grid cell */
     perspective: none;
-    /* Holds the cell open once the inner is taken out of flow */
-    aspect-ratio: 4 / 5;
-}
-
-/* No 3D here. Rotating a preserve-3d element this large while it resizes,
-   on top of the backdrop blur, was what made the flip stutter — the panel
-   cross-fades instead. */
-#projects .flip-card-inner {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: auto;
-    transform-style: flat;
-    transform: none;
-    transition: none;
 }
 
 /* Fixed, so it centres on the viewport rather than on the grid — the grid's
-   midpoint sits low because of the heading above it. No ancestor sets a
-   transform or perspective, so fixed here really is viewport-relative. */
-#projects .flip-card.flipped .flip-card-inner {
+   midpoint sits low because of the heading above it. */
+.flip-section .flip-card.flipped .flip-card-inner {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -262,21 +247,44 @@ section {
     transform: translate(-50%, -50%);
 }
 
+/* Hidden instantly rather than cross-faded — the front would otherwise be
+   stretched to the panel's width mid-fade, which looks broken */
+.flip-section .flip-card.flipped .flip-card-front {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.flip-section .flip-card-back {
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    padding: 1.75rem;
+    overflow: hidden;
+    transform: scale(0.97);
+    opacity: 0;
+    /* Must not swallow clicks meant for the front card while hidden */
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flip-section .flip-card.flipped .flip-card-back {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ---- Projects presentation ---- */
+
+#projects .flip-card {
+    /* Holds the grid cell open once the inner is taken out of flow */
+    aspect-ratio: 4 / 5;
+}
+
 #projects .flip-card-front,
 #projects .flip-card-back {
     align-items: stretch;
     justify-content: flex-start;
     text-align: left;
     overflow: hidden;
-    /* Pointless without a 3D rotation, and it forces an extra layer */
-    backface-visibility: visible;
-}
-
-/* Hidden instantly rather than cross-faded — the front would otherwise be
-   stretched to the panel's width mid-fade, which looks broken */
-#projects .flip-card.flipped .flip-card-front {
-    opacity: 0;
-    pointer-events: none;
 }
 
 #projects .flip-card-front .project-image {
@@ -301,25 +309,9 @@ section {
     line-height: 1.5;
 }
 
-/* The expanded panel */
 #projects .flip-card-back {
     flex-direction: row;
     gap: 1.75rem;
-    padding: 1.75rem;
-    background: var(--bg);
-    border: 1px solid var(--border-strong);
-    /* Overrides the base rotateY(180deg) — nothing is rotated now */
-    transform: scale(0.97);
-    opacity: 0;
-    /* Must not swallow clicks meant for the front card while hidden */
-    pointer-events: none;
-    transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-#projects .flip-card.flipped .flip-card-back {
-    transform: scale(1);
-    opacity: 1;
-    pointer-events: auto;
 }
 
 #projects .flip-card-back h3 {
@@ -330,6 +322,34 @@ section {
     font-size: 1.05rem;
     line-height: 1.6;
     margin-bottom: 1.25rem;
+}
+
+/* ---- Beyond the Code presentation ---- */
+
+#beyond .flip-card {
+    /* Square cards; holds the cell open when the inner goes fixed */
+    aspect-ratio: 1 / 1;
+}
+
+/* Same two-column panel as #projects. Stated per-section rather than shared
+   because #projects .flip-card h3 carries an id and would out-specify a
+   .flip-section-scoped heading rule, silently reverting the panel title. */
+#beyond .flip-card-back {
+    flex-direction: row;
+    gap: 1.75rem;
+    align-items: stretch;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+#beyond .flip-card-back h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.5rem;
+}
+
+#beyond .flip-card-back p {
+    font-size: 1.05rem;
+    line-height: 1.6;
 }
 
 .project-shot {
@@ -389,7 +409,7 @@ section {
     transition: opacity 0.3s ease;
 }
 
-#projects.has-flipped .flip-backdrop {
+.flip-section.has-flipped .flip-backdrop {
     opacity: 1;
     pointer-events: auto;
 }
@@ -456,21 +476,16 @@ section {
     padding-top: 6rem;
 }
 
+/* No 3D anywhere now — both flip sections expand and cross-fade, so the
+   perspective / preserve-3d / rotateY machinery is gone. */
 .flip-card {
     cursor: pointer;
-    perspective: 1000px;
 }
 
 .flip-card-inner {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
-    transition: transform 0.6s ease;
-    transform-style: preserve-3d;
-}
-
-.flip-card.flipped .flip-card-inner {
-    transform: rotateY(180deg) scale(1.3);
+    height: 100%;
 }
 
 .flip-card-front,
@@ -478,26 +493,19 @@ section {
     position: absolute;
     width: 100%;
     height: 100%;
-    backface-visibility: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.flip-card-front .project-image {
+#beyond .flip-card-front .project-image {
     width: 100%;
     aspect-ratio: 1 / 1;
     background: var(--surface);
     border: 1px solid var(--border);
     margin-bottom: 0.5rem;
     max-height: 240px;
-}
-
-.flip-card-back {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    transform: rotateY(180deg);
 }
 
 .tags {
@@ -676,6 +684,10 @@ section {
     justify-content: center;
     gap: 1.75rem;
     margin: 0;
+    /* This is a full-width band sitting above the nav (z-index 11 vs 10), so
+       once docked it covers the whole bar. Without this it would swallow every
+       click meant for Resume, the socials and the theme toggle underneath. */
+    pointer-events: none;
     /* Matches the top bar's 0.3s opacity fade so the two read as one motion,
        and outpaces the scroll-snap so the links arrive first. */
     transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -687,6 +699,8 @@ body.past-hero #nav-links {
 
 #nav-links a {
     position: relative;
+    /* Re-enabled per link, since the band itself is click-through */
+    pointer-events: auto;
     color: var(--text);
     text-decoration: none;
     white-space: nowrap;
@@ -999,11 +1013,6 @@ html.dark #theme-toggle::after {
     #beyond .projects-grid {
         grid-template-columns: 1fr;
         max-width: 280px;
-    }
-
-    /* 1.3x pushed a flipped card past the viewport and over its neighbours */
-    .flip-card.flipped .flip-card-inner {
-        transform: rotateY(180deg) scale(1.05);
     }
 
     /* Static so it stops floating over section content while scrolling */
