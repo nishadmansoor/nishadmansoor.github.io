@@ -367,13 +367,38 @@ section {
    of surface-tinted letterbox top and bottom, and the border ends up
    outlining the empty square rather than the figure. Empty placeholder boxes
    keep their 4:3 / 16:10 shape. */
-.project-image:has(img),
-.project-shot:has(img),
-#projects .flip-card-front .project-image:has(img),
-#beyond .flip-card-front .project-image:has(img) {
+/* The panel image hugs its own aspect ratio — only one panel is open at a
+   time, so there's nothing to line it up against. */
+.project-shot:has(img) {
     aspect-ratio: auto;
     height: auto;
     max-height: none;
+}
+
+/* Card fronts keep their fixed 4:3 slot so every title sits on the same
+   baseline no matter what shape the image is. The visible frame moves onto
+   the <img>, so the border still hugs the picture exactly while the leftover
+   slot space reads as page background instead of an empty bordered box. */
+.project-image:has(img),
+#projects .flip-card-front .project-image:has(img),
+#beyond .flip-card-front .project-image:has(img) {
+    background: none;
+    border: none;
+    max-height: none;
+}
+
+/* Constrained on both axes so any aspect ratio scales down to fit the slot
+   whole — contain's behaviour, but as a real box, so the border hugs the
+   picture rather than outlining the slot. Centred for images narrower
+   than the slot. */
+.project-image img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid var(--border-strong);
 }
 
 /* With the frame matching the image, no crop or letterbox is possible —
