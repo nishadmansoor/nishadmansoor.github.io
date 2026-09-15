@@ -110,13 +110,59 @@ section {
     height: 100vh;
 }
 
+/* ---- Hero ---- */
+#hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* The nav links park low on this screen now, so the clearance moved here */
+    padding: 6rem 2rem 8rem;
+}
+
+#hero-name {
+    font-weight: 500;
+    font-size: clamp(2.75rem, 9vw, 5rem);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+}
+
+#hero-tagline {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    opacity: 0.65;
+    margin-bottom: 2.5rem;
+}
+
+#hero-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.hero-button {
+    padding: 0.6rem 1.75rem;
+    border: 1px solid var(--text);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.hero-button:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+}
+
 #about {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* Bottom padding reserves room for the nav links parked down there */
-    padding: 6rem 2rem 8rem;
+    padding: 6rem 2rem 4rem;
 }
 
 #about-content {
@@ -859,7 +905,11 @@ html.dark #theme-toggle::after {
     font-size: 0.95rem;
 }
 
+/* #nav-socials is listed explicitly because script.js relocates it out of
+   #social-links into the footer on desktop. Without it these SVGs have no
+   width/height attributes and would fall back to their intrinsic default. */
 #social-links svg,
+#nav-socials svg,
 #about-links svg {
     width: 17px;
     height: 17px;
@@ -872,13 +922,33 @@ html.dark #theme-toggle::after {
     transform: translateY(-120px);
 }
 
+/* A real footer band at the end of the document rather than a floating
+   fixed chip: copyright on the left, social icons pushed to the right.
+   opacity lives on the text alone — on the container it would dim the icons
+   relocated in beside it. */
 #footer {
-    position: fixed;
-    bottom: 1rem;
-    right: 1.5rem;
-    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: 100%;
+    padding: 2.5rem 3rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+    /* Reachable under `scroll-snap-type: y mandatory`, which would otherwise
+       pull the view back to the last full-height section. */
+    scroll-snap-align: end;
+}
+
+#footer-copy {
     opacity: 0.5;
-    z-index: 5;
+}
+
+/* Two ids, so this beats both `#nav-socials { display: none }` and
+   `body.past-hero #nav-socials` — the footer set is visible from the hero on. */
+#footer #nav-socials {
+    display: inline-flex;
+    gap: 1rem;
 }
 
 /* Nav toggle */
@@ -1208,10 +1278,15 @@ html.dark #theme-toggle::after {
         scroll-margin-top: 56px;
     }
 
-    /* Static so it stops floating over section content while scrolling */
+    /* Nav links are a drawer here, not a parked band, so no bottom clearance */
+    #hero {
+        padding: 5rem 1.25rem 3rem;
+    }
+
+    /* Static so it stops floating over section content while scrolling.
+       justify-content, not text-align — the footer is a flex row now. */
     #footer {
-        position: static;
-        text-align: center;
-        padding: 2rem 1rem;
+        justify-content: center;
+        padding: 2rem 1.25rem;
     }
 }

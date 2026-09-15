@@ -1,9 +1,9 @@
 // Docks the nav links and fades in the top bar.
-// Fires as soon as About gives up ~10% of the viewport, rather than waiting
-// until it has almost fully scrolled away — that head start is what lets the
-// links finish moving up before the next section's content is on screen.
+// Fires as soon as the first screen gives up ~10% of the viewport, rather
+// than waiting until it has almost fully scrolled away — that head start is
+// what lets the links finish moving up before the next section is on screen.
 const DOCK_THRESHOLD = 0.9;
-const firstSection = document.getElementById('about');
+const firstSection = document.getElementById('hero') || document.getElementById('about');
 if (firstSection) {
     const updateNav = () => {
         const bottom = firstSection.getBoundingClientRect().bottom;
@@ -110,6 +110,28 @@ if (navTargets.length) {
     }, { rootMargin: '-40% 0px -59% 0px' });
 
     navTargets.forEach(target => sectionObserver.observe(target.section));
+}
+
+// Social icons belong in the footer on desktop and in the nav bar on mobile.
+// nav and #footer are separate elements, so CSS can't move the node between
+// them — relocating beats duplicating three inline SVGs into both.
+const navSocials = document.getElementById('nav-socials');
+const socialGroup = document.getElementById('social-links');
+const footerBox = document.getElementById('footer');
+if (navSocials && socialGroup && footerBox) {
+    const mq = window.matchMedia('(max-width: 768px)');
+    const placeSocials = () => {
+        if (mq.matches) {
+            if (navSocials.parentElement !== socialGroup) {
+                // Back between Resume and the theme toggle
+                socialGroup.insertBefore(navSocials, document.getElementById('theme-toggle'));
+            }
+        } else if (navSocials.parentElement !== footerBox) {
+            footerBox.appendChild(navSocials);
+        }
+    };
+    placeSocials();
+    mq.addEventListener('change', placeSocials);
 }
 
 // Close the mobile drawer after tapping a nav link.
