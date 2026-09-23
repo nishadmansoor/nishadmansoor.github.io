@@ -1,7 +1,5 @@
-// Docks the nav links and fades in the top bar.
-// Fires as soon as the first screen gives up ~10% of the viewport, rather
-// than waiting until it has almost fully scrolled away — that head start is
-// what lets the links finish moving up before the next section is on screen.
+// Fades the name into the mobile top bar once the home screen scrolls away.
+// Desktop has no top bar; the links live in a permanent bottom pill.
 const DOCK_THRESHOLD = 0.9;
 const firstSection = document.getElementById('hero') || document.getElementById('about');
 if (firstSection) {
@@ -112,22 +110,19 @@ if (navTargets.length) {
     navTargets.forEach(target => sectionObserver.observe(target.section));
 }
 
-// Social icons belong in the footer on desktop and in the nav bar on mobile.
-// nav and #footer are separate elements, so CSS can't move the node between
-// them — relocating beats duplicating three inline SVGs into both.
-const navSocials = document.getElementById('nav-socials');
+// On desktop the whole utility group (Resume, socials, theme toggle) lives in
+// the floating dock; on mobile it stays in the top bar. nav and #nav-links are
+// separate elements, so CSS can't move it — relocating beats duplicating.
 const socialGroup = document.getElementById('social-links');
-const footerBox = document.getElementById('footer');
-if (navSocials && socialGroup && footerBox) {
+const navBar = document.querySelector('nav');
+const dock = document.getElementById('nav-links');
+if (socialGroup && navBar && dock) {
     const mq = window.matchMedia('(max-width: 768px)');
     const placeSocials = () => {
         if (mq.matches) {
-            if (navSocials.parentElement !== socialGroup) {
-                // Back between Resume and the theme toggle
-                socialGroup.insertBefore(navSocials, document.getElementById('theme-toggle'));
-            }
-        } else if (navSocials.parentElement !== footerBox) {
-            footerBox.appendChild(navSocials);
+            if (socialGroup.parentElement !== navBar) navBar.appendChild(socialGroup);
+        } else if (socialGroup.parentElement !== dock) {
+            dock.appendChild(socialGroup);
         }
     };
     placeSocials();
