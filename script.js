@@ -1,12 +1,18 @@
-// Fades the name into the mobile top bar once the home screen scrolls away.
-// Desktop has no top bar; the links live in a permanent bottom pill.
-const DOCK_THRESHOLD = 0.9;
-const firstSection = document.getElementById('hero') || document.getElementById('about');
-if (firstSection) {
+// Tracks whether About's teal band has scrolled up past the mobile top bar.
+// Over the band the bar goes transparent with light ink and hides the name,
+// which the band already prints at size; past it the bar takes the page
+// background and dark ink. Keyed to the band clearing the bar's own height —
+// the old version measured a full-viewport hero against 90% of the viewport,
+// and with the hero gone that left the bar in its light-on-dark state for
+// most of About, i.e. light ink on the beige page.
+const banner = document.getElementById('about-band');
+const navBar = document.querySelector('nav');
+if (banner && navBar) {
     const updateNav = () => {
-        const bottom = firstSection.getBoundingClientRect().bottom;
-        const docked = bottom <= window.innerHeight * DOCK_THRESHOLD;
-        document.body.classList.toggle('past-hero', docked);
+        // Nav is display: none on desktop, so offsetHeight is 0 there
+        const barHeight = navBar.offsetHeight || 56;
+        const cleared = banner.getBoundingClientRect().bottom <= barHeight;
+        document.body.classList.toggle('past-intro', cleared);
     };
     window.addEventListener('scroll', updateNav);
     window.addEventListener('resize', updateNav);
@@ -110,11 +116,11 @@ if (navTargets.length) {
     navTargets.forEach(target => sectionObserver.observe(target.section));
 }
 
-// On desktop the whole utility group (Resume, socials, theme toggle) lives in
-// the floating dock; on mobile it stays in the top bar. nav and #nav-links are
-// separate elements, so CSS can't move it — relocating beats duplicating.
+// On desktop the utility group (Resume, theme toggle) lives in the floating
+// dock; on mobile it stays in the top bar. nav and #nav-links are separate
+// elements, so CSS can't move it — relocating beats duplicating.
+// navBar is the one declared at the top of this file.
 const socialGroup = document.getElementById('social-links');
-const navBar = document.querySelector('nav');
 const dock = document.getElementById('nav-links');
 if (socialGroup && navBar && dock) {
     const mq = window.matchMedia('(max-width: 768px)');

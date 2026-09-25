@@ -23,6 +23,14 @@
     --content-max: 1100px;
     --page-pad: 3rem;
     --prose: 72ch;
+    /* The About band is a contrast block by nature, so it carries its own
+       palette rather than the page tokens — same deep teal in both themes,
+       always light type on top. */
+    --band: #133b37;
+    --band-text: #f4f1ea;
+    --band-muted: rgba(244, 241, 234, 0.62);
+    --band-chip: rgba(244, 241, 234, 0.13);
+    --portrait: 230px;
     color-scheme: light;
 }
 
@@ -39,6 +47,10 @@ html.dark {
     --surface: rgba(242, 238, 231, 0.07);
     --dot: rgba(242, 238, 231, 0.08);
     --scrim: rgba(42, 39, 37, 0.5);
+    /* Lifted from the light-mode teal: against the charcoal ground the
+       original #133b37 sits at 1.2:1 and the band stops reading as a band.
+       This clears 1.9:1 on the page while still holding 6.8:1 for its text. */
+    --band: #1e5d54;
     color-scheme: dark;
 }
 
@@ -77,11 +89,22 @@ nav {
     /* Empty stretches of the bar must not intercept clicks meant for the
        page beneath; the interactive group re-enables them. */
     pointer-events: none;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
-body.past-hero nav {
+body.past-intro nav {
     background: var(--bg);
+}
+
+/* About's band is the top of the page now, so until the bar picks up its own
+   background it sits on dark teal — and the page's near-black ink is 1.35:1
+   there. Re-pointing the tokens on nav itself recolours the hamburger, the
+   Resume link and the theme toggle in one go, since all three read them. */
+body:not(.past-intro) nav {
+    --text: var(--band-text);
+    --border-strong: rgba(244, 241, 234, 0.42);
+    --surface: rgba(244, 241, 234, 0.16);
+    color: var(--band-text);
 }
 
 /* Desktop has no top bar: the dock carries navigation plus the utility group,
@@ -99,30 +122,8 @@ body.past-hero nav {
     transition: opacity 0.3s ease;
 }
 
-body.past-hero #nav-name {
+body.past-intro #nav-name {
     opacity: 1;
-}
-
-/* display rather than opacity so the hidden icons don't leave a gap between
-   Resume and the toggle, or shift the group off the right edge */
-#nav-socials {
-    display: none;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-body.past-hero #nav-socials {
-    display: inline-flex;
-}
-
-/* The dock is permanent, so its socials are never held back. They also form
-   their own group after resume — hence the fourth divider — and sit tighter
-   than the text links, since icons read as a cluster rather than a list. */
-#nav-links #nav-socials {
-    display: inline-flex;
-    gap: 0.5rem;
-    padding-left: 1.1rem;
-    border-left: 1px solid var(--border);
 }
 
 nav a {
@@ -150,108 +151,169 @@ section > h4 {
     margin-inline: auto;
 }
 
-/* ---- Hero / home screen ----
-   The only full-viewport section; everything else is content-height. svh
-   rather than vh so a mobile browser's collapsing toolbar doesn't make it
-   jump. Left-aligned to share the left margin with every row below it. */
-#hero {
-    min-height: 100vh;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: stretch;
+/* ---- About: contrast band over a two-column body ----
+   The band runs edge to edge while its contents stay on the shared container,
+   so the portrait's left edge lines up with the prose below it. */
+
+/* The band supplies the top padding, so the section drops its own. */
+#about {
+    padding: 0 var(--page-pad) 5rem;
 }
 
-#hero-content {
-    width: 100%;
+#about-band {
+    background: var(--band);
+    color: var(--band-text);
+    /* Cancels the section's side padding to reach both edges of the viewport */
+    margin-inline: calc(var(--page-pad) * -1);
+    padding: 5rem var(--page-pad);
+}
+
+#about-band-inner {
     max-width: var(--content-max);
     margin-inline: auto;
-}
-
-/* Small register against the name — the same scale jump the eyebrow was doing
-   before, and it front-loads the credentials above the fold. */
-#hero-eyebrow {
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    opacity: 0.5;
-    margin-bottom: 1.5rem;
-}
-
-#hero-name {
-    font-weight: 500;
-    /* Deliberately far below the 10rem of the scrapped version: the largest
-       type elsewhere is now a 2rem heading, and 160px fought that. */
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    line-height: 1;
-    letter-spacing: -0.015em;
-    margin-bottom: 1rem;
-}
-
-#hero-tagline {
-    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
-    opacity: 0.7;
-    max-width: 42ch;
-}
-
-#about {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-}
-
-/* Two columns so the width is actually used — otherwise a 72ch measure
-   leaves ~600px of dead space on the right of a full-bleed section. */
-#about-content {
-    max-width: var(--content-max);
-    width: 100%;
     display: grid;
-    grid-template-columns: minmax(180px, 260px) minmax(0, var(--prose));
-    grid-template-areas: "aside bio";
-    gap: 1.5rem 4rem;
-    align-items: start;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: 3rem;
+    align-items: center;
 }
 
-#about-header {
-    grid-area: aside;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+#about-portrait {
+    width: var(--portrait);
+    height: var(--portrait);
 }
 
 #profile-photo {
-    width: 88px;
-    height: 88px;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    flex-shrink: 0;
+    display: block;
 }
 
 #about-name {
+    font-weight: 400;
+    font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+    line-height: 1.05;
+    color: var(--band-text);
+}
+
+#about-role {
+    margin-top: 0.5rem;
+    font-size: 1.15rem;
+    color: var(--band-muted);
+}
+
+/* Shared by the band and the footer — the shape is the same in both, only
+   the colours differ, so each site supplies just background and colour. */
+.social-chips {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.social-chips a {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transition: background 0.2s;
+}
+
+.social-chips svg {
+    width: 18px;
+    height: 18px;
+}
+
+#about-band-socials a {
+    background: var(--band-chip);
+    color: var(--band-text);
+}
+
+#about-band-socials a:hover {
+    background: rgba(244, 241, 234, 0.26);
+}
+
+/* max-width and centring come from the shared container rule. */
+#about-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 5rem;
+    align-items: start;
+    padding-top: 4rem;
+}
+
+#about-text h2 {
+    font-size: 2rem;
     font-weight: 500;
-    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
 }
 
-#about-text p {
-    font-size: larger;
-    margin-bottom: 1.25rem;
-    line-height: 1.6;
-}
-
-/* Rows may run the full width, but prose must not — 1400px of 16px text is
-   unreadable. This is the one thing that stays narrow. */
+/* No prose cap here — the grid column is the measure, the way the reference
+   layout runs its bio wide against a narrow sidebar. */
 #about-text {
-    grid-area: bio;
-    max-width: var(--prose);
     text-align: left;
     hyphens: none;
 }
 
 #about-text p {
     font-size: larger;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+}
+
+#about-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.aside-cta {
+    display: block;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--band);
+    color: var(--text);
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s;
+}
+
+.aside-cta:hover {
+    background: var(--band);
+    color: var(--band-text);
+}
+
+.aside-module h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
     margin-bottom: 1rem;
+}
+
+.aside-card {
+    display: block;
+    background: var(--surface);
+    padding: 1.1rem;
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.aside-card:hover {
+    background: var(--border);
+}
+
+.aside-card-title {
+    display: block;
+    line-height: 1.45;
+    margin-bottom: 0.5rem;
+}
+
+.aside-card-meta {
+    display: block;
+    font-size: 0.85rem;
+    opacity: 0.6;
 }
 
 #projects {
@@ -728,39 +790,28 @@ section > h4 {
     opacity: 0.55;
 }
 
-/* Company mark. Ships as an initials monogram so it needs no assets and is
-   theme-safe; dropping an <img> inside takes the circle over, which is why the
-   monogram is a pseudo-element rather than real text. */
+/* Company mark. Each source is a square avatar whose artwork is an inscribed
+   circle or a full-bleed colour, so the 50% radius clips the corners away and
+   leaves the mark itself untouched. The logos keep their own colours in both
+   themes; the border is what separates the dark ones from a dark page. */
 .timeline-logo {
     grid-area: logo;
     align-self: start;
     margin-top: 0.1rem;
     width: 34px;
     height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 50%;
+    /* Shows through only while a lazy image is still loading */
     background: var(--surface);
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    opacity: 0.75;
-}
-
-.timeline-logo::before {
-    content: attr(data-monogram);
-}
-
-.timeline-logo:has(img)::before {
-    content: none;
 }
 
 .timeline-logo img {
     width: 100%;
     height: 100%;
+    /* cover, not contain — these are square, so cover fills the circle
+       edge to edge instead of leaving the source's white corners visible. */
     object-fit: cover;
     display: block;
 }
@@ -840,15 +891,13 @@ section > h4 {
     white-space: nowrap;
 }
 
-/* The dock reads as three groups: home | sections | utilities. Both dividers
-   are a border-left plus matching padding, so they hold regardless of how
-   many links sit in the middle group. */
+/* Two groups now that home is gone: sections | utilities. The one divider
+   lives on #social-links; a border-left here would draw a stray line at the
+   very start of the pill, since this group leads it. */
 .dock-group {
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    padding-left: 1.25rem;
-    border-left: 1px solid var(--border);
 }
 
 #nav-links #social-links {
@@ -954,11 +1003,7 @@ html.dark #theme-toggle::after {
     font-size: 0.9rem;
 }
 
-/* #nav-socials is listed explicitly because script.js relocates it out of
-   #social-links into the footer on desktop. Without it these SVGs have no
-   width/height attributes and would fall back to their intrinsic default. */
-#social-links svg,
-#nav-socials svg {
+#social-links svg {
     width: 17px;
     height: 17px;
     display: block;
@@ -973,7 +1018,7 @@ html.dark #theme-toggle::after {
 /* A real footer band at the end of the document rather than a floating
    fixed chip: copyright on the left, social icons pushed to the right.
    opacity lives on the text alone — on the container it would dim the icons
-   relocated in beside it. */
+   beside it. */
 #footer {
     display: flex;
     align-items: center;
@@ -993,11 +1038,15 @@ html.dark #theme-toggle::after {
     opacity: 0.5;
 }
 
-/* Two ids, so this beats both `#nav-socials { display: none }` and
-   `body.past-hero #nav-socials` — the footer set is visible from the hero on. */
-#footer #nav-socials {
-    display: inline-flex;
-    gap: 1rem;
+/* The footer set is the only always-reachable one now that the dock carries
+   navigation alone — About's band is only in view at the top of the page. */
+#footer-socials a {
+    background: var(--surface);
+    color: var(--text);
+}
+
+#footer-socials a:hover {
+    background: var(--border);
 }
 
 /* Nav toggle */
@@ -1067,6 +1116,7 @@ html.dark #theme-toggle::after {
        inherited the 3rem desktop gutter on a 375px screen. */
     :root {
         --page-pad: 1.25rem;
+        --portrait: 150px;
     }
 
     section {
@@ -1177,17 +1227,25 @@ html.dark #theme-toggle::after {
         background: var(--scrim);
     }
 
-    #about-content {
-        padding: 0;
+    /* The band stacks: portrait, then name, then the social row. */
+    #about-band {
+        padding: 4.5rem var(--page-pad) 3rem;
     }
 
-    #about-header {
-        flex-wrap: wrap;
-        gap: 1rem;
+    #about-band-inner {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 1.75rem;
+        justify-items: start;
     }
 
     #about-name {
-        font-size: 1.6rem;
+        font-size: 2.1rem;
+    }
+
+    #about-content {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 3rem;
+        padding-top: 2.5rem;
     }
 
     /* Justified text in a ~330px column opens up large word gaps */
@@ -1281,8 +1339,7 @@ html.dark #theme-toggle::after {
         padding: 0.35rem;
     }
 
-    #social-links,
-    #nav-socials {
+    #social-links {
         gap: 0.15rem;
     }
 
@@ -1300,8 +1357,12 @@ html.dark #theme-toggle::after {
 
     /* Static so it stops floating over section content while scrolling.
        justify-content, not text-align — the footer is a flex row now. */
+    /* Stacked and centred — side by side the copyright and three 44px chips
+       don't fit a 375px row without the gap collapsing to nothing. */
     #footer {
+        flex-direction: column-reverse;
         justify-content: center;
+        gap: 1.5rem;
         padding: 2rem 1.25rem;
     }
 }
