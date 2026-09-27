@@ -1,16 +1,16 @@
 /* Warm light mode: deep beige ground, warm near-black ink, burnt-orange accent.
    The alpha tokens are tinted with the ink colour rather than pure black so
    borders and surfaces stay in the same temperature family as the ground.
-   Accent is deliberately a dark burnt orange: on a mid-tone beige a bright
-   orange can't reach 4.5:1, and this accent is used for link text — the
-   "Present" date on the current role, and inline links in entry copy. The
-   previous #F2765E was a bright coral sitting at 2.52:1; this clears 4.91:1.
-   Warm in both themes on purpose: it is complementary to the navy band,
-   where the old mint was analogous to it and read as indecision. */
+   Accent is a deep brass. It is used for link text — the "Present" date on
+   the current role, and inline links in entry copy — so it has to clear
+   4.5:1 on the beige, which it does at 5.63:1. Gold rather than the earlier
+   orange or a burgundy because the dock's active underline sits over the
+   navy band: deep reds and neutrals drop to ~1.2-1.5:1 there and disappear,
+   where this stays legible on all three surfaces. */
 :root {
     --bg: #FCF2E5;
     --text: #201c17;
-    --accent: #b8431f;
+    --accent: #7a5c12;
     --border: rgba(32, 28, 23, 0.12);
     --border-strong: rgba(32, 28, 23, 0.18);
     --surface: rgba(32, 28, 23, 0.06);
@@ -47,9 +47,9 @@
 html.dark {
     --bg: #2a2725;
     --text: #f2eee7;
-    /* The warm-side partner of the light accent rather than a different hue
-       entirely — 6.41:1 on the charcoal ground. */
-    --accent: #f4906f;
+    /* Same brass, lifted for the charcoal ground: 7.51:1 there, and 4.06:1
+       on the navy band where the dock underline lands. */
+    --accent: #d9b45c;
     --border: rgba(242, 238, 231, 0.16);
     --border-strong: rgba(242, 238, 231, 0.26);
     --surface: rgba(242, 238, 231, 0.07);
