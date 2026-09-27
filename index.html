@@ -27,8 +27,8 @@
     <!-- ?v= is a cache buster: GitHub Pages serves assets with a 10-minute
          max-age, so without a changing URL a deploy can look like it did not
          land. Bump this number whenever style.css or script.js changes. -->
-    <link rel="stylesheet" href="style.css?v=4">
-    <script src="script.js?v=4" defer></script>
+    <link rel="stylesheet" href="style.css?v=8">
+    <script src="script.js?v=8" defer></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,700;1,400&display=swap"
         rel="stylesheet">
@@ -53,7 +53,7 @@
             <a href="#about">about</a>
             <a href="#experience">work</a>
             <a href="#projects">projects</a>
-            <a href="#beyond">more</a>
+            <a href="#skills">skills</a>
         </span>
     </div>
     <label for="nav-toggle" id="nav-scrim" aria-hidden="true"></label>
@@ -97,13 +97,40 @@
                     During my time at Rutgers, I became more interested in the technology and systems behind the
                     numbers. That interest led me to
                     explore data science and machine learning.<br></p>
-                <p>Since then, I've explored everything from AI research to engineering, always looking for ways to
-                    apply my skills and learn something new.
-                    This site is a snapshot of my journey and the things I've built, explored, and learned along the
-                    way.<br></p>
+                <p>Since then, I've explored everything from AI research to engineering, always looking for
+                    opportunities where I can
+                    apply my skills and make an impact. This site is a snapshot of my journey and the things I've built,
+                    explored, and learned along the way.<br></p>
             </div>
             <aside id="about-aside">
-                <a class="aside-cta" href="#projects">explore my work</a>
+                <div class="aside-module">
+                    <h3>things i like</h3>
+                    <ul class="aside-list">
+                        <li>basketball</li>
+                        <li>drawing</li>
+                        <li>photography</li>
+                        <li>LEGO</li>
+                        <li>anime</li>
+                    </ul>
+                </div>
+                <div class="aside-module">
+                    <h3>what i'm listening to</h3>
+                    <!-- Hand-updated: a live "recently played" needs the Spotify
+                         API, whose client secret cannot live in a static site. -->
+                    <p class="aside-track">
+                        <span class="aside-track-name">Song title</span>
+                        <span class="aside-track-artist">Artist</span>
+                    </p>
+                </div>
+                <a id="aside-resume" href="assets/NishadMansoor - Resume.pdf" download>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 3v12" />
+                        <path d="m7 11 5 5 5-5" />
+                        <path d="M4 20h16" />
+                    </svg>
+                    download my resume
+                </a>
             </aside>
         </div>
     </section>
@@ -246,8 +273,11 @@
                         <div class="project-image">
                             <img src="assets/reverse-turing.png" loading="lazy" decoding="async" alt="">
                         </div>
-                        <h3>Reverse Turing</h3>
-                        <p>A brief description of what this project does and the problems it solves.</p>
+                        <h3>Reverse Turing Test</h3>
+                        <p>An ensemble that detects AI-generated text by combining three models that read the same
+                            passage differently
+                            — a fine-tuned transformer, a stylometric classifier, and a CNN that renders text as an
+                            image.</p>
                     </div>
                     <div class="flip-card-back">
                         <button type="button" class="flip-close" data-flip-close
@@ -259,7 +289,7 @@
                             </a>
                         </div>
                         <div class="project-detail">
-                            <h3>Reverse Turing</h3>
+                            <h3>Reverse Turing Test</h3>
                             <p>A longer overview of this project goes here &mdash; the problem it solves, the approach
                                 you took, and what the results were.</p>
                             <div class="project-stack">
@@ -356,66 +386,9 @@
         </div>
         <div class="flip-backdrop" data-flip-close></div>
     </section>
-    <section id="beyond" class="flip-section">
-        <h2>beyond the code</h2>
+    <section id="skills">
+        <h2>skills</h2>
         <h4>a few things i enjoy outside of work and school</h4>
-        <div class="projects-grid">
-            <div class="flip-card">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <div class="project-image"></div>
-                        <p>1</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <button type="button" class="flip-close" data-flip-close
-                            aria-label="Close details">&times;</button>
-                        <div class="project-shot"></div>
-                        <div class="project-detail">
-                            <h3>Interest one</h3>
-                            <p>A short description of this goes here &mdash; what it is and why you
-                                enjoy it.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="flip-card">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <div class="project-image"></div>
-                        <p>2</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <button type="button" class="flip-close" data-flip-close
-                            aria-label="Close details">&times;</button>
-                        <div class="project-shot"></div>
-                        <div class="project-detail">
-                            <h3>Interest two</h3>
-                            <p>A short description of this goes here &mdash; what it is and why you
-                                enjoy it.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="flip-card">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <div class="project-image"></div>
-                        <p>3</p>
-                    </div>
-                    <div class="flip-card-back">
-                        <button type="button" class="flip-close" data-flip-close
-                            aria-label="Close details">&times;</button>
-                        <div class="project-shot"></div>
-                        <div class="project-detail">
-                            <h3>Interest three</h3>
-                            <p>A short description of this goes here &mdash; what it is and why you
-                                enjoy it.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="flip-backdrop" data-flip-close></div>
     </section>
 
     <footer id="footer">

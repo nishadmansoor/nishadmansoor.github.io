@@ -2,11 +2,15 @@
    The alpha tokens are tinted with the ink colour rather than pure black so
    borders and surfaces stay in the same temperature family as the ground.
    Accent is deliberately a dark burnt orange: on a mid-tone beige a bright
-   orange can't reach 4.5:1, and this accent is used for link text. */
+   orange can't reach 4.5:1, and this accent is used for link text — the
+   "Present" date on the current role, and inline links in entry copy. The
+   previous #F2765E was a bright coral sitting at 2.52:1; this clears 4.91:1.
+   Warm in both themes on purpose: it is complementary to the navy band,
+   where the old mint was analogous to it and read as indecision. */
 :root {
     --bg: #FCF2E5;
     --text: #201c17;
-    --accent: #F2765E;
+    --accent: #b8431f;
     --border: rgba(32, 28, 23, 0.12);
     --border-strong: rgba(32, 28, 23, 0.18);
     --surface: rgba(32, 28, 23, 0.06);
@@ -24,9 +28,11 @@
     --page-pad: 3rem;
     --prose: 72ch;
     /* The About band is a contrast block by nature, so it carries its own
-       palette rather than the page tokens — same deep teal in both themes,
-       always light type on top. */
-    --band: #133b37;
+       palette rather than the page tokens — always light type on top.
+       A navy with a red undertone rather than a steel blue: against a warm
+       beige ground a colder blue reads as borrowed from another palette.
+       11.2:1 for its text, 11.4:1 against the page. */
+    --band: #1f3355;
     --band-text: #f4f1ea;
     --band-muted: rgba(244, 241, 234, 0.62);
     --band-chip: rgba(244, 241, 234, 0.13);
@@ -41,16 +47,18 @@
 html.dark {
     --bg: #2a2725;
     --text: #f2eee7;
-    --accent: #5dcaa5;
+    /* The warm-side partner of the light accent rather than a different hue
+       entirely — 6.41:1 on the charcoal ground. */
+    --accent: #f4906f;
     --border: rgba(242, 238, 231, 0.16);
     --border-strong: rgba(242, 238, 231, 0.26);
     --surface: rgba(242, 238, 231, 0.07);
     --dot: rgba(242, 238, 231, 0.08);
     --scrim: rgba(42, 39, 37, 0.5);
-    /* Lifted from the light-mode teal: against the charcoal ground the
-       original #133b37 sits at 1.2:1 and the band stops reading as a band.
-       This clears 1.9:1 on the page while still holding 6.8:1 for its text. */
-    --band: #1e5d54;
+    /* Lifted from the light-mode navy: against the charcoal ground #1f3355
+       sits at 1.3:1 and the band stops reading as a band. This clears 1.9:1
+       on the page while still holding 7.1:1 for its text. */
+    --band: #31527a;
     color-scheme: dark;
 }
 
@@ -267,22 +275,57 @@ section > h4 {
     gap: 2.5rem;
 }
 
-.aside-cta {
-    display: block;
-    padding: 1.1rem 1.25rem;
+/* The one real button on the page. It can carry weight here because the
+   dock's Resume link is deliberately plain — see the note on
+   #social-links a[href$=".pdf"]. Sits last so it follows the personal
+   modules rather than leading with a job artefact. */
+#aside-resume {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem;
     border: 1px solid var(--band);
     color: var(--text);
-    text-align: center;
     text-decoration: none;
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-size: 0.95rem;
     transition: background 0.2s, color 0.2s;
 }
 
-.aside-cta:hover {
+#aside-resume:hover {
     background: var(--band);
     color: var(--band-text);
+}
+
+#aside-resume svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+}
+
+/* Unbulleted — at this size a marker column costs more than it clarifies,
+   and the heading already frames the lines as a list. */
+.aside-list {
+    list-style: none;
+}
+
+.aside-list li {
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.aside-list li:last-child {
+    border-bottom: 0;
+}
+
+.aside-track-name {
+    display: block;
+}
+
+.aside-track-artist {
+    display: block;
+    font-size: 0.9rem;
+    opacity: 0.6;
 }
 
 .aside-module h3 {
