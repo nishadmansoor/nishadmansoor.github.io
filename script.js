@@ -1,3 +1,26 @@
+// Fills the "what i'm listening to" row from a Spotify track id. oEmbed is
+// used rather than the Web API because both of the API's auth flows need a
+// client secret, which cannot ship in a static site; oEmbed needs no key and
+// sends access-control-allow-origin: *, so it is callable from the page.
+// It returns the title and cover art only — never the artist, which is why
+// that line is hand-written in the markup. If the request fails the whole
+// module is removed rather than left as an empty heading.
+const nowPlaying = document.getElementById('now-playing');
+if (nowPlaying && nowPlaying.dataset.track) {
+    const trackUrl = `https://open.spotify.com/track/${nowPlaying.dataset.track}`;
+    fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(trackUrl)}`)
+        .then(res => (res.ok ? res.json() : Promise.reject(res.status)))
+        .then(data => {
+            nowPlaying.querySelector('.aside-track-name').textContent = data.title;
+            const art = nowPlaying.querySelector('.aside-track-art');
+            if (data.thumbnail_url) art.src = data.thumbnail_url;
+            nowPlaying.classList.add('loaded');
+        })
+        .catch(() => {
+            document.getElementById('now-playing-module')?.remove();
+        });
+}
+
 // Tracks whether About's teal band has scrolled up past the mobile top bar.
 // Over the band the bar goes transparent with light ink and hides the name,
 // which the band already prints at size; past it the bar takes the page

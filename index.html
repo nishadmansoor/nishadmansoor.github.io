@@ -24,11 +24,8 @@
     <meta property="og:description" content="Data Science @ Northeastern, published author @ CVPR, ICML 2026">
     <meta property="og:image" content="https://nishadmansoor.github.io/assets/photo.png">
     <meta name="twitter:card" content="summary">
-    <!-- ?v= is a cache buster: GitHub Pages serves assets with a 10-minute
-         max-age, so without a changing URL a deploy can look like it did not
-         land. Bump this number whenever style.css or script.js changes. -->
-    <link rel="stylesheet" href="style.css?v=9">
-    <script src="script.js?v=9" defer></script>
+    <link rel="stylesheet" href="style.css?v=10">
+    <script src="script.js?v=10" defer></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,700;1,400&display=swap"
         rel="stylesheet">
@@ -113,14 +110,22 @@
                         <li>anime</li>
                     </ul>
                 </div>
-                <div class="aside-module">
+                <div class="aside-module" id="now-playing-module">
                     <h3>what i'm listening to</h3>
-                    <!-- Hand-updated: a live "recently played" needs the Spotify
-                         API, whose client secret cannot live in a static site. -->
-                    <p class="aside-track">
-                        <span class="aside-track-name">Song title</span>
-                        <span class="aside-track-artist">Artist</span>
-                    </p>
+                    <!-- To change the song, swap data-track and the href for the
+                         new track id, and retype the artist. Title and cover art
+                         are fetched from that id. The Spotify Web API is not
+                         usable here — both its auth flows need a client secret,
+                         which cannot live in a static site. -->
+                    <a class="aside-track" id="now-playing" data-track="1Z5L1sgdPUPfcuxsfaYzcB?si=95766dfa0e814800"
+                        href="https://open.spotify.com/track/1Z5L1sgdPUPfcuxsfaYzcB?si=95766dfa0e814800" target="_blank"
+                        rel="noopener">
+                        <img class="aside-track-art" alt="" width="56" height="56">
+                        <span class="aside-track-meta">
+                            <span class="aside-track-name"></span>
+                            <span class="aside-track-artist">Outasight</span>
+                        </span>
+                    </a>
                 </div>
                 <a id="aside-resume" href="assets/NishadMansoor - Resume.pdf" download>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
