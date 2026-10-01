@@ -1,1 +1,1 @@
-still a work in progress 
+this website showcases my projects, skills, and hobbies
