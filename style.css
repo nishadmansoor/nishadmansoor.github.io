@@ -8,15 +8,29 @@
    navy band: deep reds and neutrals drop to ~1.2-1.5:1 there and disappear,
    where this stays legible on all three surfaces. */
 :root {
-    --bg: #FCF2E5;
-    --text: #201c17;
-    --accent: #7a5c12;
-    --border: rgba(32, 28, 23, 0.12);
-    --border-strong: rgba(32, 28, 23, 0.18);
-    --surface: rgba(32, 28, 23, 0.06);
-    --dot: rgba(32, 28, 23, 0.07);
-    /* Semi-transparent so the blur behind it stays visible */
-    --scrim: rgba(221, 211, 192, 0.5);
+    /* Warm near-black rather than pure black: the rest of the palette carries
+       a warm bias (R-B of +9 on the ink), and #000 is the one value with none
+       at all. It also leaves room to go darker for surfaces, which #000 does
+       not, and takes the edge off light images — the white OrigamiBench
+       diagram hits 21:1 on pure black and 17.7:1 here. */
+    --bg: #1c1813;
+    --text: #f2eee7;
+    /* Brass lifted for a black ground — the light-mode #7a5c12 only reaches
+       3.4:1 here, and this is link text. 10.6:1. */
+    --accent: #d9b45c;
+    --border: rgba(242, 238, 231, 0.16);
+    --border-strong: rgba(242, 238, 231, 0.28);
+    --surface: rgba(242, 238, 231, 0.07);
+    /* A card surface that sits ABOVE the page rather than below it — the lift
+       comes from the tone delta, not from a stroke. */
+    --card: #262118;
+    /* Width of About's centred column: the prose, the education card and
+       the two modules under it all have to agree on one measure. */
+    --measure: 36rem;
+    --dot: rgba(242, 238, 231, 0.07);
+    /* The dock pill: dark and translucent so its light links stay legible
+       over both the navy band and the black page. */
+    --scrim: rgba(24, 24, 24, 0.6);
     /* Height of the top bar; the nav links dock into a band this tall */
     --nav-h: 64px;
     /* One centred container for the whole page. Every row — headings, the
@@ -27,40 +41,20 @@
     --content-max: 1100px;
     --page-pad: 3rem;
     --prose: 72ch;
-    /* The About band is a contrast block by nature, so it carries its own
-       palette rather than the page tokens — always light type on top.
-       A navy with a red undertone rather than a steel blue: against a warm
-       beige ground a colder blue reads as borrowed from another palette.
-       11.2:1 for its text, 11.4:1 against the page. */
-    --band: #1f3355;
+    --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    /* Section titles: Cormorant at display scale — the size and the 1:1 line
+       do the work, not a heavier face. */
+    --font-display: "Cormorant Garamond", serif;
+    /* The About band carries its own palette. Lifted navy: #1f3355 only
+       reaches 1.66:1 on black and stops reading as a block; this clears
+       2.6:1 while holding 7.1:1 for its own text. */
+    --band: #31527a;
     --band-text: #f4f1ea;
     --band-muted: rgba(244, 241, 234, 0.62);
     --band-chip: rgba(244, 241, 234, 0.13);
-    --portrait: 230px;
-    color-scheme: light;
-}
-
-/* A class, not a media query — a manual toggle has to be able to override the
-   OS preference, which a media query can't do. The inline script in <head>
-   applies this before first paint so the saved theme never flashes.
-   Warm charcoal keeps both modes in the same temperature as the beige. */
-html.dark {
-    --bg: #2a2725;
-    --text: #f2eee7;
-    /* Same brass, lifted for the charcoal ground: 7.51:1 there, and 4.06:1
-       on the navy band where the dock underline lands. */
-    --accent: #d9b45c;
-    --border: rgba(242, 238, 231, 0.16);
-    --border-strong: rgba(242, 238, 231, 0.26);
-    --surface: rgba(242, 238, 231, 0.07);
-    --dot: rgba(242, 238, 231, 0.08);
-    --scrim: rgba(42, 39, 37, 0.5);
-    /* Lifted from the light-mode navy: against the charcoal ground #1f3355
-       sits at 1.3:1 and the band stops reading as a band. This clears 1.9:1
-       on the page while still holding 7.1:1 for its text. */
-    --band: #31527a;
     color-scheme: dark;
 }
+
 
 html {
     scroll-behavior: smooth;
@@ -80,16 +74,16 @@ body {
     font-family: "Cormorant Garamond", serif;
 }
 
-/* The bar no longer fades as one block — Resume and the theme toggle stay
-   visible over About while the name and social icons hold back. So the bar
-   itself is always present and only its background fades in.
-   Transparent over About so the body's dot grid shows through unbroken. */
+/* One state now. The bar used to fade its background in and swap its ink as
+   About's band scrolled past, because over the band the page's ink was
+   1.35:1; with the band gone every page opens on the page background, so
+   there is nothing to transition between. */
 nav {
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 10;
-    background: transparent;
+    background: var(--bg);
     padding: 1rem 2rem;
     display: flex;
     gap: 1.5rem;
@@ -97,22 +91,6 @@ nav {
     /* Empty stretches of the bar must not intercept clicks meant for the
        page beneath; the interactive group re-enables them. */
     pointer-events: none;
-    transition: background 0.3s ease, color 0.3s ease;
-}
-
-body.past-intro nav {
-    background: var(--bg);
-}
-
-/* About's band is the top of the page now, so until the bar picks up its own
-   background it sits on dark teal — and the page's near-black ink is 1.35:1
-   there. Re-pointing the tokens on nav itself recolours the hamburger, the
-   Resume link and the theme toggle in one go, since all three read them. */
-body:not(.past-intro) nav {
-    --text: var(--band-text);
-    --border-strong: rgba(244, 241, 234, 0.42);
-    --surface: rgba(244, 241, 234, 0.16);
-    color: var(--band-text);
 }
 
 /* Desktop has no top bar: the dock carries navigation plus the utility group,
@@ -122,16 +100,6 @@ body:not(.past-intro) nav {
     nav {
         display: none;
     }
-}
-
-/* Held back over About — the section already shows the name at full size */
-#nav-name {
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-body.past-intro #nav-name {
-    opacity: 1;
 }
 
 nav a {
@@ -149,9 +117,8 @@ section {
 }
 
 .section-inner,
-#about-content,
 .timeline,
-.projects-grid,
+.sheets,
 section > h2,
 section > h4 {
     width: 100%;
@@ -159,107 +126,157 @@ section > h4 {
     margin-inline: auto;
 }
 
-/* ---- About: contrast band over a two-column body ----
-   The band runs edge to edge while its contents stay on the shared container,
-   so the portrait's left edge lines up with the prose below it. */
-
-/* The band supplies the top padding, so the section drops its own. */
-#about {
-    padding: 0 var(--page-pad) 5rem;
+/* ---- Masthead over a divided two-column body ----
+   Replaces the single centred column. The name is the page's only <h1> and
+   the first thing read; the body below it is a wide main column and a
+   sidebar, split by a vertical rule. Layout borrowed from a reference, not
+   its typography — this stays on Cormorant with mono only for meta, the way
+   the rest of the site already works. */
+/* Padding outside the cap, max-width on the inner element — the same order
+   `section` uses. With both on one element the gutter came out of the 1100px
+   instead of sitting beside it, and the name landed 48px right of the column
+   below it. */
+#masthead {
+    width: 100%;
+    /* Clears the floating dock, which is fixed at the top of the viewport */
+    padding: 8rem var(--page-pad) 0;
 }
 
-#about-band {
-    background: var(--band);
-    color: var(--band-text);
-    /* Cancels the section's side padding to reach both edges of the viewport */
-    margin-inline: calc(var(--page-pad) * -1);
-    padding: 5rem var(--page-pad);
-}
-
-#about-band-inner {
+.masthead-inner {
+    width: 100%;
     max-width: var(--content-max);
     margin-inline: auto;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    column-gap: 3rem;
-    align-items: center;
 }
 
-#about-portrait {
-    width: var(--portrait);
-    height: var(--portrait);
-}
-
-#profile-photo {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    display: block;
-}
-
-#about-name {
-    font-weight: 400;
-    font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+#masthead-name {
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    font-weight: 500;
     line-height: 1.05;
-    color: var(--band-text);
+    letter-spacing: -0.01em;
 }
 
-#about-role {
-    margin-top: 0.5rem;
-    font-size: 1.15rem;
-    color: var(--band-muted);
+/* Mono, like the dates and the school lines — it reads as a standing fact
+   rather than a sentence. */
+#masthead-role {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    opacity: 0.55;
+    margin-top: 0.6rem;
 }
 
-/* Shared by the band and the footer — the shape is the same in both, only
-   the colours differ, so each site supplies just background and colour. */
-.social-chips {
-    display: flex;
-    gap: 0.75rem;
+/* The masthead supplies the top of the page, so this section drops the
+   8rem that section:first-of-type gives the other two pages' headings. */
+#home {
+    padding-top: 2.5rem;
 }
 
-.social-chips a {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    transition: background 0.2s;
-}
-
-.social-chips svg {
-    width: 18px;
-    height: 18px;
-}
-
-#about-band-socials a {
-    background: var(--band-chip);
-    color: var(--band-text);
-}
-
-#about-band-socials a:hover {
-    background: rgba(244, 241, 234, 0.26);
-}
-
-/* max-width and centring come from the shared container rule. */
-#about-content {
+#home-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 260px;
-    gap: 5rem;
+    gap: 3rem;
     align-items: start;
-    padding-top: 4rem;
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
 }
 
+/* The divider. A border on the sidebar rather than a column of its own, so
+   it runs exactly as tall as the sidebar's content. */
+#home-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border-left: 1px solid var(--border);
+    padding-left: 2.5rem;
+}
+
+/* Capped independently of the grid column: at 19.2px the full column runs
+   to about eighty characters, which is past comfortable. */
+#about-text {
+    max-width: var(--measure);
+    hyphens: none;
+}
+
+/* ---- Sidebar blocks ----
+   A small uppercase mono label over its content, blocks separated by rules.
+   Uppercase at this size needs the tracking or it sets too tight. */
+.side-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 0.9rem;
+}
+
+.side-block + .side-block {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+}
+
+/* The main column's label is the same mark as the sidebar's, so the two
+   columns start on the same note, but it needs the room a heading gets. */
+#home-main > .side-label {
+    margin-bottom: 1.25rem;
+}
+
+#about-pubs a {
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-strong);
+}
+
+#about-pubs a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+#about-pubs li {
+    border-bottom: 0;
+    padding: 0;
+}
+
+/* The sidebar's 260px is fixed while the prose column is 1fr, so every pixel
+   lost comes off the reading column: at 820px the prose was down to 416px
+   with the sidebar still at a full 260. Stack well before phone width —
+   the sidebar's mono meta lines ("Northeastern University · 2026") need
+   about 240px, so two columns stop being worth it under ~940px. */
+@media (max-width: 940px) {
+    #home-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2.5rem;
+    }
+
+    /* Stacked, the divider becomes a top rule so the sidebar still reads as
+       a separate region rather than more of the same column. */
+    #home-aside {
+        border-left: 0;
+        padding-left: 0;
+        border-top: 1px solid var(--border);
+        padding-top: 2.5rem;
+    }
+
+    #about-text {
+        max-width: none;
+    }
+}
+
+/* ---- About ----
+   The masthead band that used to sit above this section is gone, along with
+   the portrait, the <h1> name and the social chips it carried. .social-chips
+   went with it and with the footer, which were its only two uses.
+
+   One centred column now, not prose against a 260px sidebar — and the text
+   in it is left-aligned. */
 #about-text h2 {
     font-size: 2rem;
     font-weight: 500;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
 }
 
-/* No prose cap here — the grid column is the measure, the way the reference
-   layout runs its bio wide against a narrow sidebar. */
 #about-text {
-    text-align: left;
     hyphens: none;
 }
 
@@ -269,39 +286,77 @@ section > h4 {
     margin-bottom: 1.25rem;
 }
 
-#about-aside {
+/* ---- Contact ----
+   A label/value ledger, centred as a block: the labels are right-aligned
+   against the values, so the eye reads down one edge instead of hunting for
+   a line start that moves, which is what makes a centred paragraph slower.
+   `justify-content: center` on the grid centres the pair of columns without
+   centring anything inside them. */
+/* ---- Label row over a card ----
+   The reference's "On GitHub ....... @handle" row above its contribution
+   graph. space-between so a right-hand item can be added later; with only
+   the label it reads as a flush-left caption. The <h3> that used to live
+   inside each card was removed in favour of this, so the heading is not
+   set twice. */
+
+
+/* ---- Contact: an outbound link, a rule, then the marks ----
+   Replaces the contact <dl>. The rule is a border rather than an <hr> so it
+   spans the column exactly and carries no default margin. */
+#contact {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    align-items: flex-start;
+    gap: 1.75rem;
+    margin-top: 2rem;
 }
 
-/* The one real button on the page. It can carry weight here because the
-   dock's Resume link is deliberately plain — see the note on
-   #social-links a[href$=".pdf"]. Sits last so it follows the personal
-   modules rather than leading with a job artefact. */
-#aside-resume {
+.out-link {
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.out-link:hover {
+    border-bottom-color: var(--border-strong);
+}
+
+.social-row {
     display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem;
+    width: 100%;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.social-row a {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: 0.9rem 1rem;
-    border: 1px solid var(--band);
+    gap: 0.5rem;
     color: var(--text);
     text-decoration: none;
     font-size: 0.95rem;
-    transition: background 0.2s, color 0.2s;
+    opacity: 0.7;
 }
 
-#aside-resume:hover {
-    background: var(--band);
-    color: var(--band-text);
+.social-row a:hover {
+    opacity: 1;
 }
 
-#aside-resume svg {
+/* currentColor, so the marks take the link's ink and dim with it */
+.social-row svg {
     width: 17px;
     height: 17px;
     flex-shrink: 0;
 }
+
+
+
+/* #resume-button is gone: the download button that sat under the bio is now
+   the fourth row of the contact ledger, so the page no longer offers the
+   same PDF twice within 200px. The dock still carries a plain resume link. */
 
 /* Unbulleted — at this size a marker column costs more than it clarifies,
    and the heading already frames the lines as a list. */
@@ -316,6 +371,29 @@ section > h4 {
 
 .aside-list li:last-child {
     border-bottom: 0;
+}
+
+/* Secondary line inside a list row — school and year under a degree. Same
+   treatment as .aside-track-artist, which does this for the artist name. */
+.aside-meta {
+    font-family: var(--font-mono);
+    display: block;
+    font-size: 0.78rem;
+    opacity: 0.6;
+}
+
+/* No rules between degrees: each entry is already two lines, so the second
+   line groups them visually and a divider only adds noise. The margin does
+   the separating the border used to. Hobbies keep their rules — there a
+   single word per row needs the tracking. */
+#about-education li {
+    border-bottom: 0;
+    padding: 0;
+    margin-bottom: 0.9rem;
+}
+
+#about-education li:last-child {
+    margin-bottom: 0;
 }
 
 /* Hidden until the fetch resolves, so a half-built row never flashes. */
@@ -359,16 +437,17 @@ section > h4 {
 }
 
 .aside-track-artist {
+    font-family: var(--font-mono);
     display: block;
-    font-size: 0.9rem;
+    font-size: 0.78rem;
     opacity: 0.6;
 }
 
-.aside-module h3 {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-}
+/* No surface, no radius, no padding. These were lifted cards; now the
+   .side-label above each one is the only thing marking it as a group, and
+   content sits flush on the column's left edge like everything else. The
+   rules between the list rows do the separating the box used to.
+   .aside-module h3 is gone too — each card's heading became that label. */
 
 .aside-card {
     display: block;
@@ -401,136 +480,28 @@ section > h4 {
     align-items: stretch;
 }
 
-#projects h2,
-#skills h2 {
+section > h2 {
     font-size: 2rem;
+    font-weight: 500;
     margin-bottom: 0.5rem;
 }
 
-#projects h4,
-#skills h4 {
+/* Direct children only: this is the section's standfirst, and unscoped it
+   also hit the venue line inside the OrigamiBench card, whose 2rem pushed
+   that card's description 51px below the other two in its row. */
+#projects > h4,
+#skills > h4 {
     font-weight: 400;
     opacity: 0.6;
     margin-bottom: 2rem;
 }
 
-.projects-grid {
-    display: grid;
-    /* Column count is per-section below: auto-fill left 6 projects as a
-       ragged 4 + 2 at this width. */
-    gap: 1.5rem;
-    max-width: var(--content-max);
-    width: 100%;
-}
 
-/* ---- Shared: a card expands into a large centred panel ----
-   Only #projects uses this now. Only the layout
-   inside the panel differs per section, further down. */
 
-.flip-section {
-    position: relative;
-}
 
-.flip-section .flip-card {
-    /* perspective would make this a containing block and trap the expanded
-       panel inside its own grid cell */
-    perspective: none;
-}
-
-/* The back is what goes fixed now — if the inner left the flow the card
-   would collapse, since the front defines its height. Fixed so it centres on
-   the viewport rather than the grid, whose midpoint sits low. */
-.flip-section .flip-card.flipped .flip-card-back {
-    position: fixed;
-    /* inset first — as a shorthand for top/right/bottom/left it would reset
-       the centring below if it came after */
-    inset: auto;
-    top: 50%;
-    left: 50%;
-    width: min(860px, 92vw);
-    height: min(420px, 80vh);
-    z-index: 40;
-}
-
-/* Hidden instantly rather than cross-faded — the front would otherwise be
-   stretched to the panel's width mid-fade, which looks broken */
-.flip-section .flip-card.flipped .flip-card-front {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.flip-section .flip-card-back {
-    background: var(--bg);
-    border: 1px solid var(--border-strong);
-    padding: 1.75rem;
-    overflow: hidden;
-    transform: translate(0, 0) scale(0.97);
-    opacity: 0;
-    /* Must not swallow clicks meant for the front card while hidden */
-    pointer-events: none;
-    transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.flip-section .flip-card.flipped .flip-card-back {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    pointer-events: auto;
-}
 
 /* ---- Projects: card grid with expanding detail panels ---- */
 
-/* 3 x 2 — six cards, two full rows, nothing ragged. The base .projects-grid
-   sets no columns of its own. */
-#projects .projects-grid {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-#projects .flip-card-front,
-#projects .flip-card-back {
-    align-items: stretch;
-    justify-content: flex-start;
-    text-align: left;
-    overflow: hidden;
-}
-
-#projects .flip-card-front .project-image {
-    aspect-ratio: 4 / 3;
-    max-height: none;
-    margin-bottom: 0.9rem;
-    flex-shrink: 0;
-}
-
-#projects .flip-card h3 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    margin-bottom: 0.5rem;
-}
-
-#projects .flip-card p {
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-#projects .flip-card-back {
-    flex-direction: row;
-    gap: 1.75rem;
-}
-
-#projects .flip-card-back h3 {
-    font-size: 1.35rem;
-}
-
-#projects .flip-card-back p {
-    font-size: 1.05rem;
-    line-height: 1.6;
-    margin-bottom: 1.25rem;
-}
-
-.project-detail .project-links {
-    align-self: flex-start;
-}
 
 .project-stack {
     display: flex;
@@ -544,7 +515,8 @@ section > h4 {
 }
 
 .project-stack span {
-    padding: 0.2rem 0.6rem;
+    font-family: var(--font-mono);
+    padding: 0.25rem 0.6rem;
     border: 1px solid var(--border-strong);
     border-radius: 2rem;
     font-size: 0.75rem;
@@ -576,132 +548,11 @@ section > h4 {
     flex-wrap: wrap;
 }
 
-.project-shot {
-    flex: 0 0 42%;
-    /* Landscape, sized to a site screenshot rather than stretched full-height */
-    align-self: start;
-    aspect-ratio: 16 / 10;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    overflow: hidden;
-}
-
 /* An image-bearing frame drops its placeholder aspect ratio and takes the
    image's own. Otherwise a 1.758:1 figure inside a fixed 4:3 box leaves ~24px
    of surface-tinted letterbox top and bottom, and the border ends up
    outlining the empty square rather than the figure. Empty placeholder boxes
    keep their 4:3 / 16:10 shape. */
-/* The panel image hugs its own aspect ratio — only one panel is open at a
-   time, so there's nothing to line it up against. */
-.project-shot:has(img) {
-    aspect-ratio: auto;
-    height: auto;
-    max-height: none;
-}
-
-/* Card fronts keep their fixed 4:3 slot so every title sits on the same
-   baseline no matter what shape the image is. The visible frame moves onto
-   the <img>, so the border still hugs the picture exactly while the leftover
-   slot space reads as page background instead of an empty bordered box. */
-.project-image:has(img),
-/* Constrained on both axes so any aspect ratio scales down to fit the slot
-   whole — contain's behaviour, but as a real box, so the border hugs the
-   picture rather than outlining the slot. Centred for images narrower
-   than the slot. */
-.project-image img {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid var(--border-strong);
-}
-
-/* With the frame matching the image, no crop or letterbox is possible —
-   the image just sets its own height. */
-.project-image img,
-.project-shot img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* The panel image links to the full-resolution file. A dense figure can't be
-   legible at panel size, so this is the escape hatch to actually read it. */
-.project-shot a {
-    display: block;
-    width: 100%;
-    transition: opacity 0.2s;
-}
-
-.project-shot a:hover {
-    opacity: 0.75;
-}
-
-.project-detail {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
-}
-
-.flip-close {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.75rem;
-    z-index: 2;
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 1.6rem;
-    line-height: 1;
-    opacity: 0.45;
-    transition: opacity 0.2s;
-}
-
-.flip-close:hover {
-    opacity: 1;
-}
-
-/* Blurs and dims the grid behind an open panel; also the click-outside target.
-   The scrim has to be partly transparent — a near-opaque fill would sit on top
-   of the blur and hide it entirely. */
-.flip-backdrop {
-    position: absolute;
-    inset: 0;
-    z-index: 20;
-    background: var(--scrim);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    opacity: 0;
-    /* opacity: 0 alone is not enough — an invisible element with a
-       backdrop-filter still keeps a live blur layer, and two viewport-sized
-       ones stall scrolling entirely. visibility: hidden takes it out of
-       rendering so the filter isn't computed at all. */
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.flip-section.has-flipped .flip-backdrop {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
-.project-image {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    margin-bottom: 1rem;
-    overflow: hidden;
-}
 
 /* Tech stack tags — sits between the description and the links */
 .project-stack {
@@ -712,53 +563,7 @@ section > h4 {
 }
 
 /* Collapse the row entirely until tags are filled in */
-/* No 3D anywhere now — both flip sections expand and cross-fade, so the
-   perspective / preserve-3d / rotateY machinery is gone. */
-.flip-card {
-    cursor: pointer;
-}
 
-.flip-card-inner {
-    position: relative;
-    width: 100%;
-}
-
-/* The front sits in normal flow so the card takes its height from its own
-   content. Previously both faces were absolute, the card had no intrinsic
-   height, and an aspect-ratio had to stand in for one — which needed
-   re-tuning on every column-count change and could never fit every width. */
-.flip-card-front {
-    position: relative;
-    width: 100%;
-}
-
-.flip-card-back {
-    position: absolute;
-    inset: 0;
-}
-
-.flip-card-front,
-.flip-card-back {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.tags {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-    max-width: 600px;
-}
-
-.tag {
-    padding: 0.5rem 1.25rem;
-    border: 1px solid var(--text);
-    border-radius: 2rem;
-    font-size: 1.05rem;
-}
 
 #experience {
     display: flex;
@@ -766,10 +571,6 @@ section > h4 {
     align-items: stretch;
 }
 
-#experience h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-}
 
 /* ---- Experience: ledger rows ----
    Amrit's pattern — role and company on the left, dates right-aligned, no
@@ -788,7 +589,7 @@ section > h4 {
     align-items: baseline;
     /* No dividers — spacing separates the entries instead. The hover tint is
        now the only thing marking a row as a discrete block. */
-    padding: 1.25rem 0;
+    padding: 1.6rem 0;
     transition: background 0.2s;
 }
 
@@ -804,9 +605,26 @@ section > h4 {
     color: var(--accent);
 }
 
+/* The role a recruiter checks first should not look like a 2024 internship.
+   Scale plus a brass rule standing in for the dot the old rail had. */
+.timeline-entry.is-current .timeline-content h3 {
+    font-size: 1.6rem;
+}
+
+.timeline-entry.is-current .timeline-content {
+    border-left: 2px solid var(--accent);
+    padding-left: 1.25rem;
+    margin-left: -1.25rem;
+}
+
+.timeline-entry.is-current .timeline-content p {
+    opacity: 0.9;
+}
+
 .timeline-date {
+    font-family: var(--font-mono);
     grid-area: date;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     white-space: nowrap;
     opacity: 0.55;
 }
@@ -841,19 +659,23 @@ section > h4 {
     grid-area: content;
 }
 
+/* The role is the thing being scanned, so it gets the scale. At 1rem it was
+   the same size as the description beneath it and the whole section read
+   flat — five equal rows regardless of what each one was. */
 .timeline-content h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.4;
+    font-size: 1.35rem;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
 }
 
 .timeline-company {
     display: block;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-style: italic;
     line-height: 1.4;
-    opacity: 0.6;
-    margin-bottom: 0.5rem;
+    opacity: 0.8;
+    margin-bottom: 0.65rem;
 }
 
 /* Inline links in entry descriptions — underlined, never browser blue */
@@ -961,44 +783,9 @@ section > h4 {
     transform: scaleX(1);
 }
 
-/* A real switch: the button is the track, ::after is the sliding knob.
-   Still a <button> with aria-pressed rather than a checkbox, so it stays
-   keyboard-operable and announces its state. */
-#theme-toggle {
-    position: relative;
-    flex-shrink: 0;
-    width: 34px;
-    height: 18px;
-    padding: 0;
-    border: 1px solid var(--border-strong);
-    border-radius: 999px;
-    background: var(--surface);
-    cursor: pointer;
-    transition: border-color 0.2s ease, background 0.2s ease;
-}
 
-#theme-toggle::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 3px;
-    width: 12px;
-    height: 12px;
-    margin-top: -6px;
-    border-radius: 50%;
-    background: var(--text);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease;
-}
 
-/* 32px of inner track, 12px knob, 3px inset each side -> 17px of travel */
-html.dark #theme-toggle::after {
-    transform: translateX(17px);
-    background: var(--accent);
-}
 
-#theme-toggle:hover {
-    border-color: var(--text);
-}
 
 #nav-name {
     font-size: 1.5rem;
@@ -1036,39 +823,9 @@ html.dark #theme-toggle::after {
     transform: translateY(-120px);
 }
 
-/* A real footer band at the end of the document rather than a floating
-   fixed chip: copyright on the left, social icons pushed to the right.
-   opacity lives on the text alone — on the container it would dim the icons
-   beside it. */
-#footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    width: 100%;
-    /* The border stays full-bleed as a band while the row inside it lines up
-       with the centred container above — hence padding rather than an inner
-       max-width wrapper. */
-    padding-block: 2.5rem;
-    padding-inline: max(var(--page-pad), (100% - var(--content-max)) / 2);
-    border-top: 1px solid var(--border);
-    font-size: 0.9rem;
-}
-
-#footer-copy {
-    opacity: 0.5;
-}
-
-/* The footer set is the only always-reachable one now that the dock carries
-   navigation alone — About's band is only in view at the top of the page. */
-#footer-socials a {
-    background: var(--surface);
-    color: var(--text);
-}
-
-#footer-socials a:hover {
-    background: var(--border);
-}
+/* The footer is gone. It held the copyright line and the only set of social
+   icons left on the site after the band went, so GitHub, email and LinkedIn
+   are now reachable from nowhere — see the note at the end of this file. */
 
 /* Nav toggle */
 #nav-toggle {
@@ -1137,7 +894,6 @@ html.dark #theme-toggle::after {
        inherited the 3rem desktop gutter on a 375px screen. */
     :root {
         --page-pad: 1.25rem;
-        --portrait: 150px;
     }
 
     section {
@@ -1145,12 +901,16 @@ html.dark #theme-toggle::after {
     }
 
 
+    /* The min-height: 100dvh that used to be here is gone. It dates from the
+       one-page design, where every section filled a screen. With the site
+       split across three documents it only pads short sections out with
+       nothing: Contact's four rows were given a full 812px screen, which put
+       home at 2,436px for about 1,100px of content. Sections size to their
+       content now, as they already did on desktop. */
     section,
     #projects,
     #experience {
         height: auto;
-        min-height: 100vh;
-        min-height: 100dvh;
         overflow: visible;
     }
 
@@ -1248,38 +1008,17 @@ html.dark #theme-toggle::after {
         background: var(--scrim);
     }
 
-    /* The band stacks: portrait, then name, then the social row. */
-    #about-band {
-        padding: 4.5rem var(--page-pad) 3rem;
+
+    /* Three icon links don't fit one 335px row, so they wrap to two; the
+       row gap has to be set for the wrapped case. */
+    .social-row {
+        gap: 1rem 1.5rem;
     }
 
-    #about-band-inner {
-        grid-template-columns: minmax(0, 1fr);
-        row-gap: 1.75rem;
-        justify-items: start;
+    #masthead {
+        padding-top: 6.5rem;
     }
 
-    #about-name {
-        font-size: 2.1rem;
-    }
-
-    #about-content {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 3rem;
-        padding-top: 2.5rem;
-    }
-
-    /* Justified text in a ~330px column opens up large word gaps */
-    #about-text {
-        text-align: left;
-    }
-
-    /* Scoped to match the id-level desktop rule, which would otherwise keep
-       3 columns on a phone. */
-    #projects .projects-grid {
-        grid-template-columns: 1fr;
-        max-width: 400px;
-    }
 
     /* No room for a right-hand date column — stack it above the role, with
        the logo spanning both rows beside them */
@@ -1299,46 +1038,11 @@ html.dark #theme-toggle::after {
         font-size: 0.6rem;
     }
 
-    /* ---- Expanded card panels ----
-       Side-by-side leaves the shot ~110px and the text ~150px at this width,
-       so the panel stacks and scrolls as a whole instead. */
-    .flip-section .flip-card.flipped .flip-card-back {
-        width: 92vw;
-        height: min(560px, 82vh);
-    }
 
-    #projects .flip-card-back,
-    .project-shot {
-        flex: 0 0 auto;
-        align-self: stretch;
-        width: 100%;
-    }
 
-    /* The whole panel scrolls now, so this must not scroll independently */
-    .project-detail {
-        overflow: visible;
-    }
+    
 
-    /* Stacked, the close button sits over the screenshot — needs its own
-       ground to stay legible, and doubles as a real tap target */
-    .flip-close {
-        top: 0.4rem;
-        right: 0.4rem;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        background: var(--bg);
-        opacity: 0.85;
-    }
 
-    /* Sections are taller than the viewport here, so an absolutely positioned
-       backdrop would scroll away from the fixed panel it's meant to sit behind */
-    .flip-backdrop {
-        position: fixed;
-    }
 
     /* ---- Touch targets ----
        15-17px icons with no padding are far too small to hit reliably. The
@@ -1352,28 +1056,12 @@ html.dark #theme-toggle::after {
         gap: 0.15rem;
     }
 
-    /* Expands the switch's hit area to ~50x34 without changing how it looks */
-    #theme-toggle::before {
-        content: "";
-        position: absolute;
-        inset: -8px;
-    }
 
     /* Nav is ~48px tall here, not 60 */
     section {
         scroll-margin-top: 56px;
     }
 
-    /* Static so it stops floating over section content while scrolling.
-       justify-content, not text-align — the footer is a flex row now. */
-    /* Stacked and centred — side by side the copyright and three 44px chips
-       don't fit a 375px row without the gap collapsing to nothing. */
-    #footer {
-        flex-direction: column-reverse;
-        justify-content: center;
-        gap: 1.5rem;
-        padding: 2rem 1.25rem;
-    }
 }
 /* ---- Skills ----
    Typographic, like the Experience ledger — no logo grid (brand colours
@@ -1386,26 +1074,371 @@ html.dark #theme-toggle::after {
     align-items: stretch;
 }
 
-.skill-groups {
+
+
+
+/* ---- Projects: drawing sheets ----
+   Replaces the flip cards. Everything is visible without an interaction —
+   the old panel hid the stack, the links and the full description behind a
+   click most visitors never made. Three sheets for the work with real
+   assets, a plain list for the rest, so "selected" means selected. */
+#projects {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* A card grid again, but with nothing hidden — the flip used to bury the
+   stack, the links and the full description behind a click. Three columns for
+   three projects: one clean row, no ragged remainder. */
+/* Two columns, with the first project spanning both. Three equal cards gave
+   every project the same weight and left the largest image on the page at
+   287px; this makes the published one the focal point and lets its figure
+   run at roughly 600px. The hierarchy has a reason behind it, which is what
+   the earlier stagger lacked. */
+.sheets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+.sheet:first-child {
+    grid-column: 1 / -1;
+}
+
+/* Figure beside the text rather than above it, at the lead card's width.
+   .sheet-figure already carries order: -1, which puts it left here. */
+.sheet:first-child .sheet-body {
+    flex-direction: row;
+    gap: 2rem;
+    align-items: stretch;
+}
+
+.sheet:first-child .sheet-figure {
+    flex: 1 1 58%;
+    min-width: 0;
+}
+
+.sheet:first-child .sheet-text {
+    flex: 1 1 42%;
+    min-width: 0;
+    justify-content: center;
+}
+
+/* In the lead card the text is vertically centred beside a tall figure, so
+   pinning the links to the foot opens a gap under the tags instead of
+   lining anything up. They sit with the rest of the block here. */
+.sheet:first-child .sheet-text .project-links {
+    margin-top: 1.25rem;
+}
+
+.sheet:first-child .sheet-text h3 {
+    font-size: 1.75rem;
+}
+
+/* Lifted surface, no border: the card reads as raised because it is lighter
+   than the ground, which is also the page's only second surface level. */
+.sheet {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 1.5rem;
+}
+
+.sheet {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Sheet number left, status right — the one place small caps appear in the
+   projects section, which is what makes it read as a drawing register. */
+.sheet-head {
+    font-family: var(--font-mono);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.45;
+}
+
+.sheet-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.sheet-figure {
+    order: -1;
+}
+
+/* Easy Code has no screenshot yet; without one the text would run the full
+   sheet width, so it keeps a readable measure instead. */
+
+.sheet-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.sheet-text h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+}
+
+.sheet-venue {
+    font-size: 0.85rem;
+    opacity: 0.55;
+    margin-bottom: 0.9rem;
+}
+
+.sheet-text > p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/* Rishav's title block, in Cormorant: label above value, laid out as a row
+   that wraps rather than a table, so a long stack list does not force a
+   column width on the year. */
+
+
+
+
+.sheet-text .project-links {
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.sheet-figure {
+    margin: 0;
+}
+
+.sheet-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+}
+
+/* Absolutely positioned so it is out of flow entirely. A percentage height
+   here cannot resolve against an aspect-ratio box, so it falls back to the
+   image's natural ratio and silently overrides the ratio the figure asked
+   for — which is why a declared 16/10 was measuring 1.32. */
+.sheet-figure {
+    position: relative;
+}
+
+.sheet-figure a {
+    position: absolute;
+    inset: 0.5rem;
+}
+
+/* aspect-ratio on the figure's border box, not on the image: with 0.5rem of
+   padding the two differ, and the no-figure spacer below matches this box.
+   The hairline matters because the Reverse Turing shot is itself dark — in a
+   dark well on a dark card it would have no edge at all. */
+.sheet-figure {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(242, 238, 231, 0.09);
+    border-radius: 12px;
+    padding: 0.5rem;
+    aspect-ratio: 16 / 10;
+    display: flex;
+}
+
+/* The lead figure stands beside text rather than above it, so it can be
+   taller without stretching the card. */
+.sheet:first-child .sheet-figure {
+    aspect-ratio: 4 / 3;
+}
+
+/* Holds the slot, shows nothing. */
+.sheet-figure.is-empty {
+    background: none;
+    border-color: transparent;
+}
+
+
+/* ---- The rest, as a plain register ---- */
+
+
+
+
+
+
+@media (max-width: 768px) {
+
+    /* Stacked: at this width the figure beside the text leaves both too
+       narrow, and the sheet's own padding shrinks to match the page gutter. */
+    .sheets {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2.75rem;
+        max-width: 400px;
+    }
+
+    /* The lead card's figure-beside-text split would leave the figure ~190px
+       and the text ~140px at this width, so it stacks like the others. */
+    .sheet:first-child .sheet-body {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .sheet:first-child .sheet-figure,
+    .sheet:first-child .sheet-text {
+        flex: 0 0 auto;
+    }
+
+    .sheet:first-child .sheet-figure {
+        aspect-ratio: 16 / 10;
+    }
+
+    .sheet:first-child .sheet-text h3 {
+        font-size: 1.25rem;
+    }
+
+}
+
+/* The sprite itself is never painted — only its symbols, via <use>. */
+#icon-sprite {
+    display: none;
+}
+
+/* Tool marks rather than tool names. Simple Icons are monochrome single
+   paths, so currentColor makes them take the page ink instead of eleven
+   different brand colours fighting the beige. The name stays as a caption:
+   Qdrant, ONNX and Neo4j are not recognisable as glyphs on their own. */
+.tools {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 2rem 1rem;
     max-width: var(--content-max);
     width: 100%;
     margin-inline: auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 2rem 3rem;
 }
 
-.skill-group dt {
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+.tool {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    text-align: center;
+}
+
+.tool-mark {
+    width: 34px;
+    height: 34px;
+    fill: currentColor;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+}
+
+.tool:hover .tool-mark {
+    opacity: 1;
+}
+
+.tool-name {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
     opacity: 0.5;
-    margin-bottom: 0.6rem;
-    padding-bottom: 0.6rem;
-    border-bottom: 1px solid var(--border);
 }
 
-.skill-group dd {
-    margin: 0;
-    line-height: 1.7;
+/* SQL is a language, not a product, so it has no mark; Amazon and Microsoft
+   withhold theirs, so no CC0 version exists. Set as words at the glyph's
+   size and sitting on its baseline, so the row still scans as one grid. */
+.tool-wordmark {
+    justify-content: center;
 }
+
+.tool-mark-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+}
+
+.tool-wordmark:hover .tool-mark-text {
+    opacity: 1;
+}
+
+/* ---- Hover ----
+   Nothing on the page responded to the pointer before this. Kept to tone
+   shifts rather than movement, so the layout stays still. */
+.sheet {
+    transition: background 0.25s ease;
+}
+
+.sheet:hover {
+    background: #2e2820;
+}
+
+.sheet-figure img {
+    transition: opacity 0.25s ease;
+    opacity: 0.92;
+}
+
+.sheet:hover .sheet-figure img {
+    opacity: 1;
+}
+
+.timeline-entry {
+    transition: opacity 0.2s ease;
+}
+
+.timeline:hover .timeline-entry:not(:hover) {
+    opacity: 0.55;
+}
+
+.project-link,
+.social-row a,
+.out-link,
+.aside-track {
+    transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+/* ---- Separate pages ----
+   The site is three documents now: index (about), work.html (experience) and
+   projects.html (projects, then skills). The bar, the dock and the <head>
+   metadata are duplicated in all three — GitHub Pages has no includes.
+
+   Every page now opens on a section heading rather than the band, and the
+   section rule's 5rem leaves that heading 16px clear of the floating dock —
+   close enough to read as collision. This buys it real air and lands all
+   three pages' first lines at the same height. */
+section:first-of-type {
+    padding-top: 8rem;
+}
+
+/* The name in the mobile bar is the only way back to home besides the
+   drawer. nav sets pointer-events: none, so the link has to re-enable them
+   for itself the way #social-links does. */
+#nav-name a {
+    pointer-events: auto;
+}
+
+/* Marks the page you are on, where it used to mark the section in view */
+#nav-links a[aria-current="page"] {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    section:first-of-type {
+        /* Clears the fixed top bar, which is ~56px tall here */
+        padding-top: 6.5rem;
+    }
+}
+
+/* MISSING: GitHub, email and LinkedIn. They lived in the About band and the
+   footer, both of which are gone, so the site now has no contact link of any
+   kind — only the resume PDF in the bar and the dock. The dock's utility
+   group (#social-links) is where they would go. */
