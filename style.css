@@ -1,58 +1,82 @@
-/* Warm light mode: deep beige ground, warm near-black ink, burnt-orange accent.
-   The alpha tokens are tinted with the ink colour rather than pure black so
-   borders and surfaces stay in the same temperature family as the ground.
-   Accent is a deep brass. It is used for link text — the "Present" date on
-   the current role, and inline links in entry copy — so it has to clear
-   4.5:1 on the beige, which it does at 5.63:1. Gold rather than the earlier
-   orange or a burgundy because the dock's active underline sits over the
-   navy band: deep reds and neutrals drop to ~1.2-1.5:1 there and disappear,
-   where this stays legible on all three surfaces. */
+/* ---- EB Garamond ----
+   Served from Google Fonts (the <link> lives in each page's head), with
+   Georgia and Times as the fallback stack so the page still sets in an
+   old-style serif if the request fails.
+
+   Replaces Paragon, which was self-hosted from assets/fonts and shipped a
+   single 400 cut: no bold, which meant nothing on the page could be marked
+   by weight. EB Garamond carries 400/500/600 plus a true italic, so the
+   weight overrides that pass left behind are gone and `font-synthesis: none`
+   with them — there is no longer a fake bold to suppress. */
+/* ---- Palette ----
+   White ground, near-black ink. The warm dark palette is gone; what warmth
+   is left lives in the ink, which keeps a slight warm bias (R > B) rather
+   than being a neutral grey, so the page does not read as clinical.
+
+   The alpha tokens are tinted with the ink colour instead of pure black, so
+   borders and surfaces stay in the same temperature family as the type.
+
+   ---- Type ----
+   Two serifs, paired by optical size rather than by style. The display face
+   carries the name and the section headings; the text face carries
+   everything else, including the small data lines that used to be mono. One
+   genre, two jobs — which reads as deliberate where a serif plus a mono read
+   as two unrelated voices alternating line by line.
+
+   Playfair Display is a high-contrast transitional display serif: thin
+   hairlines against heavy stems, a large x-height, tight spacing. It earns
+   its place at the sizes it runs at here (the name, the section headings,
+   the pull quote) and nowhere smaller — the hairlines thin out below about
+   24px, which is exactly why the text face exists alongside it.
+
+   Newsreader is a screen text serif with a tall x-height and sturdier
+   strokes, which is what the 12-16px data lines need. */
 :root {
-    /* Warm near-black rather than pure black: the rest of the palette carries
-       a warm bias (R-B of +9 on the ink), and #000 is the one value with none
-       at all. It also leaves room to go darker for surfaces, which #000 does
-       not, and takes the edge off light images — the white OrigamiBench
-       diagram hits 21:1 on pure black and 17.7:1 here. */
-    --bg: #1c1813;
-    --text: #f2eee7;
-    /* Brass lifted for a black ground — the light-mode #7a5c12 only reaches
-       3.4:1 here, and this is link text. 10.6:1. */
-    --accent: #d9b45c;
-    --border: rgba(242, 238, 231, 0.16);
-    --border-strong: rgba(242, 238, 231, 0.28);
-    --surface: rgba(242, 238, 231, 0.07);
-    /* A card surface that sits ABOVE the page rather than below it — the lift
-       comes from the tone delta, not from a stroke. */
-    --card: #262118;
-    /* Width of About's centred column: the prose, the education card and
-       the two modules under it all have to agree on one measure. */
-    --measure: 36rem;
-    --dot: rgba(242, 238, 231, 0.07);
-    /* The dock pill: dark and translucent so its light links stay legible
-       over both the navy band and the black page. */
-    --scrim: rgba(24, 24, 24, 0.6);
-    /* Height of the top bar; the nav links dock into a band this tall */
-    --nav-h: 64px;
+    --bg: #ffffff;
+    --text: #1b1815;
+    /* Black and white for now — the accent resolves to the ink, so every
+       rule, marker and underline that used brass goes black without any of
+       them losing their shape. Colour comes later: put a hex back here and
+       all eight sites light up again.
+       (The brass that was here, #8a6a15, measured 5.06:1 on white.) */
+    --accent: var(--text);
+    --border: rgba(27, 24, 21, 0.14);
+    --border-strong: rgba(27, 24, 21, 0.32);
+    --surface: rgba(27, 24, 21, 0.05);
+    /* A card surface just off the ground. On white the lift has to come from
+       going darker, not lighter. */
+    --card: #f7f5f1;
+
+    /* One family for the whole site. The two tokens are kept so the display
+       and text roles stay nameable, but they resolve to the same face: a
+       legibility serif scales up to a masthead more gracefully than a
+       display serif scales down to a 13px data line. */
+    --font-display: "EB Garamond", Georgia, "Times New Roman", serif;
+    --font-text: "EB Garamond", Georgia, "Times New Roman", serif;
+
+    /* The sidebar's width and the gutter between the columns, which together
+       set the reading column: 840 - 300 - 64 = 476px. The prose fills that
+       column rather than being capped inside it, so there is no dead band
+       between where a line ends and where the divider starts.
+       300px is the narrowest the sidebar goes before the education entries
+       and the track title start wrapping — that was measured at 219px. */
+    --aside-width: 300px;
+    --column-gap: 4rem;
     /* One centred container for the whole page. Every row — headings, the
-       timeline, the project grids, the footer — shares this width and this
-       left edge, so nothing drifts apart as the window grows. Content inside
-       it is left-aligned; it's the container that centres, not the text.
-       --page-pad is the floor for the side gutters, not the gutter itself. */
-    --content-max: 1100px;
+       timeline, the project grids — shares this width and this left edge, so
+       nothing drifts apart as the window grows. Content inside it is
+       left-aligned; it's the container that centres, not the text.
+       --page-pad is the floor for the side gutters, not the gutter itself.
+
+       840px, not the reference's 1024px. His frame gives a 620px reading
+       column that holds 56 characters because JetBrains Mono is wide;
+       Paragon at 15px puts 93 characters in that same column, which is well
+       past the 45-75 a line should run. Matching his pixels with a narrower
+       typeface would copy the number and lose the proportion. 840 lands the
+       column at 476px and the line at ~71 characters. */
+    --content-max: 840px;
     --page-pad: 3rem;
-    --prose: 72ch;
-    --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    /* Section titles: Cormorant at display scale — the size and the 1:1 line
-       do the work, not a heavier face. */
-    --font-display: "Cormorant Garamond", serif;
-    /* The About band carries its own palette. Lifted navy: #1f3355 only
-       reaches 1.66:1 on black and stops reading as a block; this clears
-       2.6:1 while holding 7.1:1 for its own text. */
-    --band: #31527a;
-    --band-text: #f4f1ea;
-    --band-muted: rgba(244, 241, 234, 0.62);
-    --band-chip: rgba(244, 241, 234, 0.13);
-    color-scheme: dark;
+    color-scheme: light;
 }
 
 
@@ -66,46 +90,15 @@ html {
     box-sizing: border-box;
 }
 
+/* Flat. The 24px dot grid that tiled this came from an earlier, busier
+   version of the page and put texture behind every line of type on the
+   site. Nothing is laid out against it, and its token went with it. */
 body {
     background-color: var(--bg);
-    background-image: radial-gradient(circle, var(--dot) 1px, transparent 1px);
-    background-size: 24px 24px;
     color: var(--text);
-    font-family: "Cormorant Garamond", serif;
+    font-family: var(--font-text);
 }
 
-/* One state now. The bar used to fade its background in and swap its ink as
-   About's band scrolled past, because over the band the page's ink was
-   1.35:1; with the band gone every page opens on the page background, so
-   there is nothing to transition between. */
-nav {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 10;
-    background: var(--bg);
-    padding: 1rem 2rem;
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    /* Empty stretches of the bar must not intercept clicks meant for the
-       page beneath; the interactive group re-enables them. */
-    pointer-events: none;
-}
-
-/* Desktop has no top bar: the dock carries navigation plus the utility group,
-   and About already shows the name at size. Mobile still uses the bar for the
-   hamburger, so this is a breakpoint-scoped removal rather than a deletion. */
-@media (min-width: 769px) {
-    nav {
-        display: none;
-    }
-}
-
-nav a {
-    color: var(--text);
-    text-decoration: none;
-}
 
 /* Content-height sections in one continuous scroll — no 100vh, no snap.
    Rows span the full width; only prose is held to a readable measure. */
@@ -135,50 +128,126 @@ section > h4 {
 /* Padding outside the cap, max-width on the inner element — the same order
    `section` uses. With both on one element the gutter came out of the 1100px
    instead of sitting beside it, and the name landed 48px right of the column
-   below it. */
+   below it.
+   The 8rem that used to be here was clearing the floating dock; with the nav
+   in the masthead there is nothing fixed above it. */
 #masthead {
     width: 100%;
-    /* Clears the floating dock, which is fixed at the top of the viewport */
-    padding: 8rem var(--page-pad) 0;
+    padding: 4rem var(--page-pad) 0;
 }
 
+/* Portrait beside the identity block, nav underneath the pair. Centred
+   rather than baseline-aligned here: the photo is a square mass, so it wants
+   to sit against the optical middle of the two text lines, not their first
+   baseline. */
+.masthead-top {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+#masthead-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+    /* Shows through only while the image is still decoding */
+    background: var(--surface);
+}
+
+/* One left-aligned stack: name, role, nav. The nav sat top-right until now,
+   which put the only right-hand element on a page where everything else
+   hangs off one left edge — and it needed a separate stacked layout under
+   768px. This is the same layout at every width. */
 .masthead-inner {
     width: 100%;
     max-width: var(--content-max);
     margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* ---- Masthead nav ----
+   The site's only navigation now. It replaces both the fixed mobile bar with
+   its hamburger drawer and the floating dock — two mechanisms that swapped at
+   769px, neither of which the page needs when the links sit in the header.
+   The current page is marked by ink weight alone, the way the reference does
+   it; the dock's accent underline is gone with the dock. */
+#masthead-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    /* Larger than the 0.6rem between name and role, so the nav reads as its
+       own row rather than a third line of the identity block. */
+    margin-top: 1.6rem;
+}
+
+#masthead-nav a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    opacity: 0.6;
+    /* Transparent on every link so the current page's underline appearing
+       shifts nothing; only the colour changes. */
+    border-bottom: 1px solid transparent;
+    padding-bottom: 3px;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+#masthead-nav a:hover {
+    border-bottom-color: var(--border-strong);
+}
+
+#masthead-nav a:hover {
+    opacity: 1;
+}
+
+#masthead-nav a[aria-current="page"] {
+    opacity: 1;
+    border-bottom-color: var(--accent);
+}
+
+/* The name links home from every page, including index */
+#masthead-name a {
+    color: inherit;
+    text-decoration: none;
 }
 
 #masthead-name {
-    font-size: clamp(2.4rem, 5vw, 3.4rem);
-    font-weight: 500;
+    font-family: var(--font-display);
+    font-size: clamp(2.375rem, 5vw, 3.4rem);
+    font-weight: 400;
     line-height: 1.05;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
 }
 
 /* Mono, like the dates and the school lines — it reads as a standing fact
    rather than a sentence. */
 #masthead-role {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    letter-spacing: 0.02em;
-    opacity: 0.55;
-    margin-top: 0.6rem;
+    font-family: var(--font-text);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    opacity: 0.6;
+    margin-top: 0.7rem;
 }
 
-/* The masthead supplies the top of the page, so this section drops the
-   8rem that section:first-of-type gives the other two pages' headings. */
-#home {
-    padding-top: 2.5rem;
-}
-
+/* Home used to run a narrower container than the other two — 860px against
+   1100px — so the masthead jumped 120px sideways when you clicked from about
+   to work. One width everywhere now; what varies is the measure of the prose
+   inside the frame, not the frame itself. */
 #home-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 260px;
-    gap: 3rem;
-    align-items: start;
     width: 100%;
     max-width: var(--content-max);
     margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--aside-width);
+    gap: var(--column-gap);
+    align-items: start;
 }
 
 /* The divider. A border on the sidebar rather than a column of its own, so
@@ -188,26 +257,34 @@ section > h4 {
     flex-direction: column;
     gap: 1.5rem;
     border-left: 1px solid var(--border);
-    padding-left: 2.5rem;
+    padding-left: 2rem;
 }
 
-/* Capped independently of the grid column: at 19.2px the full column runs
-   to about eighty characters, which is past comfortable. */
+/* No max-width on the prose. It used to be capped at 512px inside a 676px
+   column, which left a 164px band of nothing between the end of every line
+   and the divider — the thing that made this page look loose next to the
+   reference, where the paragraph runs the full column and the only space
+   before the rule is the gutter. The column itself is now the measure. */
 #about-text {
-    max-width: var(--measure);
     hyphens: none;
 }
 
 /* ---- Sidebar blocks ----
    A small uppercase mono label over its content, blocks separated by rules.
    Uppercase at this size needs the tracking or it sets too tight. */
+/* Lowercase, so the tracking comes off: 0.1em is what stops uppercase from
+   colliding, and on lowercase it just looks loose. Weight and a slightly
+   larger size carry the label instead of caps. */
+/* Weight marks these as labels now that the family has a 600; the heavy
+   tracking that stood in for it while Paragon offered one cut is mostly
+   off again. */
 .side-label {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    opacity: 0.5;
+    font-family: var(--font-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    opacity: 0.6;
     margin-bottom: 0.9rem;
 }
 
@@ -216,11 +293,6 @@ section > h4 {
     padding-top: 1.5rem;
 }
 
-/* The main column's label is the same mark as the sidebar's, so the two
-   columns start on the same note, but it needs the room a heading gets. */
-#home-main > .side-label {
-    margin-bottom: 1.25rem;
-}
 
 #about-pubs a {
     color: var(--text);
@@ -233,17 +305,13 @@ section > h4 {
     border-bottom-color: var(--accent);
 }
 
-#about-pubs li {
-    border-bottom: 0;
-    padding: 0;
-}
-
-/* The sidebar's 260px is fixed while the prose column is 1fr, so every pixel
+/* The sidebar's width is fixed while the prose column is 1fr, so every pixel
    lost comes off the reading column: at 820px the prose was down to 416px
-   with the sidebar still at a full 260. Stack well before phone width —
-   the sidebar's mono meta lines ("Northeastern University · 2026") need
-   about 240px, so two columns stop being worth it under ~940px. */
-@media (max-width: 940px) {
+   with the sidebar still at full width. Stack well before phone width.
+   prose = viewport - 96 (gutters) - 300 (sidebar) - 64 (gap), and the frame
+   stops shrinking once the viewport clears 936px, so below that the loss is
+   all on the prose: 880px is where the column drops under 420. */
+@media (max-width: 880px) {
     #home-grid {
         grid-template-columns: minmax(0, 1fr);
         gap: 2.5rem;
@@ -257,10 +325,6 @@ section > h4 {
         border-top: 1px solid var(--border);
         padding-top: 2.5rem;
     }
-
-    #about-text {
-        max-width: none;
-    }
 }
 
 /* ---- About ----
@@ -270,19 +334,13 @@ section > h4 {
 
    One centred column now, not prose against a 260px sidebar — and the text
    in it is left-aligned. */
-#about-text h2 {
-    font-size: 2rem;
-    font-weight: 500;
-    margin-bottom: 1.25rem;
-}
 
-#about-text {
-    hyphens: none;
-}
 
+/* 1.65 leading pushed consecutive lines far enough apart that a paragraph
+   read as separate floating lines rather than a block. */
 #about-text p {
-    font-size: larger;
-    line-height: 1.7;
+    font-size: 1.0625rem;
+    line-height: 1.55;
     margin-bottom: 1.25rem;
 }
 
@@ -300,35 +358,130 @@ section > h4 {
    set twice. */
 
 
+/* ---- Highlights ----
+   Doubles what the main column holds. The marker is the accent, which until
+   now only appeared on the work page — this carries it onto home. em dash
+   rather than a bullet: it reads as an aside in a serif, where a round
+   bullet reads as a UI list. */
+.hl {
+    margin-top: 2.5rem;
+}
+
+.hl-list {
+    list-style: none;
+}
+
+.hl-list li {
+    position: relative;
+    padding-left: 1.4rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    margin-bottom: 0.8rem;
+}
+
+.hl-list li:last-child {
+    margin-bottom: 0;
+}
+
+.hl-list li::before {
+    content: "\2014";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+}
+
+/* <strong> is visually inert here, and deliberately so: Paragon has no bold
+   cut, the palette is black and white, and italic was rejected. Size, colour
+   and weight are all unavailable, so nothing is left to mark it with. The
+   rule stays to pin the weight — without it the browser fakes a bold — and
+   the tag keeps its meaning for screen readers. */
+.hl-list strong {
+    font-weight: 600;
+}
+
+.hl-list a {
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-strong);
+}
+
+.hl-list a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* ---- Pull quote ----
+   Set in the display
+   face: this is the only place besides the headings where the lowercase gets
+   to be seen at size. */
+.quote {
+    margin-top: 2.75rem;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--accent);
+}
+
+.quote p {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 400;
+    line-height: 1.35;
+}
+
+.quote cite {
+    display: block;
+    margin-top: 0.7rem;
+    font-size: 0.9rem;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    opacity: 0.6;
+}
+
 /* ---- Contact: an outbound link, a rule, then the marks ----
    Replaces the contact <dl>. The rule is a border rather than an <hr> so it
    spans the column exactly and carries no default margin. */
+/* Holds the resume button alone now that the marks have moved into the
+   main column. align-items keeps the box at its content width rather than
+   stretching it across the sidebar. */
 #contact {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.75rem;
-    margin-top: 2rem;
 }
 
-.out-link {
-    color: var(--text);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.2s ease;
+
+/* ---- Footer ----
+   The marks sit here now rather than at the foot of the home page's main
+   column, so they reach all three pages. The rule is on .footer-inner so it
+   spans the container exactly, the way the masthead and the columns do,
+   instead of running the full bleed of the viewport. */
+#site-footer {
+    width: 100%;
+    padding: 3rem var(--page-pad) 3.5rem;
 }
 
-.out-link:hover {
-    border-bottom-color: var(--border-strong);
+.footer-inner {
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.footer-copy {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    opacity: 0.6;
 }
 
 .social-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.75rem;
-    width: 100%;
-    padding-top: 1.75rem;
-    border-top: 1px solid var(--border);
+    gap: 1.25rem;
 }
 
 .social-row a {
@@ -337,7 +490,7 @@ section > h4 {
     gap: 0.5rem;
     color: var(--text);
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 1.0625rem;
     opacity: 0.7;
 }
 
@@ -354,9 +507,32 @@ section > h4 {
 
 
 
-/* #resume-button is gone: the download button that sat under the bio is now
-   the fourth row of the contact ledger, so the page no longer offers the
-   same PDF twice within 200px. The dock still carries a plain resume link. */
+/* The one boxed control on the site. It can carry a border because
+   the masthead's plain resume link. inline-flex, not flex: block-level it
+   stretches the sidebar's full width and reads as a slab. */
+#resume-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.1rem;
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+#resume-button:hover {
+    background: var(--surface);
+    border-color: var(--text);
+}
+
+#resume-button svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
 
 /* Unbulleted — at this size a marker column costs more than it clarifies,
    and the heading already frames the lines as a list. */
@@ -365,36 +541,25 @@ section > h4 {
 }
 
 .aside-list li {
-    padding: 0.35rem 0;
-    border-bottom: 1px solid var(--border);
+    font-size: 1.0625rem;
+    line-height: 1.45;
+    margin-bottom: 0.9rem;
 }
 
 .aside-list li:last-child {
-    border-bottom: 0;
+    margin-bottom: 0;
 }
 
 /* Secondary line inside a list row — school and year under a degree. Same
    treatment as .aside-track-artist, which does this for the artist name. */
 .aside-meta {
-    font-family: var(--font-mono);
+    font-family: var(--font-text);
     display: block;
-    font-size: 0.78rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
     opacity: 0.6;
 }
 
-/* No rules between degrees: each entry is already two lines, so the second
-   line groups them visually and a divider only adds noise. The margin does
-   the separating the border used to. Hobbies keep their rules — there a
-   single word per row needs the tracking. */
-#about-education li {
-    border-bottom: 0;
-    padding: 0;
-    margin-bottom: 0.9rem;
-}
-
-#about-education li:last-child {
-    margin-bottom: 0;
-}
 
 /* Hidden until the fetch resolves, so a half-built row never flashes. */
 .aside-track {
@@ -425,6 +590,8 @@ section > h4 {
 
 .aside-track-name {
     display: block;
+    font-size: 1.0625rem;
+    line-height: 1.45;
     /* A long title would otherwise push the row past the 260px column */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -437,9 +604,10 @@ section > h4 {
 }
 
 .aside-track-artist {
-    font-family: var(--font-mono);
+    font-family: var(--font-text);
     display: block;
-    font-size: 0.78rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
     opacity: 0.6;
 }
 
@@ -470,7 +638,7 @@ section > h4 {
 
 .aside-card-meta {
     display: block;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     opacity: 0.6;
 }
 
@@ -480,9 +648,13 @@ section > h4 {
     align-items: stretch;
 }
 
+/* Every one of these is lowercase, which is the whole reason for this face */
 section > h2 {
+    font-family: var(--font-display);
     font-size: 2rem;
     font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
     margin-bottom: 0.5rem;
 }
 
@@ -515,11 +687,11 @@ section > h2 {
 }
 
 .project-stack span {
-    font-family: var(--font-mono);
+    font-family: var(--font-text);
     padding: 0.25rem 0.6rem;
     border: 1px solid var(--border-strong);
     border-radius: 2rem;
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     letter-spacing: 0.03em;
     opacity: 0.8;
     white-space: nowrap;
@@ -532,7 +704,7 @@ section > h2 {
     border: 1px solid var(--text);
     text-decoration: none;
     color: var(--text);
-    font-size: 1rem;
+    font-size: 1.0625rem;
     transition: background 0.2s, color 0.2s;
 }
 
@@ -597,36 +769,20 @@ section > h2 {
     background: var(--surface);
 }
 
-/* The rail is gone, so the filled dot can't signal the current role. The
-   date already reads "Present"; this just gives it full strength. */
-.timeline-entry.is-current .timeline-date {
-    opacity: 1;
-    font-weight: 500;
-    color: var(--accent);
-}
-
-/* The role a recruiter checks first should not look like a 2024 internship.
-   Scale plus a brass rule standing in for the dot the old rail had. */
-.timeline-entry.is-current .timeline-content h3 {
-    font-size: 1.6rem;
-}
-
-.timeline-entry.is-current .timeline-content {
-    border-left: 2px solid var(--accent);
-    padding-left: 1.25rem;
-    margin-left: -1.25rem;
-}
-
-.timeline-entry.is-current .timeline-content p {
-    opacity: 0.9;
-}
+/* The ledger is deliberately flat: five rows, same weight, dates doing the
+   ranking. A promoted row lived here — first keyed to the "current" role,
+   then to the MIT research row — but ranking belongs in the home page's
+   highlights list, which is meant to be ordered. A chronology is not, and
+   emphasising one row here said the same thing twice while costing the
+   clean reverse-chronological read. */
 
 .timeline-date {
-    font-family: var(--font-mono);
+    font-family: var(--font-text);
     grid-area: date;
-    font-size: 0.78rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
     white-space: nowrap;
-    opacity: 0.55;
+    opacity: 0.6;
 }
 
 /* Company mark. Each source is a square avatar whose artwork is an inscribed
@@ -663,8 +819,8 @@ section > h2 {
    the same size as the description beneath it and the whole section read
    flat — five equal rows regardless of what each one was. */
 .timeline-content h3 {
-    font-size: 1.35rem;
-    font-weight: 500;
+    font-size: 1.25rem;
+    font-weight: 600;
     line-height: 1.3;
     letter-spacing: -0.005em;
 }
@@ -692,199 +848,15 @@ section > h2 {
 
 /* Measured even though the row is full-bleed */
 .timeline-content p {
-    font-size: 0.95rem;
+    font-size: 1.0625rem;
     line-height: 1.65;
     opacity: 0.75;
     max-width: 88ch;
 }
 
 
-/* Sits low on the About screen, then slides up and docks into the nav bar.
-   Kept as a fixed-height band so only `top` changes — that's what makes the
-   move animate. Anchoring one state to `bottom` would jump instead. */
-/* ---- Floating dock ----
-   Replaces both the parked/docking links band and the top bar's link group.
-   Fixed bottom-centre pill: section links, then Resume + socials + theme
-   toggle, which script.js relocates in here on desktop. */
-#nav-links {
-    position: fixed;
-    left: 50%;
-    top: 1.5rem;
-    transform: translateX(-50%);
-    z-index: 30;
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    margin: 0;
-    padding: 0.6rem 1.25rem;
-    width: max-content;
-    max-width: calc(100vw - 2rem);
-    background: var(--scrim);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    /* The pill is a real surface, unlike the full-width band it replaces */
-    pointer-events: auto;
-    transition: none;
-}
-
-#nav-links a {
-    font-size: 0.9rem;
-    white-space: nowrap;
-}
-
-/* Two groups now that home is gone: sections | utilities. The one divider
-   lives on #social-links; a border-left here would draw a stray line at the
-   very start of the pill, since this group leads it. */
-.dock-group {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-}
-
-#nav-links #social-links {
-    margin-left: 0.25rem;
-    padding-left: 1.25rem;
-    border-left: 1px solid var(--border);
-    gap: 0.9rem;
-}
-
-
-
-#nav-links a {
-    position: relative;
-    /* Re-enabled per link, since the band itself is click-through */
-    pointer-events: auto;
-    color: var(--text);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: opacity 0.2s;
-}
-
-#nav-links a:hover {
-    opacity: 0.6;
-}
-
-/* Active-section underline, grown from the centre so it slides in */
-#nav-links a::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -4px;
-    height: 2px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transition: transform 0.25s ease;
-}
-
-#nav-links a.active::after {
-    transform: scaleX(1);
-}
-
-
-
-
-
-#nav-name {
-    font-size: 1.5rem;
-    font-weight: 500;
-    flex-shrink: 0;
-}
-
-/* margin-left: auto is back — the nav links used to supply the auto margins
-   that pushed this right, and they've left the nav's flow. */
-#social-links {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    flex-shrink: 0;
-    margin-left: auto;
-    /* nav sets pointer-events: none; this group is the interactive part */
-    pointer-events: auto;
-}
-
-/* Plain text, no box. In the dock beside the section links a bordered pill
-   read as the page's primary action, which it isn't. */
-#social-links a[href$=".pdf"] {
-    font-size: 0.9rem;
-}
-
-#social-links svg {
-    width: 17px;
-    height: 17px;
-    display: block;
-}
-
-#image {
-    display: flex;
-    justify-content: left;
-    transform: translateY(-120px);
-}
-
-/* The footer is gone. It held the copyright line and the only set of social
-   icons left on the site after the band went, so GitHub, email and LinkedIn
-   are now reachable from nowhere — see the note at the end of this file. */
-
-/* Nav toggle */
-#nav-toggle {
-    display: none;
-}
-
-#nav-icon {
-    display: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    z-index: 12;
-}
-
-.icon-close {
-    display: none;
-}
-
-/* Only ever shown by the mobile drawer rules */
-#nav-scrim {
-    display: none;
-}
-
-#nav-toggle:checked~nav .icon-open {
-    display: none;
-}
-
-#nav-toggle:checked~nav .icon-close {
-    display: inline;
-}
 
 /* Narrow desktop: tighten the nav so name + links + socials still fit on one line */
-@media (min-width: 769px) and (max-width: 1000px) {
-    nav {
-        padding: 1rem 1.25rem;
-        gap: 1rem;
-    }
-
-    #nav-name {
-        font-size: 1.2rem;
-    }
-
-    #nav-links {
-        gap: 1.1rem;
-    }
-
-    #nav-links a {
-        font-size: 0.95rem;
-    }
-
-    #social-links {
-        gap: 1rem;
-    }
-
-    #social-links svg {
-        width: 16px;
-        height: 16px;
-    }
-
-}
 
 /* Mobile */
 @media (max-width: 768px) {
@@ -914,110 +886,31 @@ section > h2 {
         overflow: visible;
     }
 
-    /* Nav bar: shrink to fit one line at 320px without clipping */
-    nav {
-        padding: 0.75rem 1rem;
-        gap: 0.6rem;
-    }
-
-    #nav-name {
-        font-size: 1rem;
-        flex-shrink: 1;
-        min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    /* #nav-links is fixed here, so nothing else pushes the socials right */
-    #social-links {
-        gap: 0.6rem;
-        margin-left: auto;
-    }
-
-    #social-links svg {
-        width: 15px;
-        height: 15px;
-    }
-
-    #social-links a[href$=".pdf"] {
-        font-size: 0.8rem;
-    }
-
-    /* ---- Section links become a hamburger drawer ---- */
-    #nav-icon {
-        display: block;
-        font-size: 1.35rem;
-        flex-shrink: 0;
-        /* nav is click-through, so the label must opt back in */
-        pointer-events: auto;
-    }
-
-    /* Replaces the bottom-then-dock band entirely: a drawer shouldn't move
-       with scroll, so `top` is pinned and `transform` does the sliding. */
-    /* Mobile keeps the drawer, so every bit of the desktop pill has to be
-       undone explicitly — bottom, the centring transform, the radius, the
-       blur and the max-width would otherwise survive into the drawer. */
-    #nav-links {
-        --nav-h: 48px;
-        top: var(--nav-h);
-        bottom: auto;
-        left: 0;
-        right: auto;
-        width: min(260px, 76vw);
-        max-width: none;
-        height: calc(100dvh - var(--nav-h));
-        padding: 2rem 1.5rem;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        gap: 1.75rem;
-        background: var(--bg);
-        -webkit-backdrop-filter: none;
-        backdrop-filter: none;
-        border: none;
-        border-right: 1px solid var(--border);
-        border-radius: 0;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        /* The open drawer is a real surface — it must not be click-through */
-        pointer-events: auto;
-    }
 
 
-    #nav-toggle:checked~#nav-links {
-        transform: translateX(0);
-    }
-
-    #nav-links a {
-        font-size: 1.1rem;
-    }
-
-    /* display: contents so the wrapper leaves layout entirely and the four
-       links stack in the drawer like the rest */
-    .dock-group {
-        display: contents;
-    }
-
-    /* Tap-outside-to-close. A <label> for the same checkbox, so no JS. */
-    #nav-toggle:checked~#nav-scrim {
-        display: block;
-        position: fixed;
-        inset: 0;
-        z-index: 9;
-        background: var(--scrim);
-    }
-
-
-    /* Three icon links don't fit one 335px row, so they wrap to two; the
-       row gap has to be set for the wrapped case. */
-    .social-row {
-        gap: 1rem 1.5rem;
-    }
 
     #masthead {
-        padding-top: 6.5rem;
+        padding-top: 2.5rem;
     }
+
+    /* Re-measured a third time, for EB Garamond. The name runs 6.44px per
+       pixel of font-size — narrower than Paragon's 7.94 — but the scaled-up
+       2.125rem still asked for 219px against the 212px a 44px portrait and a
+       0.75rem gap leave at 375px, so it wrapped. 1.9375rem needs 200px and
+       clears with 12px to spare. */
+    .masthead-top {
+        gap: 0.75rem;
+    }
+
+    #masthead-photo {
+        width: 44px;
+        height: 44px;
+    }
+
+    #masthead-name {
+        font-size: 1.9375rem;
+    }
+
 
 
     /* No room for a right-hand date column — stack it above the role, with
@@ -1035,7 +928,7 @@ section > h2 {
     .timeline-logo {
         width: 30px;
         height: 30px;
-        font-size: 0.6rem;
+        font-size: 0.6875rem;
     }
 
 
@@ -1044,22 +937,10 @@ section > h2 {
 
 
 
-    /* ---- Touch targets ----
-       15-17px icons with no padding are far too small to hit reliably. The
-       attribute-selector rule for Resume out-specifies this, so its pill
-       padding is untouched. */
-    #social-links a {
-        padding: 0.35rem;
-    }
-
-    #social-links {
-        gap: 0.15rem;
-    }
 
 
-    /* Nav is ~48px tall here, not 60 */
     section {
-        scroll-margin-top: 56px;
+        scroll-margin-top: 2rem;
     }
 
 }
@@ -1133,7 +1014,10 @@ section > h2 {
 }
 
 .sheet:first-child .sheet-text h3 {
-    font-size: 1.75rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
 }
 
 /* Lifted surface, no border: the card reads as raised because it is lighter
@@ -1152,15 +1036,14 @@ section > h2 {
 /* Sheet number left, status right — the one place small caps appear in the
    projects section, which is what makes it read as a drawing register. */
 .sheet-head {
-    font-family: var(--font-mono);
+    font-family: var(--font-text);
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 1rem;
     margin-bottom: 1rem;
-    font-size: 0.7rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
     opacity: 0.45;
 }
 
@@ -1184,14 +1067,14 @@ section > h2 {
 }
 
 .sheet-text h3 {
-    font-size: 1.25rem;
-    font-weight: 500;
+    font-size: 1.375rem;
+    font-weight: 600;
     margin-bottom: 0.4rem;
 }
 
 .sheet-venue {
-    font-size: 0.85rem;
-    opacity: 0.55;
+    font-size: 0.9rem;
+    opacity: 0.6;
     margin-bottom: 0.9rem;
 }
 
@@ -1242,8 +1125,8 @@ section > h2 {
    The hairline matters because the Reverse Turing shot is itself dark — in a
    dark well on a dark card it would have no edge at all. */
 .sheet-figure {
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(242, 238, 231, 0.09);
+    background: var(--card);
+    border: 1px solid var(--border);
     border-radius: 12px;
     padding: 0.5rem;
     aspect-ratio: 16 / 10;
@@ -1342,8 +1225,8 @@ section > h2 {
 }
 
 .tool-name {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-family: var(--font-text);
+    font-size: 0.8rem;
     letter-spacing: 0.06em;
     opacity: 0.5;
 }
@@ -1360,8 +1243,8 @@ section > h2 {
     align-items: center;
     justify-content: center;
     height: 34px;
-    font-family: var(--font-mono);
-    font-size: 1rem;
+    font-family: var(--font-text);
+    font-size: 1.0625rem;
     letter-spacing: 0.02em;
     opacity: 0.75;
     transition: opacity 0.2s;
@@ -1379,7 +1262,7 @@ section > h2 {
 }
 
 .sheet:hover {
-    background: #2e2820;
+    background: #efece6;
 }
 
 .sheet-figure img {
@@ -1396,12 +1279,11 @@ section > h2 {
 }
 
 .timeline:hover .timeline-entry:not(:hover) {
-    opacity: 0.55;
+    opacity: 0.6;
 }
 
 .project-link,
 .social-row a,
-.out-link,
 .aside-track {
     transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
@@ -1411,34 +1293,26 @@ section > h2 {
    projects.html (projects, then skills). The bar, the dock and the <head>
    metadata are duplicated in all three — GitHub Pages has no includes.
 
-   Every page now opens on a section heading rather than the band, and the
-   section rule's 5rem leaves that heading 16px clear of the floating dock —
-   close enough to read as collision. This buys it real air and lands all
-   three pages' first lines at the same height. */
+   All three pages open on the masthead now, so the first section no longer
+   has to clear anything fixed — the 8rem here was dock clearance. */
 section:first-of-type {
-    padding-top: 8rem;
+    padding-top: 2.5rem;
 }
 
-/* The name in the mobile bar is the only way back to home besides the
-   drawer. nav sets pointer-events: none, so the link has to re-enable them
-   for itself the way #social-links does. */
-#nav-name a {
-    pointer-events: auto;
-}
 
-/* Marks the page you are on, where it used to mark the section in view */
-#nav-links a[aria-current="page"] {
-    opacity: 1;
-}
 
 @media (max-width: 768px) {
     section:first-of-type {
-        /* Clears the fixed top bar, which is ~56px tall here */
-        padding-top: 6.5rem;
+        padding-top: 2rem;
     }
 }
 
 /* MISSING: GitHub, email and LinkedIn. They lived in the About band and the
    footer, both of which are gone, so the site now has no contact link of any
-   kind — only the resume PDF in the bar and the dock. The dock's utility
-   group (#social-links) is where they would go. */
+   kind. */
+
+/* Back to a real bold now that the family has one. */
+strong,
+b {
+    font-weight: 600;
+}

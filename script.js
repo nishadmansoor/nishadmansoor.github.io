@@ -21,55 +21,25 @@ if (nowPlaying && nowPlaying.dataset.track) {
         });
 }
 
-// The scroll listener that tracked About's band past the top bar is gone with
-// the band: it toggled body.past-intro so the bar could swap its background
-// and ink over dark teal, and there is no second state to swap into now. The
-// bar's one appearance is set in CSS.
-const navBar = document.querySelector('nav');
-
-const navLinks = document.querySelectorAll('#nav-links a');
-
-// Underline the dock link for the page being viewed. The site is three
-// documents now, not one scroll, so this is a URL comparison rather than the
+// Mark the masthead nav link for the page being viewed. The site is three
+// documents, not one scroll, so this is a URL comparison rather than the
 // IntersectionObserver that used to watch which section crossed the viewport.
 // Matching on the last path segment keeps it working whether the page was
 // reached as /, /index.html or /projects.html.
+//
+// Gone with the dock and the mobile drawer: the relocation handler that moved
+// the utility group between the top bar and the dock at 769px, and the
+// click handler that unchecked #nav-toggle to close the drawer. One nav in
+// the masthead needs neither.
 const pageName = (() => {
     const last = window.location.pathname.split('/').pop();
     return last === '' ? 'index.html' : last;
 })();
 
-navLinks.forEach(link => {
+document.querySelectorAll('#masthead-nav a').forEach(link => {
     const target = (link.getAttribute('href') || '').split('/').pop();
-    // Only the three section links carry a page name; the resume link is a PDF
+    // Only the three page links can match; resume is a PDF
     if (target !== pageName) return;
     link.classList.add('active');
     link.setAttribute('aria-current', 'page');
-});
-
-// On desktop the utility group (Resume, theme toggle) lives in the floating
-// dock; on mobile it stays in the top bar. nav and #nav-links are separate
-// elements, so CSS can't move it — relocating beats duplicating.
-// navBar is the one declared at the top of this file.
-const socialGroup = document.getElementById('social-links');
-const dock = document.getElementById('nav-links');
-if (socialGroup && navBar && dock) {
-    const mq = window.matchMedia('(max-width: 768px)');
-    const placeSocials = () => {
-        if (mq.matches) {
-            if (socialGroup.parentElement !== navBar) navBar.appendChild(socialGroup);
-        } else if (socialGroup.parentElement !== dock) {
-            dock.appendChild(socialGroup);
-        }
-    };
-    placeSocials();
-    mq.addEventListener('change', placeSocials);
-}
-
-// Close the mobile drawer after tapping a nav link.
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        const toggle = document.getElementById('nav-toggle');
-        if (toggle) toggle.checked = false;
-    });
 });
