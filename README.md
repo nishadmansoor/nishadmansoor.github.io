@@ -1,1 +1,1 @@
-this website showcases my projects, skills, and hobbies
+my portfolio, built with HTML, CSS, and a little bit of JavaScript
