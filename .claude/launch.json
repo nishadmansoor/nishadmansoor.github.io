@@ -10,23 +10,6 @@
         "8912"
       ],
       "port": 8912
-    },
-    {
-      "name": "nba-mvp",
-      "runtimeExecutable": "/Users/nishad/Projects/nba_mvp/.venv/bin/streamlit",
-      "runtimeArgs": [
-        "run",
-        "/Users/nishad/Projects/nba_mvp/app/streamlit_app.py",
-        "--server.port",
-        "8501",
-        "--server.headless",
-        "true",
-        "--browser.gatherUsageStats",
-        "false",
-        "--client.toolbarMode",
-        "minimal"
-      ],
-      "port": 8501
     }
   ]
 }
