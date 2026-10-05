@@ -25,26 +25,24 @@ if (nowPlaying && nowPlaying.dataset.track) {
 // Mark the masthead nav link for the page being viewed. The site is three
 // documents, not one scroll, so this is a URL comparison rather than the
 // IntersectionObserver that used to watch which section crossed the viewport.
-// Matching on the last path segment keeps it working whether the page was
-// reached as /, /index.html or /projects.html.
 //
-// Gone with the dock and the mobile drawer: the relocation handler that moved
-// the utility group between the top bar and the dock at 769px, and the
-// click handler that unchecked #nav-toggle to close the drawer. One nav in
-// the masthead needs neither.
-const pageName = (() => {
-    const last = window.location.pathname.split('/').pop();
-    return last === '' ? 'index.html' : last;
-})();
+// Compared as normalised paths, not filenames. The pages live at /, /work/
+// and /projects/ now, so the old "last path segment" test broke: splitting
+// "/work/" on "/" ends in an empty string, same as "/" does. Normalising
+// folds "/work", "/work/" and "/work/index.html" onto one key.
+const normalisePath = (p) => {
+    const path = p.replace(/index\.html$/, '');
+    return path.endsWith('/') ? path : path + '/';
+};
+
+const here = normalisePath(window.location.pathname);
 
 document.querySelectorAll('#masthead-nav a').forEach(link => {
-    const target = (link.getAttribute('href') || '').split('/').pop();
-    // Only the three page links can match; resume is a PDF
-    if (target !== pageName) return;
+    // link.href is already absolute, so this also covers a relative href
+    if (normalisePath(new URL(link.href).pathname) !== here) return;
     link.classList.add('active');
     link.setAttribute('aria-current', 'page');
 });
-
 
 // ---- Rotation deck ----
 // Four cards sharing one slot. Everything is visible until this runs, so a
