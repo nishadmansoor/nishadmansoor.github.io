@@ -12,12 +12,13 @@ if (nowPlaying && nowPlaying.dataset.track) {
         .then(res => (res.ok ? res.json() : Promise.reject(res.status)))
         .then(data => {
             nowPlaying.querySelector('.aside-track-name').textContent = data.title;
-            const art = nowPlaying.querySelector('.aside-track-art');
-            if (data.thumbnail_url) art.src = data.thumbnail_url;
             nowPlaying.classList.add('loaded');
         })
         .catch(() => {
-            document.getElementById('now-playing-module')?.remove();
+            // Only the song card goes. It used to remove the whole module,
+            // which now also holds the book, show and game cards.
+            document.getElementById('now-playing-card')?.remove();
+            initRotation();
         });
 }
 
@@ -43,3 +44,40 @@ document.querySelectorAll('#masthead-nav a').forEach(link => {
     link.classList.add('active');
     link.setAttribute('aria-current', 'page');
 });
+
+
+// ---- Rotation deck ----
+// Four cards sharing one slot. Everything is visible until this runs, so a
+// JS failure degrades to a plain stack rather than to one hidden card.
+function initRotation() {
+    const deck = document.querySelector('.rot-deck');
+    const nav = document.querySelector('.rot-nav');
+    if (!deck || !nav) return;
+
+    const cards = [...deck.querySelectorAll('.rot-card')];
+    if (cards.length < 2) {
+        nav.hidden = true;
+        deck.classList.remove('is-deck');
+        cards.forEach(c => c.removeAttribute('aria-hidden'));
+        return;
+    }
+
+    deck.classList.add('is-deck');
+    nav.hidden = false;
+    const count = nav.querySelector('.rot-count');
+    let i = 0;
+
+    const show = n => {
+        i = (n + cards.length) % cards.length;
+        cards.forEach((c, k) => c.setAttribute('aria-hidden', String(k !== i)));
+        count.textContent = `${i + 1} / ${cards.length}`;
+    };
+
+    nav.querySelectorAll('.rot-btn').forEach(btn => {
+        btn.addEventListener('click', () => show(i + Number(btn.dataset.dir)));
+    });
+
+    show(0);
+}
+
+initRotation();

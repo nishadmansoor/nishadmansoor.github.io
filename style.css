@@ -45,7 +45,6 @@
     --surface: rgba(27, 24, 21, 0.05);
     /* A card surface just off the ground. On white the lift has to come from
        going darker, not lighter. */
-    --card: #f7f5f1;
 
     /* One family for the whole site. The two tokens are kept so the display
        and text roles stay nameable, but they resolve to the same face: a
@@ -94,6 +93,13 @@ html {
    version of the page and put texture behind every line of type on the
    site. Nothing is laid out against it, and its token went with it. */
 body {
+    /* Everything renders lowercase. Done here rather than by rewriting the
+       markup so the Spotify track title — which arrives from the API at
+       runtime — follows the same rule, and so <title>, the meta description
+       and the og: tags keep their real casing for search results, social
+       cards and screen readers. Copying text off the page still yields the
+       properly-cased original. */
+    text-transform: lowercase;
     background-color: var(--bg);
     color: var(--text);
     font-family: var(--font-text);
@@ -109,14 +115,29 @@ section {
     padding: 5rem var(--page-pad);
 }
 
-.section-inner,
 .timeline,
 .sheets,
-section > h2,
-section > h4 {
+section > h2 {
     width: 100%;
     max-width: var(--content-max);
     margin-inline: auto;
+}
+
+/* ---- Casing exceptions ----
+   The page sets lowercase, which reads as a style choice on prose and proper
+   nouns but as a mistake on acronyms — "cvpr" and "icml" are the two most
+   credentialing strings on the site, and lowercased they look like text that
+   lost its casing rather than text that chose it.
+
+   Two mechanisms. These blocks are entirely technical metadata, so they opt
+   out wholesale; .caps handles single acronyms sitting inside running prose,
+   where a block rule would also un-lowercase the sentence around them. */
+.sheet-venue,
+.project-stack,
+.tool-name,
+.tool-mark-text,
+.caps {
+    text-transform: none;
 }
 
 /* ---- Masthead over a divided two-column body ----
@@ -176,13 +197,26 @@ section > h4 {
    769px, neither of which the page needs when the links sit in the header.
    The current page is marked by ink weight alone, the way the reference does
    it; the dock's accent underline is gone with the dock. */
+/* Nav and contact marks share one row: links left, marks hard right. The
+   right half of this row was empty before, and the marks belong here rather
+   than beside the name — at 47px the name should be the only thing claiming
+   that much attention. */
+.masthead-row {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-top: 1.6rem;
+}
+
 #masthead-nav {
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
-    /* Larger than the 0.6rem between name and role, so the nav reads as its
-       own row rather than a third line of the identity block. */
-    margin-top: 1.6rem;
+    /* The 1.6rem that separated this from the identity block now sits on
+       .masthead-row, which owns the spacing for both halves. */
 }
 
 #masthead-nav a {
@@ -294,17 +328,6 @@ section > h4 {
 }
 
 
-#about-pubs a {
-    color: var(--text);
-    text-decoration: none;
-    border-bottom: 1px solid var(--border-strong);
-}
-
-#about-pubs a:hover {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-}
-
 /* The sidebar's width is fixed while the prose column is 1fr, so every pixel
    lost comes off the reading column: at 820px the prose was down to 416px
    with the sidebar still at full width. Stack well before phone width.
@@ -325,6 +348,106 @@ section > h4 {
         border-top: 1px solid var(--border);
         padding-top: 2.5rem;
     }
+}
+
+/* ---- Rotation deck ----
+   Four cards in one slot with arrows. The deck is a grid with every card
+   stacked in cell 1/1, so its height is the tallest card's and the sidebar
+   does not jump as you page through — the usual carousel bug. */
+.rot-deck {
+    display: grid;
+}
+
+.rot-card {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+/* Without JS the deck renders as a plain stack of all four, which is the
+   honest fallback; the script adds this class before hiding anything. */
+.rot-deck.is-deck .rot-card[aria-hidden="true"] {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.rot-kind {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    opacity: 0.6;
+    margin-bottom: 0.35rem;
+}
+
+.rot-title {
+    font-size: 1.0625rem;
+    line-height: 1.4;
+}
+
+.rot-by {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    opacity: 0.6;
+}
+
+.rot-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.9rem;
+    margin-top: 1.1rem;
+}
+
+/* The glyph is 17px; the hit area is not. Padding takes the target to 44px
+   and the negative margin pulls the row back to the glyph's own alignment,
+   so it looks identical and is actually tappable on a phone. */
+.rot-btn {
+    font-family: inherit;
+    font-size: 1.0625rem;
+    line-height: 1;
+    color: var(--text);
+    background: none;
+    border: 0;
+    padding: 13.5px;
+    margin: -13.5px;
+    cursor: pointer;
+    opacity: 0.45;
+    transition: opacity 0.2s ease;
+}
+
+.rot-btn:hover,
+.rot-btn:focus-visible {
+    opacity: 1;
+}
+
+.rot-count {
+    font-size: 0.9rem;
+    opacity: 0.45;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---- Epigraph ----
+   Italic, in the text face. The page runs one family, two weights and four
+   sizes; a display face bought in for a single block is how that comes
+   apart, and italic is the traditional setting for an epigraph anyway.
+   No rule, no border — the whole site dropped those. */
+.epigraph {
+    max-width: 26rem;
+    margin-bottom: 2.5rem;
+}
+
+.epigraph p {
+    font-size: 1.25rem;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.epigraph cite {
+    display: block;
+    margin-top: 0.7rem;
+    font-size: 0.9rem;
+    font-style: normal;
+    line-height: 1.5;
+    opacity: 0.6;
 }
 
 /* ---- About ----
@@ -410,33 +533,6 @@ section > h4 {
     border-bottom-color: var(--accent);
 }
 
-/* ---- Pull quote ----
-   Set in the display
-   face: this is the only place besides the headings where the lowercase gets
-   to be seen at size. */
-.quote {
-    margin-top: 2.75rem;
-    padding-left: 1.5rem;
-    border-left: 2px solid var(--accent);
-}
-
-.quote p {
-    font-family: var(--font-display);
-    font-size: 1.375rem;
-    font-weight: 400;
-    line-height: 1.35;
-}
-
-.quote cite {
-    display: block;
-    margin-top: 0.7rem;
-    font-size: 0.9rem;
-    font-style: normal;
-    line-height: 1.5;
-    letter-spacing: 0.01em;
-    opacity: 0.6;
-}
-
 /* ---- Contact: an outbound link, a rule, then the marks ----
    Replaces the contact <dl>. The rule is a border rather than an <hr> so it
    spans the column exactly and carries no default margin. */
@@ -450,34 +546,14 @@ section > h4 {
 }
 
 
-/* ---- Footer ----
-   The marks sit here now rather than at the foot of the home page's main
-   column, so they reach all three pages. The rule is on .footer-inner so it
-   spans the container exactly, the way the masthead and the columns do,
-   instead of running the full bleed of the viewport. */
-#site-footer {
-    width: 100%;
-    padding: 3rem var(--page-pad) 3.5rem;
-}
+/* ---- Social marks ----
+   Under the bio in the main column. They were in a footer that carried them
+   to all three pages; with the footer gone they appear once, on the page
+   someone actually arrives at.
 
-.footer-inner {
-    width: 100%;
-    max-width: var(--content-max);
-    margin-inline: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.5rem;
-    padding-top: 1.75rem;
-    border-top: 1px solid var(--border);
-}
-
-.footer-copy {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    opacity: 0.6;
-}
-
+   Full-strength ink, no opacity. These were set at 0.7 to sit back as
+   footer furniture — in the body of the page that just reads as a greyed
+   out, half-disabled control. */
 .social-row {
     display: flex;
     flex-wrap: wrap;
@@ -487,25 +563,21 @@ section > h4 {
 .social-row a {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
     color: var(--text);
     text-decoration: none;
-    font-size: 1.0625rem;
-    opacity: 0.7;
-}
-
-.social-row a:hover {
     opacity: 1;
 }
 
-/* currentColor, so the marks take the link's ink and dim with it */
-.social-row svg {
-    width: 17px;
-    height: 17px;
-    flex-shrink: 0;
+.social-row a:hover {
+    opacity: 0.6;
 }
 
-
+/* currentColor, so the marks take the link's ink */
+.social-row svg {
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
+}
 
 /* The one boxed control on the site. It can carry a border because
    the masthead's plain resume link. inline-flex, not flex: block-level it
@@ -562,26 +634,23 @@ section > h4 {
 
 
 /* Hidden until the fetch resolves, so a half-built row never flashes. */
+/* Text only now, matching the other three cards. Still an <a>, so the track
+   links out to Spotify — the artwork went, the link did not. */
 .aside-track {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: inherit;
+    flex-direction: column;
+    gap: 0.15rem;
+    color: var(--text);
     text-decoration: none;
-    opacity: 0;
-    transition: opacity 0.25s ease;
+}
+
+.aside-track:hover .aside-track-name {
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 .aside-track.loaded {
     opacity: 1;
-}
-
-.aside-track-art {
-    width: 56px;
-    height: 56px;
-    flex-shrink: 0;
-    object-fit: cover;
-    background: var(--surface);
 }
 
 .aside-track-meta {
@@ -617,124 +686,27 @@ section > h4 {
    rules between the list rows do the separating the box used to.
    .aside-module h3 is gone too — each card's heading became that label. */
 
-.aside-card {
-    display: block;
-    background: var(--surface);
-    padding: 1.1rem;
-    color: inherit;
-    text-decoration: none;
-    transition: background 0.2s;
-}
-
-.aside-card:hover {
-    background: var(--border);
-}
-
-.aside-card-title {
-    display: block;
-    line-height: 1.45;
-    margin-bottom: 0.5rem;
-}
-
-.aside-card-meta {
-    display: block;
-    font-size: 0.9rem;
-    opacity: 0.6;
-}
-
 #projects {
     display: flex;
     flex-direction: column;
     align-items: stretch;
 }
 
-/* Every one of these is lowercase, which is the whole reason for this face */
+/* Every one of these is lowercase, which is the whole reason for this face.
+   400, not 500: the masthead name sets at 47px without extra weight, so a
+   32px heading asking for some was the one inconsistency in the system.
+   Size carries the big type; weight is reserved for marking small type. */
 section > h2 {
     font-family: var(--font-display);
     font-size: 2rem;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 1.15;
     letter-spacing: -0.01em;
     margin-bottom: 0.5rem;
 }
 
-/* Direct children only: this is the section's standfirst, and unscoped it
-   also hit the venue line inside the OrigamiBench card, whose 2rem pushed
-   that card's description 51px below the other two in its row. */
-#projects > h4,
-#skills > h4 {
-    font-weight: 400;
-    opacity: 0.6;
-    margin-bottom: 2rem;
-}
 
 
-
-
-
-/* ---- Projects: card grid with expanding detail panels ---- */
-
-
-.project-stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 1rem;
-}
-
-.project-stack:empty {
-    display: none;
-}
-
-.project-stack span {
-    font-family: var(--font-text);
-    padding: 0.25rem 0.6rem;
-    border: 1px solid var(--border-strong);
-    border-radius: 2rem;
-    font-size: 0.8125rem;
-    letter-spacing: 0.03em;
-    opacity: 0.8;
-    white-space: nowrap;
-}
-
-.project-link {
-    display: inline-block;
-    align-self: flex-start;
-    padding: 0.4rem 1rem;
-    border: 1px solid var(--text);
-    text-decoration: none;
-    color: var(--text);
-    font-size: 1.0625rem;
-    transition: background 0.2s, color 0.2s;
-}
-
-.project-link:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--bg);
-}
-
-.project-links {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-/* An image-bearing frame drops its placeholder aspect ratio and takes the
-   image's own. Otherwise a 1.758:1 figure inside a fixed 4:3 box leaves ~24px
-   of surface-tinted letterbox top and bottom, and the border ends up
-   outlining the empty square rather than the figure. Empty placeholder boxes
-   keep their 4:3 / 16:10 shape. */
-
-/* Tech stack tags — sits between the description and the links */
-.project-stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 1rem;
-}
-
-/* Collapse the row entirely until tags are filled in */
 
 
 #experience {
@@ -958,195 +930,127 @@ section > h2 {
 
 
 
-/* ---- Projects: drawing sheets ----
-   Replaces the flip cards. Everything is visible without an interaction —
-   the old panel hid the stack, the links and the full description behind a
-   click most visitors never made. Three sheets for the work with real
-   assets, a plain list for the rest, so "selected" means selected. */
-#projects {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-}
+/* ---- Projects: ledger rows ----
+   The same object as the Experience ledger: content left, one muted word
+   right-aligned, no surface and no dividers. What this replaces drew five
+   kinds of box on a page whose other two sections draw none — a tinted
+   panel per project at an 18px radius, a bordered well around each
+   screenshot with its own 12px radius and a forced 16/10 letterbox, pill
+   chips for the stack and outlined buttons for the links.
 
-/* A card grid again, but with nothing hidden — the flip used to bury the
-   stack, the links and the full description behind a click. Three columns for
-   three projects: one clean row, no ragged remainder. */
-/* Two columns, with the first project spanning both. Three equal cards gave
-   every project the same weight and left the largest image on the page at
-   287px; this makes the published one the focal point and lets its figure
-   run at roughly 600px. The hierarchy has a reason behind it, which is what
-   the earlier stagger lacked. */
+   The "01 / 03" counters went with them. Numbering is only information when
+   the items are a sequence, and three projects are not one. */
 .sheets {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Fixed figure column, so every row's text starts at the same x whether or
+   not that project has a screenshot — the job the 34px logo column does in
+   the Experience ledger. */
+.sheet {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: 240px minmax(0, 1fr) max-content;
+    grid-template-areas: "figure content status";
+    column-gap: 2rem;
+    align-items: start;
+    padding: 1.6rem 0;
+    transition: background 0.2s;
 }
 
-.sheet:first-child {
-    grid-column: 1 / -1;
+.sheet:hover {
+    background: var(--surface);
 }
 
-/* Figure beside the text rather than above it, at the lead card's width.
-   .sheet-figure already carries order: -1, which puts it left here. */
-.sheet:first-child .sheet-body {
-    flex-direction: row;
-    gap: 2rem;
-    align-items: stretch;
-}
-
-.sheet:first-child .sheet-figure {
-    flex: 1 1 58%;
-    min-width: 0;
-}
-
-.sheet:first-child .sheet-text {
-    flex: 1 1 42%;
-    min-width: 0;
-    justify-content: center;
-}
-
-/* In the lead card the text is vertically centred beside a tall figure, so
-   pinning the links to the foot opens a gap under the tags instead of
-   lining anything up. They sit with the rest of the block here. */
-.sheet:first-child .sheet-text .project-links {
-    margin-top: 1.25rem;
-}
-
-.sheet:first-child .sheet-text h3 {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-/* Lifted surface, no border: the card reads as raised because it is lighter
-   than the ground, which is also the page's only second surface level. */
-.sheet {
-    background: var(--card);
-    border-radius: 18px;
-    padding: 1.5rem;
-}
-
-.sheet {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Sheet number left, status right — the one place small caps appear in the
-   projects section, which is what makes it read as a drawing register. */
-.sheet-head {
-    font-family: var(--font-text);
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    letter-spacing: 0.01em;
-    opacity: 0.45;
-}
-
-.sheet-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
+/* No well, no padding, no forced ratio: the screenshot keeps its own
+   proportions behind a single hairline. */
 .sheet-figure {
-    order: -1;
-}
-
-/* Easy Code has no screenshot yet; without one the text would run the full
-   sheet width, so it keeps a readable measure instead. */
-
-.sheet-text {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.sheet-text h3 {
-    font-size: 1.375rem;
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-}
-
-.sheet-venue {
-    font-size: 0.9rem;
-    opacity: 0.6;
-    margin-bottom: 0.9rem;
-}
-
-.sheet-text > p {
-    line-height: 1.6;
-    margin-bottom: 1rem;
-}
-
-/* Rishav's title block, in Cormorant: label above value, laid out as a row
-   that wraps rather than a table, so a long stack list does not force a
-   column width on the year. */
-
-
-
-
-.sheet-text .project-links {
-    margin-top: auto;
-    padding-top: 0.5rem;
-}
-
-.sheet-figure {
+    grid-area: figure;
     margin: 0;
+    min-width: 0;
 }
 
 .sheet-figure img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
     display: block;
-    border-radius: 10px;
-}
-
-/* Absolutely positioned so it is out of flow entirely. A percentage height
-   here cannot resolve against an aspect-ratio box, so it falls back to the
-   image's natural ratio and silently overrides the ratio the figure asked
-   for — which is why a declared 16/10 was measuring 1.32. */
-.sheet-figure {
-    position: relative;
-}
-
-.sheet-figure a {
-    position: absolute;
-    inset: 0.5rem;
-}
-
-/* aspect-ratio on the figure's border box, not on the image: with 0.5rem of
-   padding the two differ, and the no-figure spacer below matches this box.
-   The hairline matters because the Reverse Turing shot is itself dark — in a
-   dark well on a dark card it would have no edge at all. */
-.sheet-figure {
-    background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 0.5rem;
-    aspect-ratio: 16 / 10;
+}
+
+.sheet-text {
+    grid-area: content;
+    min-width: 0;
+}
+
+/* Matches .timeline-content h3 — same ledger, same title treatment. */
+.sheet-text h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+}
+
+.sheet-text > p {
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    margin-bottom: 0.65rem;
+}
+
+/* Matches .timeline-company. */
+.sheet-venue {
+    display: block;
+    font-size: 1rem;
+    font-style: italic;
+    line-height: 1.4;
+    opacity: 0.8;
+    margin-bottom: 0.65rem;
+}
+
+/* Matches .timeline-date: the single right-hand column, same size and mute. */
+.sheet-status {
+    grid-area: status;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    white-space: nowrap;
+    opacity: 0.6;
+}
+
+/* Plain separated text where there were bordered pills. */
+.project-stack {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    opacity: 0.6;
+    margin-bottom: 0.5rem;
+}
+
+.project-stack:empty {
+    display: none;
+}
+
+.project-stack span:not(:last-child)::after {
+    content: " \00b7 ";
+}
+
+/* Underlined, like every other link on the site. Was a bordered button that
+   inverted to solid ink on hover. */
+.project-links {
     display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
 }
 
-/* The lead figure stands beside text rather than above it, so it can be
-   taller without stretching the card. */
-.sheet:first-child .sheet-figure {
-    aspect-ratio: 4 / 3;
+.project-link {
+    font-size: 1.0625rem;
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: opacity 0.2s;
 }
 
-/* Holds the slot, shows nothing. */
-.sheet-figure.is-empty {
-    background: none;
-    border-color: transparent;
+.project-link:hover {
+    opacity: 0.6;
 }
 
-
-/* ---- The rest, as a plain register ---- */
 
 
 
@@ -1155,32 +1059,20 @@ section > h2 {
 
 @media (max-width: 768px) {
 
-    /* Stacked: at this width the figure beside the text leaves both too
-       narrow, and the sheet's own padding shrinks to match the page gutter. */
-    .sheets {
+    /* One column: a 240px figure beside text leaves the text ~140px here.
+       Status first so it reads as the row's label, then figure, then text. */
+    .sheet {
         grid-template-columns: minmax(0, 1fr);
-        gap: 2.75rem;
+        grid-template-areas:
+            "status"
+            "figure"
+            "content";
+        row-gap: 0.85rem;
+        padding: 1.4rem 0;
+    }
+
+    .sheet-figure {
         max-width: 400px;
-    }
-
-    /* The lead card's figure-beside-text split would leave the figure ~190px
-       and the text ~140px at this width, so it stacks like the others. */
-    .sheet:first-child .sheet-body {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .sheet:first-child .sheet-figure,
-    .sheet:first-child .sheet-text {
-        flex: 0 0 auto;
-    }
-
-    .sheet:first-child .sheet-figure {
-        aspect-ratio: 16 / 10;
-    }
-
-    .sheet:first-child .sheet-text h3 {
-        font-size: 1.25rem;
     }
 
 }
@@ -1226,7 +1118,7 @@ section > h2 {
 
 .tool-name {
     font-family: var(--font-text);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     letter-spacing: 0.06em;
     opacity: 0.5;
 }
