@@ -79,3 +79,43 @@ function initRotation() {
 }
 
 initRotation();
+
+// ---- Theme toggle ----
+// The <head> script has already applied a stored choice before paint; this
+// only handles clicks and keeps the button's label truthful. With no stored
+// choice there is no data-theme attribute at all, so the page follows the OS
+// through the media query and the button reports whatever that resolves to.
+const themeToggle = document.getElementById('theme-toggle');
+
+if (themeToggle) {
+    const root = document.documentElement;
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const activeTheme = () =>
+        root.getAttribute('data-theme') || (systemDark.matches ? 'dark' : 'light');
+
+    const syncLabel = () => {
+        const dark = activeTheme() === 'dark';
+        themeToggle.setAttribute('aria-pressed', String(dark));
+        themeToggle.setAttribute('aria-label', dark ? 'switch to light mode' : 'switch to dark mode');
+        themeToggle.setAttribute('title', dark ? 'light mode' : 'dark mode');
+    };
+
+    themeToggle.addEventListener('click', () => {
+        const next = activeTheme() === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        // Safari in private mode throws on write, and a failed save is not
+        // worth breaking the toggle over — the theme still applies this visit.
+        try {
+            localStorage.setItem('theme', next);
+        } catch (e) { }
+        syncLabel();
+    });
+
+    // Track the OS only while the visitor has made no explicit choice.
+    systemDark.addEventListener('change', () => {
+        if (!root.hasAttribute('data-theme')) syncLabel();
+    });
+
+    syncLabel();
+}

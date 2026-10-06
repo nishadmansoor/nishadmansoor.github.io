@@ -75,7 +75,41 @@
        column at 476px and the line at ~71 characters. */
     --content-max: 840px;
     --page-pad: 3rem;
+    /* One step up from --surface, for the project rows on hover. */
+    --surface-strong: rgba(27, 24, 21, 0.045);
     color-scheme: light;
+}
+
+/* ---- Dark ----
+   Only the colour tokens are redefined; every rule on the page reads through
+   them, so nothing else changes. Not pure black: #151310 keeps the same warm
+   bias the ink has (R > B), so the dark page reads as the same object with
+   the lights off rather than a different site.
+
+   Two selectors for the same values. The media query covers everyone who has
+   never touched the toggle, guarded with :not([data-theme="light"]) so an
+   explicit light choice still wins on a dark OS. The attribute selector
+   covers the toggle itself, in both directions. */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --bg: #151310;
+        --text: #eceae4;
+        --border: rgba(236, 234, 228, 0.16);
+        --border-strong: rgba(236, 234, 228, 0.34);
+        --surface: rgba(236, 234, 228, 0.06);
+        --surface-strong: rgba(236, 234, 228, 0.09);
+        color-scheme: dark;
+    }
+}
+
+:root[data-theme="dark"] {
+    --bg: #151310;
+    --text: #eceae4;
+    --border: rgba(236, 234, 228, 0.16);
+    --border-strong: rgba(236, 234, 228, 0.34);
+    --surface: rgba(236, 234, 228, 0.06);
+    --surface-strong: rgba(236, 234, 228, 0.09);
+    color-scheme: dark;
 }
 
 
@@ -121,6 +155,78 @@ section > h2 {
     width: 100%;
     max-width: var(--content-max);
     margin-inline: auto;
+}
+
+/* ---- Theme toggle ----
+   Sits with the contact marks at the right of the nav row. Same 19px box and
+   same ink as those, so it reads as one row of utilities rather than a
+   control bolted on.
+
+   Both icons are in the markup; CSS picks one. The sun shows on the light
+   page (press it to go dark), the moon on the dark page. Hit area is padded
+   to 44px with a matching negative margin, same trick as the deck arrows --
+   the glyph stays 19px and the target is tappable. */
+.masthead-utils {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+#theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    background: none;
+    border: 0;
+    padding: 12.5px;
+    margin: -12.5px;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+#theme-toggle:hover {
+    opacity: 0.6;
+}
+
+.theme-icon {
+    width: 19px;
+    height: 19px;
+    display: block;
+}
+
+/* Default (light): show the sun. */
+.theme-icon-moon {
+    display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-icon-sun {
+        display: none;
+    }
+
+    :root:not([data-theme="light"]) .theme-icon-moon {
+        display: block;
+    }
+}
+
+:root[data-theme="dark"] .theme-icon-sun {
+    display: none;
+}
+
+:root[data-theme="dark"] .theme-icon-moon {
+    display: block;
+}
+
+/* An explicit light choice beats a dark OS, so restate the light pairing at
+   higher specificity than the media query above. */
+:root[data-theme="light"] .theme-icon-sun {
+    display: block;
+}
+
+:root[data-theme="light"] .theme-icon-moon {
+    display: none;
 }
 
 /* ---- Casing exceptions ----
@@ -410,7 +516,10 @@ section > h2 {
     padding: 13.5px;
     margin: -13.5px;
     cursor: pointer;
-    opacity: 0.45;
+    /* 0.6, not 0.45: at 0.45 these measured 2.92:1 on white and 3.97:1 on
+       the dark ground, both short of the 4.5:1 that 14-17px text needs.
+       0.6 is the single muted level the rest of the page uses. */
+    opacity: 0.6;
     transition: opacity 0.2s ease;
 }
 
@@ -421,7 +530,7 @@ section > h2 {
 
 .rot-count {
     font-size: 0.9rem;
-    opacity: 0.45;
+    opacity: 0.6;
     font-variant-numeric: tabular-nums;
 }
 
@@ -1154,7 +1263,7 @@ section > h2 {
 }
 
 .sheet:hover {
-    background: #efece6;
+    background: var(--surface-strong);
 }
 
 .sheet-figure img {
