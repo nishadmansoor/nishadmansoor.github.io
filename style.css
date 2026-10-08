@@ -1317,3 +1317,25 @@ strong,
 b {
     font-weight: 600;
 }
+
+
+/* ---- Closing panel ----
+   Home page only, in the main column under the publication block.
+
+   Tried as a fixed full-bleed backdrop first, which is the obvious reading
+   of "page background" -- but this page keeps a sidebar down its whole
+   right-hand side, so the artwork landed on top of the education block and
+   the resume button. In the column it collides with nothing.
+
+   No border, no blend mode: the ground is transparent, so it sits directly
+   on the page and the same file works on white and on #151310. */
+.panel {
+    margin: 2.5rem 0 0;
+    width: 100%;
+}
+
+.panel img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
