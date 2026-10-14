@@ -33,16 +33,15 @@
    strokes, which is what the 12-16px data lines need. */
 :root {
     --bg: #ffffff;
-    --text: #1b1815;
-    /* Black and white for now — the accent resolves to the ink, so every
-       rule, marker and underline that used brass goes black without any of
-       them losing their shape. Colour comes later: put a hex back here and
-       all eight sites light up again.
-       (The brass that was here, #8a6a15, measured 5.06:1 on white.) */
-    --accent: var(--text);
-    --border: rgba(27, 24, 21, 0.14);
-    --border-strong: rgba(27, 24, 21, 0.32);
-    --surface: rgba(27, 24, 21, 0.05);
+    --text: #15161a;
+    /* The accent is link text and list markers, so it owes 4.5:1. A brighter
+       orange fails on white — #f97316 measures 2.80:1, #ea580c 3.56:1 — so
+       this is a true burnt orange that clears with headroom at 5.18:1
+       rather than one scraping the line. */
+    --accent: #c2410c;
+    --border: rgba(21, 22, 26, 0.13);
+    --border-strong: rgba(21, 22, 26, 0.28);
+    --surface: rgba(21, 22, 26, 0.04);
     /* A card surface just off the ground. On white the lift has to come from
        going darker, not lighter. */
 
@@ -52,6 +51,13 @@
        display serif scales down to a 13px data line. */
     --font-display: "EB Garamond", Georgia, "Times New Roman", serif;
     --font-text: "EB Garamond", Georgia, "Times New Roman", serif;
+    /* Interface text only — labels, chips, dates, metadata, nav. A serif
+       carries its detail in thin strokes and bracketed serifs, and below
+       about 14px those stop resolving; the 12px status chips were the worst
+       of it. Prose and headings stay in the serif. Every swapped rule also
+       drops a size step: mono has a far larger x-height, so it reads bigger
+       than Garamond at the same nominal size. */
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
     /* The sidebar's width and the gutter between the columns, which together
        set the reading column: 840 - 300 - 64 = 476px. The prose fills that
@@ -76,15 +82,16 @@
     --content-max: 840px;
     --page-pad: 3rem;
     /* One step up from --surface, for the project rows on hover. */
-    --surface-strong: rgba(27, 24, 21, 0.045);
+    --surface-strong: rgba(21, 22, 26, 0.055);
     color-scheme: light;
 }
 
 /* ---- Dark ----
    Only the colour tokens are redefined; every rule on the page reads through
-   them, so nothing else changes. Not pure black: #151310 keeps the same warm
-   bias the ink has (R > B), so the dark page reads as the same object with
-   the lights off rather than a different site.
+   them, so nothing else changes. A true near-black rather than a tinted one,
+   to match the white it mirrors. Dark has the easier job of the two: a bright
+   accent gains contrast against this ground, where on white it loses it,
+   which is why the teal can be vivid while the orange has to be deep.
 
    Two selectors for the same values. The media query covers everyone who has
    never touched the toggle, guarded with :not([data-theme="light"]) so an
@@ -92,23 +99,25 @@
    covers the toggle itself, in both directions. */
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-        --bg: #151310;
-        --text: #eceae4;
-        --border: rgba(236, 234, 228, 0.16);
-        --border-strong: rgba(236, 234, 228, 0.34);
-        --surface: rgba(236, 234, 228, 0.06);
-        --surface-strong: rgba(236, 234, 228, 0.09);
+        --bg: #0d0d0d;
+        --text: #ededed;
+        --accent: #2dd4bf;   /* 10.44:1 on the ground — AA */
+        --border: rgba(237, 237, 237, 0.15);
+        --border-strong: rgba(237, 237, 237, 0.32);
+        --surface: rgba(237, 237, 237, 0.05);
+        --surface-strong: rgba(237, 237, 237, 0.08);
         color-scheme: dark;
     }
 }
 
 :root[data-theme="dark"] {
-    --bg: #151310;
-    --text: #eceae4;
-    --border: rgba(236, 234, 228, 0.16);
-    --border-strong: rgba(236, 234, 228, 0.34);
-    --surface: rgba(236, 234, 228, 0.06);
-    --surface-strong: rgba(236, 234, 228, 0.09);
+    --bg: #0d0d0d;
+    --text: #ededed;
+    --accent: #2dd4bf;
+    --border: rgba(237, 237, 237, 0.15);
+    --border-strong: rgba(237, 237, 237, 0.32);
+    --surface: rgba(237, 237, 237, 0.05);
+    --surface-strong: rgba(237, 237, 237, 0.08);
     color-scheme: dark;
 }
 
@@ -150,7 +159,10 @@ section {
 }
 
 .timeline,
-.sheets,
+.group-label,
+.sheet-featured,
+.sheet-grid,
+.sheet-rows,
 section > h2 {
     width: 100%;
     max-width: var(--content-max);
@@ -238,7 +250,6 @@ section > h2 {
    Two mechanisms. These blocks are entirely technical metadata, so they opt
    out wholesale; .caps handles single acronyms sitting inside running prose,
    where a block rule would also un-lowercase the sentence around them. */
-.sheet-venue,
 .project-stack,
 .tool-name,
 .tool-mark-text,
@@ -328,7 +339,8 @@ section > h2 {
 #masthead-nav a {
     color: var(--text);
     text-decoration: none;
-    font-size: 1.0625rem;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
     line-height: 1.5;
     opacity: 0.6;
     /* Transparent on every link so the current page's underline appearing
@@ -367,9 +379,26 @@ section > h2 {
 
 /* Mono, like the dates and the school lines — it reads as a standing fact
    rather than a sentence. */
+/* Status, not decoration: sits on the role line so it is on every page
+   without scrolling. No chip — it reads as the second half of the line,
+   divided by a rule rather than boxed. The accent carries it instead, which
+   is otherwise barely used anywhere. Not a link, so no underline, no hover. */
+.open-badge {
+    color: var(--accent);
+    white-space: nowrap;
+    opacity: 1;
+}
+
+/* Decorative, so it is hidden from screen readers — the two halves are
+   already separate phrases to anyone listening. */
+.role-sep {
+    opacity: 0.3;
+    margin: 0 0.2rem;
+}
+
 #masthead-role {
-    font-family: var(--font-text);
-    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
     line-height: 1.5;
     letter-spacing: 0.01em;
     opacity: 0.6;
@@ -419,11 +448,11 @@ section > h2 {
    tracking that stood in for it while Paragon offered one cut is mostly
    off again. */
 .side-label {
-    font-family: var(--font-text);
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
     line-height: 1.5;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.06em;
     opacity: 0.6;
     margin-bottom: 0.9rem;
 }
@@ -479,19 +508,22 @@ section > h2 {
 }
 
 .rot-kind {
-    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
     line-height: 1.5;
     opacity: 0.6;
     margin-bottom: 0.35rem;
 }
 
 .rot-title {
-    font-size: 1.0625rem;
-    line-height: 1.4;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.5;
 }
 
 .rot-by {
-    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
     line-height: 1.5;
     opacity: 0.6;
 }
@@ -532,31 +564,6 @@ section > h2 {
     font-size: 0.9rem;
     opacity: 0.6;
     font-variant-numeric: tabular-nums;
-}
-
-/* ---- Epigraph ----
-   Italic, in the text face. The page runs one family, two weights and four
-   sizes; a display face bought in for a single block is how that comes
-   apart, and italic is the traditional setting for an epigraph anyway.
-   No rule, no border — the whole site dropped those. */
-.epigraph {
-    max-width: 26rem;
-    margin-bottom: 2.5rem;
-}
-
-.epigraph p {
-    font-size: 1.25rem;
-    font-style: italic;
-    line-height: 1.4;
-}
-
-.epigraph cite {
-    display: block;
-    margin-top: 0.7rem;
-    font-size: 0.9rem;
-    font-style: normal;
-    line-height: 1.5;
-    opacity: 0.6;
 }
 
 /* ---- About ----
@@ -616,7 +623,7 @@ section > h2 {
 }
 
 .hl-list li::before {
-    content: "\2014";
+    content: "\2022";
     position: absolute;
     left: 0;
     color: var(--accent);
@@ -699,7 +706,8 @@ section > h2 {
     border: 1px solid var(--border-strong);
     color: var(--text);
     text-decoration: none;
-    font-size: 1.0625rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
     line-height: 1.5;
     transition: background 0.2s, border-color 0.2s;
 }
@@ -722,8 +730,9 @@ section > h2 {
 }
 
 .aside-list li {
-    font-size: 1.0625rem;
-    line-height: 1.45;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.5;
     margin-bottom: 0.9rem;
 }
 
@@ -734,9 +743,9 @@ section > h2 {
 /* Secondary line inside a list row — school and year under a degree. Same
    treatment as .aside-track-artist, which does this for the artist name. */
 .aside-meta {
-    font-family: var(--font-text);
+    font-family: var(--font-mono);
     display: block;
-    font-size: 0.9rem;
+    font-size: 0.8125rem;
     line-height: 1.5;
     opacity: 0.6;
 }
@@ -762,14 +771,11 @@ section > h2 {
     opacity: 1;
 }
 
-.aside-track-meta {
-    min-width: 0;
-}
-
 .aside-track-name {
     display: block;
-    font-size: 1.0625rem;
-    line-height: 1.45;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.5;
     /* A long title would otherwise push the row past the 260px column */
     overflow: hidden;
     text-overflow: ellipsis;
@@ -782,9 +788,9 @@ section > h2 {
 }
 
 .aside-track-artist {
-    font-family: var(--font-text);
+    font-family: var(--font-mono);
     display: block;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     line-height: 1.5;
     opacity: 0.6;
 }
@@ -805,17 +811,20 @@ section > h2 {
    400, not 500: the masthead name sets at 47px without extra weight, so a
    32px heading asking for some was the one inconsistency in the system.
    Size carries the big type; weight is reserved for marking small type. */
+/* Mono from here down. The rule across the site: serif for sentences and
+   the name, mono for anything that titles or labels. Headings are structure,
+   not prose — and holding the serif back to the masthead alone makes the
+   name a wordmark rather than just the biggest text on the page.
+   Sized down from 2rem: mono's x-height runs far larger than Garamond's, so
+   the same nominal size reads heavier. */
 section > h2 {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    font-weight: 400;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
+    font-family: var(--font-mono);
+    font-size: 1.4375rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
     margin-bottom: 0.5rem;
 }
-
-
-
 
 
 #experience {
@@ -858,9 +867,9 @@ section > h2 {
    clean reverse-chronological read. */
 
 .timeline-date {
-    font-family: var(--font-text);
+    font-family: var(--font-mono);
     grid-area: date;
-    font-size: 0.9rem;
+    font-size: 0.8125rem;
     line-height: 1.5;
     white-space: nowrap;
     opacity: 0.6;
@@ -900,10 +909,11 @@ section > h2 {
    the same size as the description beneath it and the whole section read
    flat — five equal rows regardless of what each one was. */
 .timeline-content h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.3;
-    letter-spacing: -0.005em;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
 }
 
 .timeline-company {
@@ -934,7 +944,6 @@ section > h2 {
     opacity: 0.75;
     max-width: 88ch;
 }
-
 
 
 /* Narrow desktop: tighten the nav so name + links + socials still fit on one line */
@@ -968,8 +977,6 @@ section > h2 {
     }
 
 
-
-
     #masthead {
         padding-top: 2.5rem;
     }
@@ -993,7 +1000,6 @@ section > h2 {
     }
 
 
-
     /* No room for a right-hand date column — stack it above the role, with
        the logo spanning both rows beside them */
     .timeline-entry {
@@ -1013,11 +1019,7 @@ section > h2 {
     }
 
 
-
     
-
-
-
 
 
     section {
@@ -1037,8 +1039,6 @@ section > h2 {
 }
 
 
-
-
 /* ---- Projects: ledger rows ----
    The same object as the Experience ledger: content left, one muted word
    right-aligned, no surface and no dividers. What this replaces drew five
@@ -1049,32 +1049,80 @@ section > h2 {
 
    The "01 / 03" counters went with them. Numbering is only information when
    the items are a sequence, and three projects are not one. */
-.sheets {
+/* Three tiers, following the reference: one full-width card with its
+   screenshot alongside, a two-up grid under it, then plain rows. Card chrome
+   was stripped from this page once before — this brings back a border and a
+   small radius, which is the price of the tiering reading as tiers. */
+.sheet-featured,
+.sheet-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5rem;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.sheet-featured:hover,
+.sheet-card:hover {
+    background: var(--surface);
+    border-color: var(--border-strong);
+}
+
+/* Text left, screenshot right. */
+.sheet-featured {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 2rem;
+    align-items: start;
+}
+
+.sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+}
+
+/* Column, so the stack and links sit at the foot however tall the text is. */
+.sheet-card {
     display: flex;
     flex-direction: column;
 }
 
-/* Fixed figure column, so every row's text starts at the same x whether or
-   not that project has a screenshot — the job the 34px logo column does in
-   the Experience ledger. */
-.sheet {
-    display: grid;
-    grid-template-columns: 240px minmax(0, 1fr) max-content;
-    grid-template-areas: "figure content status";
-    column-gap: 2rem;
-    align-items: start;
-    padding: 1.6rem 0;
-    transition: background 0.2s;
+.sheet-card .sheet-figure {
+    margin: 0.9rem 0;
 }
 
-.sheet:hover {
-    background: var(--surface);
+/* Pushes stack and links down when descriptions differ in length, so the
+   two cards' footers line up. */
+.sheet-card .project-stack {
+    margin-top: auto;
+    padding-top: 0.9rem;
+}
+
+/* Last tier: no border, no image, just a rule between rows. */
+.sheet-rows {
+    list-style: none;
+}
+
+.sheet-row {
+    border-top: 1px solid var(--border);
+    padding: 1.1rem 0;
+}
+
+/* The row spans the full frame, so without a cap its description ran 105
+   characters a line against the 45-75 the cards sit in. The measure is
+   capped rather than the row, so the rule above it still spans. */
+.sheet-row > p {
+    max-width: 62ch;
+}
+
+.sheet-row:last-child {
+    border-bottom: 1px solid var(--border);
 }
 
 /* No well, no padding, no forced ratio: the screenshot keeps its own
    proportions behind a single hairline. */
 .sheet-figure {
-    grid-area: figure;
     margin: 0;
     min-width: 0;
 }
@@ -1087,46 +1135,79 @@ section > h2 {
 }
 
 .sheet-text {
-    grid-area: content;
     min-width: 0;
 }
 
-/* Matches .timeline-content h3 — same ledger, same title treatment. */
-.sheet-text h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.3;
-    letter-spacing: -0.005em;
+/* Group heading over each run of projects. Borrowed from the reference,
+   which sorts its work under labels rather than running one flat list.
+   Same treatment as the sidebar labels on the home page. */
+.group-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    opacity: 0.6;
+    margin-top: 2.5rem;
+    margin-bottom: 0.25rem;
 }
 
-.sheet-text > p {
+.group-label:first-of-type {
+    margin-top: 1rem;
+}
+
+/* Title and status on one line. The status used to be a column of its own
+   on the far right, which left it stranded from the thing it described. */
+.sheet-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.3rem;
+}
+
+/* Matches .timeline-content h3 — same ledger, same title treatment.
+   Scoped to .sheet-head, not .sheet-text: only the featured card kept a
+   .sheet-text wrapper when the tiers went in, so the grid cards and the row
+   were falling through to the browser default — 16px/700 against the 20px/600
+   these are meant to be. */
+.sheet-head h4 {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+}
+
+/* Same reason: the descriptions in cards and rows had no rule at all and
+   were rendering at 16px with line-height: normal. */
+.sheet-featured .sheet-text > p,
+.sheet-card > p,
+.sheet-row > p {
     font-size: 1.0625rem;
     line-height: 1.55;
     margin-bottom: 0.65rem;
 }
 
-/* Matches .timeline-company. */
-.sheet-venue {
-    display: block;
-    font-size: 1rem;
-    font-style: italic;
-    line-height: 1.4;
-    opacity: 0.8;
-    margin-bottom: 0.65rem;
-}
-
-/* Matches .timeline-date: the single right-hand column, same size and mute. */
+/* A chip now rather than a column: next to the title it reads as that
+   project's state, which is what it always meant. */
 .sheet-status {
-    grid-area: status;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.4;
     white-space: nowrap;
-    opacity: 0.6;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    opacity: 0.7;
+    position: relative;
+    top: -0.1em;
 }
 
 /* Plain separated text where there were bordered pills. */
 .project-stack {
-    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
     line-height: 1.5;
     opacity: 0.6;
     margin-bottom: 0.5rem;
@@ -1149,35 +1230,75 @@ section > h2 {
 }
 
 .project-link {
-    font-size: 1.0625rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
     color: var(--text);
+    /* Underline moves to the label span: on an inline-flex link the rule
+       would run under the icon too. */
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    transition: opacity 0.2s;
+}
+
+.project-link > span {
     text-decoration: underline;
     text-underline-offset: 2px;
-    transition: opacity 0.2s;
+}
+
+/* A globe for a live deployment, angle brackets for source. Sized in em so
+   the mark tracks the label rather than needing its own breakpoint. */
+.link-mark {
+    width: 1em;
+    height: 1em;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    opacity: 0.75;
 }
 
 .project-link:hover {
     opacity: 0.6;
 }
 
+/* Marks the link as leaving the site. Kept outside the underline by sitting
+   in ::after with its own margin, so the arrow is not underlined with the
+   text. */
+.project-link[target="_blank"]::after {
+    content: "\2197";
+    display: inline-block;
+    margin-left: 0.25em;
+    text-decoration: none;
+    font-size: 0.85em;
+    opacity: 0.7;
+}
 
-
-
-
+/* Must follow the arrow rule, not precede it: :has() takes the specificity
+   of its argument, so this and the [target] rule both land on (0,2,1) and
+   source order is what decides. The mark already says where the link goes. */
+.project-link:has(.link-mark)::after {
+    content: none;
+}
 
 
 @media (max-width: 768px) {
 
-    /* One column: a 240px figure beside text leaves the text ~140px here.
-       Status first so it reads as the row's label, then figure, then text. */
-    .sheet {
+    /* Both tiers collapse to one column: side by side, neither the featured
+       card's two halves nor the grid's two cards leave the text enough
+       width. */
+    .sheet-featured,
+    .sheet-grid {
         grid-template-columns: minmax(0, 1fr);
-        grid-template-areas:
-            "status"
-            "figure"
-            "content";
-        row-gap: 0.85rem;
-        padding: 1.4rem 0;
+    }
+
+    .sheet-featured {
+        row-gap: 1.25rem;
+    }
+
+    .sheet-featured,
+    .sheet-card {
+        padding: 1.1rem;
     }
 
     .sheet-figure {
@@ -1226,8 +1347,8 @@ section > h2 {
 }
 
 .tool-name {
-    font-family: var(--font-text);
-    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
     letter-spacing: 0.06em;
     opacity: 0.5;
 }
@@ -1301,7 +1422,6 @@ section:first-of-type {
 }
 
 
-
 @media (max-width: 768px) {
     section:first-of-type {
         padding-top: 2rem;
@@ -1316,26 +1436,4 @@ section:first-of-type {
 strong,
 b {
     font-weight: 600;
-}
-
-
-/* ---- Closing panel ----
-   Home page only, in the main column under the publication block.
-
-   Tried as a fixed full-bleed backdrop first, which is the obvious reading
-   of "page background" -- but this page keeps a sidebar down its whole
-   right-hand side, so the artwork landed on top of the education block and
-   the resume button. In the column it collides with nothing.
-
-   No border, no blend mode: the ground is transparent, so it sits directly
-   on the page and the same file works on white and on #151310. */
-.panel {
-    margin: 2.5rem 0 0;
-    width: 100%;
-}
-
-.panel img {
-    display: block;
-    width: 100%;
-    height: auto;
 }

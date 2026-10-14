@@ -18,7 +18,8 @@
     <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <!-- Runs before the stylesheet applies, so a visitor who chose dark does
          not get a white flash on every page load. Wrapped because Safari in
@@ -31,8 +32,8 @@
             } catch (e) { }
         })();
     </script>
-    <link rel="stylesheet" href="/style.css?v=121">
-    <script src="/script.js?v=121" defer></script>
+    <link rel="stylesheet" href="/style.css?v=187">
+    <script src="/script.js?v=187" defer></script>
 </head>
 
 <body class="home">
@@ -47,7 +48,8 @@
                 <img id="masthead-photo" src="/assets/photo.png" alt="Nishad Mansoor" width="80" height="80">
                 <div class="masthead-id">
                     <h1 id="masthead-name"><a href="/">Nishad Mansoor</a></h1>
-                    <p id="masthead-role">data science @ northeastern</p>
+                    <p id="masthead-role">data science @ northeastern <span class="role-sep" aria-hidden="true">|</span>
+                        <span class="open-badge">open to work</span></p>
                 </div>
             </div>
             <!-- Nav left, contact marks right, one row. The marks used to sit
@@ -89,12 +91,13 @@
                          choice is remembered in localStorage. Both icons ship and CSS
                          shows whichever matches the active theme, so there is no icon
                          swap to do in script. -->
-                    <button type="button" id="theme-toggle" aria-pressed="false"
-                        aria-label="switch to dark mode" title="dark mode">
-                        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                    <button type="button" id="theme-toggle" aria-pressed="false" aria-label="switch to dark mode"
+                        title="dark mode">
+                        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
                             <circle cx="12" cy="12" r="4.2" />
-                            <path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6" />
+                            <path
+                                d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6" />
                         </svg>
                         <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="currentColor"
                             aria-hidden="true">
@@ -111,46 +114,33 @@
 
             <div id="home-main">
 
-                <!--<blockquote class="epigraph">
-                    <p>all our dreams can come true if we have the courage to pursue them.</p>
-                    <cite>walt disney</cite>
-                </blockquote>-->
-
                 <div id="about-text">
-                    <p>i'm a data scientist based in new jersey. i studied finance at rutgers and kept finding the
-                        systems behind the numbers more interesting than the numbers themselves, which is why i switched
-                        to
-                        tech.
-                        i'm finishing my master's in data science at northeastern this
-                        december, and looking for machine learning or data science roles full time.</p>
-                    <p>most of what i make starts as a random idea i wanted to see exist. something catches my
-                        interest, so i build a version of it. a lot of them never really go anywhere, but i always
-                        come out knowing something i didn't.</p>
-                    <p>in my free time, i like to watch anime, play basketball, take photos, and draw.
-                        if you want to talk about any of these, or if you just want to say hi, reach out at
-                        nishadmansoor02@gmail.com!
+                    <p>i'm nishad, a data scientist who likes exploring machine learning, experimenting with creative
+                        technology, and building things just to see if i can.</p>
+                    <p>i studied finance at rutgers before finding my way into tech. i'm now finishing my master's in
+                        data science at northeastern and <strong>looking for full-time roles in <span
+                                class="caps">ML</span> and data science</strong>. if you're hiring, i'd like to hear
+                        from you &mdash; <a href="mailto:nishadmansoor02@gmail.com">nishadmansoor02@gmail.com</a></p>
+                    <p>most of what i make starts as a random idea i want to see exist. i'll build a version, see where
+                        it goes, and learn something along the way. that's half the fun.
                     </p>
+                    <p>outside of work &amp; school, i'm usually watching anime, playing basketball, taking photos, or
+                        drawing. always happy to chat.</p>
                 </div>
 
 
                 <div class="hl">
-                    <h2 class="side-label">publication</h2>
+                    <h2 class="side-label">notable</h2>
                     <ul class="hl-list">
-                        <li><a class="caps" href="https://arxiv.org/abs/2603.13856v2" target="_blank"
+                        <li>published<a class="caps" href="https://arxiv.org/abs/2603.13856v2" target="_blank"
                                 rel="noopener"><strong>OrigamiBench</strong></a>,
-                            accepted to <span class="caps">CVPR MAR</span> &amp; <span class="caps">ICML LM4Plan</span>
+                            to <span class="caps">CVPR MAR</span> &amp; <span class="caps">ICML LM4Plan</span>
                             2026
                         </li>
+                        <li><strong class="caps">CodePath A301</strong>, open source fellowship (in progress)</li>
                     </ul>
                 </div>
 
-                <!-- Under the publication block, in the main column. The
-                     artwork has a transparent ground, so it sits on the page
-                     with no panel edge and one file serves both themes. -->
-                <figure class="panel">
-                    <img src="/assets/spidey.webp" alt="Spider-Man swinging between rooftops and a water tower"
-                        width="1000" height="1036" loading="lazy" decoding="async">
-                </figure>
             </div>
 
             <aside id="home-aside">
@@ -228,6 +218,8 @@
             </aside>
         </div>
     </section>
+
+
 
 
 

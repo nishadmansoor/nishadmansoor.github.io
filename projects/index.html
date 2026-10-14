@@ -18,7 +18,8 @@
     <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <!-- Runs before the stylesheet applies, so a visitor who chose dark does
          not get a white flash on every page load. Wrapped because Safari in
@@ -31,8 +32,8 @@
             } catch (e) { }
         })();
     </script>
-    <link rel="stylesheet" href="/style.css?v=121">
-    <script src="/script.js?v=121" defer></script>
+    <link rel="stylesheet" href="/style.css?v=187">
+    <script src="/script.js?v=187" defer></script>
 </head>
 
 <body>
@@ -84,12 +85,13 @@
                          choice is remembered in localStorage. Both icons ship and CSS
                          shows whichever matches the active theme, so there is no icon
                          swap to do in script. -->
-                    <button type="button" id="theme-toggle" aria-pressed="false"
-                        aria-label="switch to dark mode" title="dark mode">
-                        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                    <button type="button" id="theme-toggle" aria-pressed="false" aria-label="switch to dark mode"
+                        title="dark mode">
+                        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
                             <circle cx="12" cy="12" r="4.2" />
-                            <path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6" />
+                            <path
+                                d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6" />
                         </svg>
                         <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="currentColor"
                             aria-hidden="true">
@@ -104,6 +106,19 @@
     <!-- Icon sprite: Simple Icons (CC0), single-path and monochrome so
          fill="currentColor" lets each mark take the page ink colour. -->
     <svg id="icon-sprite" aria-hidden="true" focusable="false">
+        <!-- Generic marks, stroked rather than filled: a globe for a live
+             deployment, angle brackets for source. -->
+        <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9.2" />
+            <path d="M2.8 12h18.4" />
+            <path d="M12 2.8c2.4 2.5 3.7 5.7 3.7 9.2s-1.3 6.7-3.7 9.2c-2.4-2.5-3.7-5.7-3.7-9.2S9.6 5.3 12 2.8z" />
+        </symbol>
+        <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8.5 7.5 3.5 12l5 4.5" />
+            <path d="M15.5 7.5 20.5 12l-5 4.5" />
+        </symbol>
         <symbol id="i-python" viewBox="0 0 24 24">
             <path
                 d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z" />
@@ -154,123 +169,137 @@
 
         <!-- EDIT ME: Easy Code has no screenshot yet; its figure column simply
              sits empty, which keeps its text aligned with the rows above. -->
-        <div class="sheets">
-
-            <article class="sheet">
-                <span class="sheet-status">research</span>
-                <figure class="sheet-figure">
-                    <a href="/assets/origamibench.webp" target="_blank" rel="noopener" title="Open full size">
-                        <img src="/assets/origamibench.webp" loading="lazy" decoding="async"
-                            alt="OrigamiBench: dataset of folds, evaluation environment, and the two task formats">
-                    </a>
-                </figure>
-                <div class="sheet-text">
-                    <h3><span class="caps">OrigamiBench</span></h3>
-                    <p>A benchmark of 300+ origami folds built to test how well vision-language models reason
-                        about space &mdash; whether a model can tell what a sheet of paper becomes after a
-                        given fold.</p>
-                    <div class="project-stack">
-                        <span>Python</span>
-                        <span>vision-language models</span>
-                    </div>
-                    <div class="project-links">
-                        <a class="project-link" href="https://arxiv.org/abs/2603.13856v2" target="_blank"
-                            rel="noopener">Paper</a>
-                        <a class="project-link"
-                            href="https://drive.google.com/file/d/1UFxzwQivMwHLesgbVVBdexgVkEwPz3UG/view?usp=drive_link"
-                            target="_blank" rel="noopener">Poster</a>
-                    </div>
+        <!-- One project takes the full width with its screenshot beside it,
+             two sit in a grid under it, the rest are rows. The tiers come
+             from the reference; what decides them here is how much each
+             project actually has to show. -->
+        <h3 class="group-label">featured</h3>
+        <article class="sheet sheet-featured">
+            <div class="sheet-text">
+                <div class="sheet-head">
+                    <h4><span class="caps">OrigamiBench</span></h4>
+                    <span class="sheet-status">research</span>
                 </div>
-            </article>
+                <p>A benchmark of 300+ origami folds built to test how well vision-language models reason
+                    about space &mdash; whether a model can tell what a sheet of paper becomes after a
+                    given fold.</p>
+                <div class="project-stack">
+                    <span>Python</span>
+                    <span>vision-language models</span>
+                </div>
+                <div class="project-links">
+                    <a class="project-link" href="https://arxiv.org/abs/2603.13856v2" target="_blank"
+                        rel="noopener"><span>Paper</span></a>
+                    <a class="project-link"
+                        href="https://drive.google.com/file/d/1UFxzwQivMwHLesgbVVBdexgVkEwPz3UG/view?usp=drive_link"
+                        target="_blank" rel="noopener"><span>Poster</span></a>
+                </div>
+            </div>
+            <figure class="sheet-figure">
+                <a href="/assets/origamibench.webp" target="_blank" rel="noopener" title="Open full size">
+                    <img src="/assets/origamibench.webp" loading="lazy" decoding="async"
+                        alt="OrigamiBench: dataset of folds, evaluation environment, and the two task formats">
+                </a>
+            </figure>
+        </article>
 
-            <article class="sheet">
-                <span class="sheet-status">shipped</span>
+        <div class="sheet-grid">
+            <article class="sheet sheet-card">
+                <div class="sheet-head">
+                    <h4>Reverse Turing Test</h4>
+                    <span class="sheet-status">shipped</span>
+                </div>
+                <p>An ensemble that detects <span class="caps">AI</span>-generated text by combining three models
+                    that read the same
+                    passage differently &mdash; a fine-tuned transformer, a stylometric classifier, and a
+                    <span class="caps">CNN</span> that renders text as an image.
+                </p>
                 <figure class="sheet-figure">
                     <a href="/assets/reverse-turing.png" target="_blank" rel="noopener" title="Open full size">
                         <img src="/assets/reverse-turing.png" loading="lazy" decoding="async"
                             alt="Reverse Turing Test web app: paste-text classifier with labelled sample cards">
                     </a>
                 </figure>
-                <div class="sheet-text">
-                    <h3>Reverse Turing Test</h3>
-                    <p>An ensemble that detects <span class="caps">AI</span>-generated text by combining three models
-                        that read the same
-                        passage differently &mdash; a fine-tuned transformer, a stylometric classifier, and a
-                        <span class="caps">CNN</span> that renders text as an image.
-                    </p>
-                    <div class="project-stack">
-                        <span>Python</span>
-                        <span>PyTorch</span>
-                        <span>DistilBERT</span>
-                        <span>ONNX Runtime</span>
-                        <span>Flask</span>
-                        <span>Docker</span>
-                    </div>
-                    <div class="project-links">
-                        <a class="project-link" href="https://reverse-turing-y0bz.onrender.com/" target="_blank"
-                            rel="noopener">reverse-turing.on.render.com</a>
-                        <a class="project-link" href="https://github.com/nishadmansoor/reverse-turing" target="_blank"
-                            rel="noopener">Code</a>
-                    </div>
+                <div class="project-stack">
+                    <span>Python</span>
+                    <span>PyTorch</span>
+                    <span>DistilBERT</span>
+                    <span>Flask</span>
+                    <span>Docker</span>
+                </div>
+                <div class="project-links">
+                    <a class="project-link" href="https://reverse-turing-y0bz.onrender.com/" target="_blank"
+                        rel="noopener"><svg class="link-mark" aria-hidden="true">
+                            <use href="#i-globe"></use>
+                        </svg><span>reverse-turing.on.render.com</span></a>
+                    <a class="project-link" href="https://github.com/nishadmansoor/reverse-turing" target="_blank"
+                        rel="noopener"><svg class="link-mark" aria-hidden="true">
+                            <use href="#i-code"></use>
+                        </svg><span>Code</span></a>
                 </div>
             </article>
-
-            <article class="sheet">
-                <span class="sheet-status">in progress</span>
-                <div class="sheet-text">
-                    <h3>Easy Code</h3>
-                    <p>A tool that makes unfamiliar codebases readable by indexing them twice &mdash; a vector store
-                        for semantic search, a graph for structure &mdash; then answering questions with citations to
-                        real file paths and line numbers.</p>
-                    <div class="project-stack">
-                        <span>Python</span>
-                        <span>Qdrant</span>
-                        <span>Neo4j</span>
-                        <span>abstract syntax trees</span>
-                        <span>RAG</span>
-                    </div>
-                    <div class="project-links">
-                        <a class="project-link" href="https://github.com/nishadmansoor/easy-code" target="_blank"
-                            rel="noopener">Code</a>
-                    </div>
+            <article class="sheet sheet-card">
+                <div class="sheet-head">
+                    <h4><span class="caps">NBA MVP</span> predictor</h4>
+                    <span class="sheet-status">shipped</span>
                 </div>
-            </article>
-
-            <article class="sheet">
-                <span class="sheet-status">shipped</span>
+                <p>A pipeline that learns two decades of <span class="caps">NBA MVP</span> ballots to predict
+                    the winner of the 2024&ndash;25 season. it models each player's share of the vote rather
+                    than the
+                    result, so it's scored on how it ranks the field.</p>
                 <figure class="sheet-figure">
                     <a href="/assets/nba-mvp.webp" target="_blank" rel="noopener" title="Open full size">
                         <img src="/assets/nba-mvp.webp" loading="lazy" decoding="async"
                             alt="NBA MVP Tracker: 2024-25 leaderboard with predicted vote share beside the actual MVP">
                     </a>
                 </figure>
-                <div class="sheet-text">
-                    <h3><span class="caps">NBA MVP</span> predictor</h3>
-                    <p>A pipeline that learns two decades of <span class="caps">NBA MVP</span> ballots to predict
-                        the winner of the 2024&ndash;25 season. it models each player's share of the vote rather
-                        than the
-                        result, so it's scored on how it ranks the field.</p>
-                    <div class="project-stack">
-                        <span>Python</span>
-                        <span>scikit-learn</span>
-                        <span>pandas</span>
-                        <span>BeautifulSoup</span>
-                        <span>Streamlit</span>
-                    </div>
-                    <div class="project-links">
-                        <a class="project-link" href="https://nba-predict-mvp.streamlit.app/" target="_blank"
-                            rel="noopener">nba-predict-mvp.streamlit.app</a>
-                        <a class="project-link" href="https://github.com/nishadmansoor/nba_mvp" target="_blank"
-                            rel="noopener">Code</a>
-                    </div>
+                <div class="project-stack">
+                    <span>Python</span>
+                    <span>scikit-learn</span>
+                    <span>pandas</span>
+                    <span>Streamlit</span>
+                </div>
+                <div class="project-links">
+                    <a class="project-link" href="https://nba-predict-mvp.streamlit.app/" target="_blank"
+                        rel="noopener"><svg class="link-mark" aria-hidden="true">
+                            <use href="#i-globe"></use>
+                        </svg><span>nba-predict-mvp.streamlit.app</span></a>
+                    <a class="project-link" href="https://github.com/nishadmansoor/nba_mvp" target="_blank"
+                        rel="noopener"><svg class="link-mark" aria-hidden="true">
+                            <use href="#i-code"></use>
+                        </svg><span>Code</span></a>
                 </div>
             </article>
         </div>
+
+        <h3 class="group-label">also</h3>
+        <ul class="sheet-rows">
+            <li class="sheet-row">
+                <div class="sheet-head">
+                    <h4>Easy Code</h4>
+                    <span class="sheet-status">in progress</span>
+                </div>
+                <p>A tool that makes unfamiliar codebases readable by indexing them twice &mdash; a vector store
+                    for semantic search, a graph for structure &mdash; then answering questions with citations to
+                    real file paths and line numbers.</p>
+                <div class="project-stack">
+                    <span>Python</span>
+                    <span>Qdrant</span>
+                    <span>Neo4j</span>
+                    <span>RAG</span>
+                </div>
+                <div class="project-links">
+                    <a class="project-link" href="https://github.com/nishadmansoor/easy-code" target="_blank"
+                        rel="noopener"><svg class="link-mark" aria-hidden="true">
+                            <use href="#i-code"></use>
+                        </svg><span>Code</span></a>
+                </div>
+            </li>
+        </ul>
     </section>
 
     <section id="skills">
         <h2>skills</h2>
-        <!-- <h4>the toolkit behind the work above</h4> -->
         <!-- EDIT ME: drawn from the project stacks. Add or remove tools here;
              each needs a matching <symbol> in the sprite at the top of body. -->
         <ul class="tools">
