@@ -251,8 +251,7 @@ section > h2 {
    out wholesale; .caps handles single acronyms sitting inside running prose,
    where a block rule would also un-lowercase the sentence around them. */
 .project-stack,
-.tool-name,
-.tool-mark-text,
+.skill-items,
 .caps {
     text-transform: none;
 }
@@ -1092,6 +1091,16 @@ section > h2 {
     margin: 0.9rem 0;
 }
 
+/* The connect 4 shot is portrait where the others are landscape, so at card
+   width it would run ~470px tall against their ~250 and stretch its whole
+   grid row. Capped and cropped from the top, which keeps the board and
+   trims the chart beneath it. */
+.sheet-card .sheet-figure img {
+    max-height: 300px;
+    object-fit: cover;
+    object-position: top;
+}
+
 /* Pushes stack and links down when descriptions differ in length, so the
    two cards' footers line up. */
 .sheet-card .project-stack {
@@ -1312,68 +1321,59 @@ section > h2 {
     display: none;
 }
 
-/* Tool marks rather than tool names. Simple Icons are monochrome single
-   paths, so currentColor makes them take the page ink instead of eleven
-   different brand colours fighting the beige. The name stays as a caption:
-   Qdrant, ONNX and Neo4j are not recognisable as glyphs on their own. */
-.tools {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 2rem 1rem;
-    max-width: var(--content-max);
+/* ---- Skills ----
+   Grouped rows, not an icon grid. The grid had three of fourteen tools with
+   no logo, so those cells sat misaligned against their neighbours; 14 items
+   across 6 columns orphaned two onto a third row; and it was centred on a
+   page where everything else hangs off one left edge.
+
+   Grouping costs the logos and buys something better: the categories say how
+   the stack is organised, which is a judgement a flat list cannot make. */
+.skill-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
     width: 100%;
+    max-width: var(--content-max);
     margin-inline: auto;
 }
 
-.tool {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.7rem;
-    text-align: center;
+/* Fixed label column, so every row's items start at the same x. */
+.skill-row {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--border);
 }
 
-.tool-mark {
-    width: 34px;
-    height: 34px;
-    fill: currentColor;
-    opacity: 0.75;
-    transition: opacity 0.2s;
-}
-
-.tool:hover .tool-mark {
-    opacity: 1;
-}
-
-.tool-name {
+.skill-label {
     font-family: var(--font-mono);
     font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
     letter-spacing: 0.06em;
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
-/* SQL is a language, not a product, so it has no mark; Amazon and Microsoft
-   withhold theirs, so no CC0 version exists. Set as words at the glyph's
-   size and sitting on its baseline, so the row still scans as one grid. */
-.tool-wordmark {
-    justify-content: center;
-}
-
-.tool-mark-text {
+.skill-items {
+    list-style: none;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 34px;
-    font-family: var(--font-text);
-    font-size: 1.0625rem;
-    letter-spacing: 0.02em;
-    opacity: 0.75;
-    transition: opacity 0.2s;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.5;
 }
 
-.tool-wordmark:hover .tool-mark-text {
-    opacity: 1;
+/* Narrow: a 7rem label column leaves too little for the items, so the label
+   moves onto its own line above them. */
+@media (max-width: 600px) {
+    .skill-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.5rem;
+    }
 }
 
 /* ---- Hover ----

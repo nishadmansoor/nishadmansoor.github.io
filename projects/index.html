@@ -32,8 +32,8 @@
             } catch (e) { }
         })();
     </script>
-    <link rel="stylesheet" href="/style.css?v=187">
-    <script src="/script.js?v=187" defer></script>
+    <link rel="stylesheet" href="/style.css?v=194">
+    <script src="/script.js?v=194" defer></script>
 </head>
 
 <body>
@@ -208,6 +208,39 @@
         <div class="sheet-grid">
             <article class="sheet sheet-card">
                 <div class="sheet-head">
+                    <h4>Connect 4 AlphaZero</h4>
+                    <span class="sheet-status">shipped</span>
+                </div>
+                <p>An <span class="caps">AlphaZero</span>-style connect 4 engine that learned entirely from
+                    self-play &mdash; a policy-value network guiding Monte Carlo tree search. the trained weights
+                    run in the browser as plain JavaScript, with no server and no <span class="caps">ML</span>
+                    library.
+                </p>
+                <figure class="sheet-figure">
+                    <a href="/assets/connect4.png" target="_blank" rel="noopener" title="Open full size">
+                        <img src="/assets/connect4.png" loading="lazy" decoding="async"
+                            alt="Connect 4 AlphaZero: a board mid-game, with the AI's per-column search counts and its estimated win chance below">
+                    </a>
+                </figure>
+                <div class="project-stack">
+                    <span>Python</span>
+                    <span>PyTorch</span>
+                    <span>NumPy</span>
+                    <span>JavaScript</span>
+                </div>
+                <div class="project-links">
+                    <a class="project-link" href="https://nishad.xyz/connect4-alphazero/" target="_blank"
+                        rel="noopener"><svg class="link-mark" aria-hidden="true">
+                            <use href="#i-globe"></use>
+                        </svg><span>nishad.xyz/connect4</span></a>
+                    <a class="project-link" href="https://github.com/nishadmansoor/connect4-alphazero" target="_blank"
+                        rel="noopener"><svg class="link-mark" aria-hidden="true">
+                            <use href="#i-code"></use>
+                        </svg><span>Code</span></a>
+                </div>
+            </article>
+            <article class="sheet sheet-card">
+                <div class="sheet-head">
                     <h4>Reverse Turing Test</h4>
                     <span class="sheet-status">shipped</span>
                 </div>
@@ -272,11 +305,7 @@
                         </svg><span>Code</span></a>
                 </div>
             </article>
-        </div>
-
-        <h3 class="group-label">also</h3>
-        <ul class="sheet-rows">
-            <li class="sheet-row">
+            <article class="sheet sheet-card">
                 <div class="sheet-head">
                     <h4>Easy Code</h4>
                     <span class="sheet-status">in progress</span>
@@ -296,91 +325,51 @@
                             <use href="#i-code"></use>
                         </svg><span>Code</span></a>
                 </div>
-            </li>
-        </ul>
+            </article>
+        </div>
+
     </section>
 
     <section id="skills">
         <h2>skills</h2>
-        <!-- EDIT ME: drawn from the project stacks. Add or remove tools here;
-             each needs a matching <symbol> in the sprite at the top of body. -->
-        <ul class="tools">
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-python"></use>
-                </svg>
-                <span class="tool-name">Python</span>
-            </li>
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-r"></use>
-                </svg>
-                <span class="tool-name">R</span>
-            </li>
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-pytorch"></use>
-                </svg>
-                <span class="tool-name">PyTorch</span>
-            </li>
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-onnx"></use>
-                </svg>
-                <span class="tool-name">ONNX</span>
-            </li>
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-numpy"></use>
-                </svg>
-                <span class="tool-name">NumPy</span>
-            </li>
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-pandas"></use>
-                </svg>
-                <span class="tool-name">pandas</span>
-            </li>
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-neo4j"></use>
-                </svg>
-                <span class="tool-name">Neo4j</span>
-            </li>
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-qdrant"></use>
-                </svg>
-                <span class="tool-name">Qdrant</span>
-            </li>
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-flask"></use>
-                </svg>
-                <span class="tool-name">Flask</span>
-            </li>
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-docker"></use>
-                </svg>
-                <span class="tool-name">Docker</span>
-            </li>
-            <li class="tool">
-                <svg class="tool-mark" aria-hidden="true">
-                    <use href="#i-git"></use>
-                </svg>
-                <span class="tool-name">Git</span>
-            </li>
-            <li class="tool tool-wordmark">
-                <span class="tool-mark-text">SQL</span>
-            </li>
-            <li class="tool tool-wordmark">
-                <span class="tool-mark-text">AWS</span>
-            </li>
-            <li class="tool tool-wordmark">
-                <span class="tool-mark-text">Azure</span>
-            </li>
-        </ul>
+        <!-- EDIT ME: grouped so the list says something about how the
+             stack is organised rather than just listing it. Replaced an
+             icon grid: three of the fourteen had no logo, which left
+             their cells misaligned, and 14 items over 6 columns orphaned
+             two on a third row. -->
+        <div class="skill-groups">
+            <div class="skill-row">
+                <h3 class="skill-label">languages</h3>
+                <ul class="skill-items">
+                    <li>Python</li>
+                    <li><span class="caps">SQL</span></li>
+                    <li>R</li>
+                </ul>
+            </div>
+            <div class="skill-row">
+                <h3 class="skill-label">ml / nlp</h3>
+                <ul class="skill-items">
+                    <li>PyTorch</li>
+                    <li>Hugging Face</li>
+                    <li>scikit-learn</li>
+                    <li>OpenCV</li>
+                    <li>pandas</li>
+                    <li>NumPy</li>
+                </ul>
+            </div>
+            <div class="skill-row">
+                <h3 class="skill-label">tools</h3>
+                <ul class="skill-items">
+                    <li>Neo4j</li>
+                    <li>Qdrant</li>
+                    <li>Docker</li>
+                    <li>Git</li>
+                    <li>Streamlit</li>
+                    <li>Flask</li>
+                    <li>Azure</li>
+                </ul>
+            </div>
+        </div>
     </section>
 
 </body>
