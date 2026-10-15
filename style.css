@@ -582,6 +582,22 @@ section > h2 {
     margin-bottom: 1.25rem;
 }
 
+/* Same treatment as the links in the work entries, and for the same reason:
+   there is no global rule for an <a>, so an inline link in prose renders at
+   the user agent's #0000EE until something claims it. The one link in here is
+   the hiring address, which is the last place on the site that should look
+   unstyled. */
+#about-text a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: opacity 0.2s;
+}
+
+#about-text a:hover {
+    opacity: 0.65;
+}
+
 /* ---- Contact ----
    A label/value ledger, centred as a block: the labels are right-aligned
    against the values, so the eye reads down one edge instead of hunting for
@@ -1457,4 +1473,18 @@ b {
     margin-inline: auto;
     font-family: var(--font-mono);
     font-size: 0.9375rem;
+}
+
+/* These are the whole point of the page, so they take the accent rather than
+   the masthead nav's dimmed ink. Without a rule they fall back to the user
+   agent's blue, which is what shipped the first time. */
+.notfound-nav a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s;
+}
+
+.notfound-nav a:hover {
+    opacity: 0.65;
 }
