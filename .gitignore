@@ -1,0 +1,4 @@
+# macOS Finder metadata. These were tracked until now, which meant Finder
+# could dirty the working tree just by opening a folder.
+.DS_Store
+**/.DS_Store

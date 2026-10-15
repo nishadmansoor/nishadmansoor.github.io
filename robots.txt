@@ -1,0 +1,8 @@
+# Everything here is meant to be found. /about/ is a redirect to the root and
+# carries its own noindex, so it is excluded to keep it out of results as a
+# duplicate of the home page.
+User-agent: *
+Allow: /
+Disallow: /about/
+
+Sitemap: https://nishad.xyz/sitemap.xml

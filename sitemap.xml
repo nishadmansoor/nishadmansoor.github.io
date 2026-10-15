@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Three real pages. /about/ is a redirect and 404.html is an error page, so
+     neither belongs here. Update lastmod when a page's content changes. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://nishad.xyz/</loc>
+        <lastmod>2026-10-15</lastmod>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://nishad.xyz/work/</loc>
+        <lastmod>2026-10-15</lastmod>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://nishad.xyz/projects/</loc>
+        <lastmod>2026-10-15</lastmod>
+        <priority>0.8</priority>
+    </url>
+</urlset>

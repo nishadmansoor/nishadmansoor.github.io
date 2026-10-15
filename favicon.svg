@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <!-- A tile rather than a bare letter: at 16px a filled shape holds its
+         edges where a thin glyph dissolves into the tab strip. The two
+         colour pairs are the site's own accent and bg tokens, so the
+         mark follows the theme the same way the page does. -->
+    <style>
+        .tile { fill: #c2410c; }
+        .mark { fill: #ffffff; }
+        @media (prefers-color-scheme: dark) {
+            .tile { fill: #2dd4bf; }
+            .mark { fill: #0d0d0d; }
+        }
+    </style>
+    <rect class="tile" width="64" height="64" rx="14" />
+    <!-- N drawn as a path, not type: a favicon cannot rely on a font being
+         installed, and EB Garamond certainly will not be. -->
+    <path class="mark" d="M18 48 V16 H26 L38 37 V16 H46 V48 H38 L26 27 V48 Z" />
+</svg>

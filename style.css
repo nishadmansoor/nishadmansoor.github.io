@@ -1428,12 +1428,33 @@ section:first-of-type {
     }
 }
 
-/* MISSING: GitHub, email and LinkedIn. They lived in the About band and the
-   footer, both of which are gone, so the site now has no contact link of any
-   kind. */
-
 /* Back to a real bold now that the family has one. */
 strong,
 b {
     font-weight: 600;
+}
+
+
+/* ---- 404 ----
+   Served by GitHub Pages for any unmatched path. It borrows the masthead and
+   the h2 rule from the rest of the site, so all it needs of its own is the
+   prose measure and the row of ways out. */
+#notfound p {
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    margin-bottom: 1.5rem;
+}
+
+.notfound-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
 }
