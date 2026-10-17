@@ -36,8 +36,8 @@
             } catch (e) { }
         })();
     </script>
-    <link rel="stylesheet" href="/style.css?v=204">
-    <script src="/script.js?v=204" defer></script>
+    <link rel="stylesheet" href="/style.css?v=207">
+    <script src="/script.js?v=207" defer></script>
 </head>
 
 <body>
@@ -172,9 +172,9 @@
                     <span class="sheet-status">shipped</span>
                 </div>
                 <p>An <span class="caps">AlphaZero</span>-style connect 4 engine that learned entirely from
-                    self-play &mdash; a policy-value network guiding Monte Carlo tree search. the trained weights
-                    run in the browser as plain JavaScript, with no server and no <span class="caps">ML</span>
-                    library.
+                    self-play &mdash; a policy-value network guiding Monte Carlo tree search. The trained weights
+                    are exported to the browser, where a JavaScript reimplementation of the network and search
+                    plays every move.
                 </p>
                 <figure class="sheet-figure">
                     <a href="/assets/connect4.png" target="_blank" rel="noopener" title="Open full size">
@@ -207,7 +207,8 @@
                 <p>An ensemble that detects <span class="caps">AI</span>-generated text by combining three models
                     that read the same
                     passage differently &mdash; a fine-tuned transformer, a stylometric classifier, and a
-                    <span class="caps">CNN</span> that renders text as an image.
+                    <span class="caps">CNN</span> that renders text as an image. Quantized to int8, the ensemble
+                    runs entirely client-side &mdash; the text you paste never leaves your browser.
                 </p>
                 <figure class="sheet-figure">
                     <a href="/assets/reverse-turing.png" target="_blank" rel="noopener" title="Open full size">
@@ -327,6 +328,7 @@
                     <li>pandas</li>
                     <li>NumPy</li>
                     <li>matplotlib</li>
+                    <li><span class="caps">ONNX</span></li>
                 </ul>
             </div>
             <div class="skill-row">
@@ -347,7 +349,6 @@
                     <li>Docker</li>
                     <li>Git</li>
                     <li>Streamlit</li>
-                    <li>Flask</li>
                     <li>Azure</li>
                     <li>Power <span class="caps">BI</span></li>
                     <li><span class="caps">DAX</span></li>
