@@ -598,6 +598,14 @@ section > h2 {
     opacity: 0.65;
 }
 
+/* The Rutgers degree is long enough to take three lines in this column, and
+   the default greedy wrap leaves "technology" alone on the last one. Balance
+   evens the lines out instead; browsers that do not support it just wrap the
+   old way. */
+#about-education li {
+    text-wrap: balance;
+}
+
 /* ---- Contact ----
    A label/value ledger, centred as a block: the labels are right-aligned
    against the values, so the eye reads down one edge instead of hunting for
@@ -1377,10 +1385,23 @@ section > h2 {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.35rem 1rem;
+    /* Column gap halved from 1rem now that a dot sits between items: the
+       separator plus the old gap read as too much air. */
+    gap: 0.35rem 0.5rem;
     font-family: var(--font-mono);
     font-size: 0.875rem;
     line-height: 1.5;
+}
+
+/* Same middle dot the project stacks use, rather than the katakana one: this
+   is set in JetBrains Mono, which has no CJK coverage, so U+30FB would fall
+   back to a system font and sit at a different width and baseline from
+   everything around it. The margin matches the flex gap so the dot lands
+   centred between the two items instead of hugging the one before it. */
+.skill-items li:not(:last-child)::after {
+    content: "\00b7";
+    margin-left: 0.5rem;
+    opacity: 0.4;
 }
 
 /* Narrow: a 7rem label column leaves too little for the items, so the label
