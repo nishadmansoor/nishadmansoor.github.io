@@ -252,6 +252,9 @@ section > h2 {
    where a block rule would also un-lowercase the sentence around them. */
 .project-stack,
 .skill-items,
+.timeline-content h3,
+.timeline-company,
+.sheet-head h4,
 .caps {
     text-transform: none;
 }
@@ -418,6 +421,17 @@ section > h2 {
     align-items: start;
 }
 
+/* The contact marks, under the bio. The rule above them went with the
+   notable block: with nothing between the bio and the marks, it was
+   dividing one thing from itself. */
+.about-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem 2rem;
+    margin-top: 2.25rem;
+}
+
 /* The divider. A border on the sidebar rather than a column of its own, so
    it runs exactly as tall as the sidebar's content. */
 #home-aside {
@@ -428,12 +442,21 @@ section > h2 {
     padding-left: 2rem;
 }
 
-/* No max-width on the prose. It used to be capped at 512px inside a 676px
-   column, which left a 164px band of nothing between the end of every line
-   and the divider — the thing that made this page look loose next to the
-   reference, where the paragraph runs the full column and the only space
-   before the rule is the gutter. The column itself is now the measure. */
+/* The cap is back, for the opposite reason it was removed. It came off when
+   the sidebar was still here and the column was 476px wide — narrow enough
+   to be its own measure, so capping it only left a dead band before the
+   divider. With the sidebar gone the column is the full 840px frame, which
+   set lines at 98 characters against a comfortable 45-75. 36rem holds it to
+   about 67.
+
+   Only the prose is capped. The rule above the closing row, and the row
+   itself, still span the full frame so they stay aligned with the masthead
+   nav and the theme toggle. */
 #about-text {
+    /* Inert while the sidebar is here -- the column is narrower than this --
+       but it is what stops the measure running to 98 characters if the
+       sidebar ever comes out again. */
+    max-width: 36rem;
     hyphens: none;
 }
 
@@ -506,11 +529,12 @@ section > h2 {
     pointer-events: none;
 }
 
+/* The kind is the block's heading now -- there is no fixed "from my
+   rotation" label above the deck, so whichever card is showing supplies
+   its own. It carries .side-label for the look and this for the spacing:
+   .side-label's 0.9rem gap is sized for a label over a list, which is too
+   much over a single two-line card. */
 .rot-kind {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    line-height: 1.5;
-    opacity: 0.6;
     margin-bottom: 0.35rem;
 }
 
@@ -576,10 +600,16 @@ section > h2 {
 
 /* 1.65 leading pushed consecutive lines far enough apart that a paragraph
    read as separate floating lines rather than a block. */
+/* Back to Garamond, but at the apparent size the mono preview was running
+   at. The two faces are not comparable by nominal size: measured in the
+   browser, JetBrains Mono's x-height is 0.55 of its font-size against
+   Garamond's 0.405, so mono at 15px was setting a larger x-height than
+   Garamond at 17px. 20px is what matches it. Leading comes down from 1.7
+   because larger text needs proportionally less of it. */
 #about-text p {
-    font-size: 1.0625rem;
+    font-size: 1.125rem;
     line-height: 1.55;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.15rem;
 }
 
 /* Same treatment as the links in the work entries, and for the same reason:
@@ -1469,6 +1499,48 @@ section:first-of-type {
 strong,
 b {
     font-weight: 600;
+}
+
+
+
+/* ---- Currently ----
+   The rotation deck as four rows instead of four stacked cards. Held to the
+   same measure as the prose so the left edge of the page stays one column;
+   the rule above the closing row is the only full-frame element. */
+.now-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+/* Stacked, not side by side: the sidebar is 260px, and a 6rem label column
+   would leave under 160px for a title like "lego batman: legacy of the dark
+   knight". */
+.now-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.now-list .rot-kind {
+    display: block;
+    margin-bottom: 0.1rem;
+}
+
+.now-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+
+/* Sized for a 260px sidebar, where a long title had to be clipped. The
+   column is wider now, so let it wrap instead. */
+.now-list .aside-track-name {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
 }
 
 

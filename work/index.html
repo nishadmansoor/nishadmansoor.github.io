@@ -36,8 +36,8 @@
             } catch (e) { }
         })();
     </script>
-    <link rel="stylesheet" href="/style.css?v=207">
-    <script src="/script.js?v=207" defer></script>
+    <link rel="stylesheet" href="/style.css?v=225">
+    <script src="/script.js?v=225" defer></script>
 </head>
 
 <body>
@@ -61,6 +61,11 @@
                     <a href="/">about</a>
                     <a href="/work/">work</a>
                     <a href="/projects/">projects</a>
+                    <!-- A download, not a page, so it opens in a tab rather than
+                         firing a save: in the nav it should behave like the three
+                         links beside it. The button under the bio is the one that
+                         downloads, and its label says so. -->
+                    <a href="/assets/NishadMansoor - Resume.pdf" target="_blank" rel="noopener">resume</a>
                 </nav>
                 <div class="masthead-utils">
                     <div class="social-row">
@@ -120,10 +125,10 @@
                 <div class="timeline-content">
                     <h3><span class="caps">AI</span> Engineer Intern</h3>
                     <span class="timeline-company">EisnerAmper</span>
-                    <p>Built a pipeline tracking <span class="caps">AI</span> usage across the firm using the Anthropic and OpenAI <span class="caps">APIs</span>, then a
-                        time-series model projecting $1.7<span class="caps">M</span> in year-end spend. Additionally, I built a conversational
-                        agent that sits on top, answering cost questions in plain language against a <span class="caps">Power BI</span> model
-                        on Azure.</p>
+                    <p>tracked <span class="caps">AI</span> usage across the firm using the <span class="caps">Anthropic</span> and <span class="caps">OpenAI</span> <span
+                            class="caps">APIs</span>, then built a
+                        time-series model projecting $1.7<span class="caps">M</span> in year-end spend. Additionally, I
+                        made a chatbot built against a <span class="caps">Power BI</span> model hosted on <span class="caps">Azure</span> that lets employees answer cost questions in natural language.</p>
                 </div>
             </div>
 
@@ -134,10 +139,12 @@
                 <div class="timeline-content">
                     <h3>Machine Learning Researcher</h3>
                     <span class="timeline-company">Massachusetts Institute of Technology</span>
-                    <p>Benchmarked four vision-language models across 300+ origami models using <span class="caps">IoU</span> and <span class="caps">CLIP</span> similarity
+                    <p>Benchmarked four vision-language models across 300+ origami models using <span
+                            class="caps">IoU</span> and <span class="caps">CLIP</span> similarity
                         to see how they understand spatial reasoning, tuning constraint thresholds to query efficiency
-                        scores of 0.85&ndash;0.87. Published <a href="https://arxiv.org/abs/2603.13856v2"
-                            target="_blank" rel="noopener">the paper</a> to workshops at <span class="caps">ICML</span> and <span class="caps">CVPR</span>.</p>
+                        scores of 0.85&ndash;0.87. Co-authored <a href="https://arxiv.org/abs/2603.13856v2"
+                            target="_blank" rel="noopener">a paper</a> that was published to workshops at <span
+                            class="caps">ICML</span> and <span class="caps">CVPR</span>.</p>
                 </div>
             </div>
 
@@ -147,8 +154,9 @@
                 <div class="timeline-content">
                     <h3>Data Science Intern</h3>
                     <span class="timeline-company">Defense Industrial Base Institute at Northeastern</span>
-                    <p>Built an ingestion pipeline pulling <span class="caps">DoD</span> contract data from <span class="caps">USASpending</span>.gov and geocoding vendor
-                        locations, feeding a Neo4j knowledge graph that links vendors, contracts and geographies
+                    <p>Built an ingestion pipeline pulling <span class="caps">DoD</span> contract data from <span
+                            class="caps">USASpending</span>.gov and geocoding vendor
+                        locations, feeding a <span class="caps">Neo4j</span> knowledge graph that links vendors, contracts and geographies
                         through <span class="caps">UEI/CAGE</span> identifiers.</p>
                 </div>
             </div>
@@ -160,7 +168,8 @@
                 <div class="timeline-content">
                     <h3>Graduate Research Assistant</h3>
                     <span class="timeline-company">Northeastern University</span>
-                    <p>Generated <span class="caps">CSVs</span> from parsing <span class="caps">HTML</span> docs and built an <span class="caps">AI</span> research dashboard that visualized trends
+                    <p>Generated <span class="caps">CSVs</span> from parsing <span class="caps">HTML</span> docs and
+                        built an <span class="caps">AI</span> research dashboard that visualized trends
                         from student reflections for use in future semesters.</p>
                 </div>
             </div>
@@ -172,8 +181,10 @@
                 <div class="timeline-content">
                     <h3>Data Science Intern</h3>
                     <span class="timeline-company">Beats Electronics</span>
-                    <p>Trained a random forest on marketing spend and 1,000 survey responses, reaching an <span class="caps">F1</span> of 0.84 for
-                        audience targeting, and built a <span class="caps">TF-IDF</span> sentiment pipeline to surface what drove customer
+                    <p>Trained a random forest on marketing spend and 1,000 survey responses, reaching an <span
+                            class="caps">F1</span> of 0.84 for
+                        audience targeting, and built a <span class="caps">TF-IDF</span> sentiment pipeline to surface
+                        what drove customer
                         satisfaction.</p>
                 </div>
             </div>
